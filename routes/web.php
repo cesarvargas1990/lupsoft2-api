@@ -18,18 +18,28 @@ $router->get('/', function () use ($router) {
 
 // API route group
 $router->group(['prefix' => 'api'], function () use ($router) {
+
+    // AUTH SERVICES
     // Matches "/api/register
    $router->post('register', 'AuthController@register');
      // Matches "/api/login
     $router->post('login', 'AuthController@login');
-
     // Matches "/api/profile
     $router->get('profile', 'UserController@profile');
-
     // Matches "/api/user 
     //get one user by id
     $router->get('users/{id}', 'UserController@singleUser');
-
     // Matches "/api/users
     $router->get('users', 'UserController@allUsers');
+
+
+   // REST FULL SERVICES FOR TABLE => psclientes
+   $router->get('psclientes',  ['uses' => 'PsclientesController@showAllPsclientes']);
+   $router->get('psclientes/{id}', ['uses' => 'PsclientesController@showOnePsclientes']);
+   $router->post('psclientes', ['uses' => 'PsclientesController@create']);
+   $router->put('psclientes/{id}', ['uses' => 'PsclientesController@update']);
+   $router->delete('psclientes/{id}', ['uses' => 'PsclientesController@delete']);
+   
+
+
 });
