@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTipodocidentiTable extends Migration
+class CreatePsperfilTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateTipodocidentiTable extends Migration
      */
     public function up()
     {
-        Schema::create('tipodocidenti', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('codtipdocid');
-            $table->string('nomtipodocumento');
-            $table->string('nitempresa',30);
+        Schema::create('psperfil', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('nombre');
+            $table->string('ind_activo')->unique()->notNullable();
+			$table->string('nitempresa',30)->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateTipodocidentiTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tipodocidenti');
+        Schema::dropIfExists('psperfil');
     }
 }

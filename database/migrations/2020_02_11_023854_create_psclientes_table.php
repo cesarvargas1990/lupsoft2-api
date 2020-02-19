@@ -16,7 +16,7 @@ class CreatePsclientesTable extends Migration
 
 
         Schema::create('psclientes', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->string('nomcliente')->nullable();
             $table->integer('codtipdocid')->nullable();
             $table->string('numdocumento',30)->nullable();

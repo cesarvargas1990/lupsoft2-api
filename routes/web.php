@@ -21,12 +21,12 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
     // AUTH SERVICES
     // Matches "/api/register
-   $router->post('register', 'AuthController@register');
+   $router->post('auth/register', 'AuthController@register');
      // Matches "/api/login
-    $router->post('login', 'AuthController@login');
+    $router->post('auth/login', 'AuthController@login');
     // Matches "/api/profile
     $router->get('profile', 'UserController@profile');
-    // Matches "/api/user 
+    // Matches "/api/user
     //get one user by id
     $router->get('users/{id}', 'UserController@singleUser');
     // Matches "/api/users
@@ -39,7 +39,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
    $router->post('psclientes', ['uses' => 'PsclientesController@create']);
    $router->put('psclientes/{id}', ['uses' => 'PsclientesController@update']);
    $router->delete('psclientes/{id}', ['uses' => 'PsclientesController@delete']);
-   
+
 
 
 });

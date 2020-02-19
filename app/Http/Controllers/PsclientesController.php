@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Psclientes;
+
 use Illuminate\Http\Request;
 
 
 class PsclientesController extends Controller
 {
-	public function __construct()
+    public function __construct()
     {
         $this->middleware('auth');
     }
@@ -17,19 +18,17 @@ class PsclientesController extends Controller
     {
 
 
-		try {
+        try {
 
-			 return response()->json(Psclientes::all());
+            return response()->json(Psclientes::all());
 
 
+        } catch (\Exception $e) {
 
-		} catch (\Exception $e) {
+            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
+                ->header('Content-Type', 'application/json');
 
-			echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-					->header('Content-Type', 'application/json');
-
-		}
-
+        }
 
 
     }
@@ -38,19 +37,16 @@ class PsclientesController extends Controller
     {
 
 
-		try {
+        try {
 
-			     return response()->json(Psclientes::find($id));
+            return response()->json(Psclientes::find($id));
 
 
+        } catch (\Exception $e) {
 
-		} catch (\Exception $e) {
+            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
 
-			echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-					->header('Content-Type', 'application/json');
-
-		}
-
+        }
 
 
     }
@@ -59,46 +55,38 @@ class PsclientesController extends Controller
     {
 
 
-		try {
+        try {
 
-			$data = Psclientes::create($request->all());
+            $data = Psclientes::create($request->all());
 
-		return response()->json($data, 201);
+            return response()->json($data, 201);
 
-		} catch (\Exception $e) {
+        } catch (\Exception $e) {
 
-			echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-					->header('Content-Type', 'application/json');
+            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
 
-		}
-
-
-
-
+        }
 
 
     }
 
-    public function update($id, Request $request)
+    public function update($id,Request $request)
     {
 
 
-		try {
+        try {
 
-			 $data = Psclientes::findOrFail($id);
-        $data->update($request->all());
+            $data = Psclientes::findOrFail($id);
+            $data->update($request->all());
 
-        return response()->json($data, 200);
+            return response()->json($data, 200);
 
 
+        } catch (\Exception $e) {
 
-		} catch (\Exception $e) {
+            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
 
-			echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-					->header('Content-Type', 'application/json');
-
-		}
-
+        }
 
 
     }
@@ -107,18 +95,16 @@ class PsclientesController extends Controller
     {
 
 
-		try {
+        try {
 
-		 Psclientes::findOrFail($id)->delete();
-        return response('Deleted Successfully', 200);
+            Psclientes::findOrFail($id)->delete();
+            return response(array('message' => 'Deleted Successfully') , 200);
 
-		} catch (\Exception $e) {
+        } catch (\Exception $e) {
 
-			echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-					->header('Content-Type', 'application/json');
+            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
 
-		}
-
+        }
 
 
     }
