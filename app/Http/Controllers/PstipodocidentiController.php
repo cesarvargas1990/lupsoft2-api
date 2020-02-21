@@ -2,27 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Psclientes;
+use App\Pstipodocidenti;
 
 use Illuminate\Http\Request;
 
-
 use DB;
 
-class PsclientesController extends Controller
+class PstipodocidentiController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    public function showAllPsclientes()
+    public function showAllPstipodocidenti()
     {
 
 
         try {
 
-            return response()->json(Psclientes::all());
+            return response()->json(Pstipodocidenti::all());
 
 
         } catch (\Exception $e) {
@@ -35,13 +34,13 @@ class PsclientesController extends Controller
 
     }
 
-    public function showOnePsclientes($id)
+    public function showOnePstipodocidenti($id)
     {
 
 
         try {
 
-            return response()->json(Psclientes::find($id));
+            return response()->json(Pstipodocidenti::find($id));
 
 
         } catch (\Exception $e) {
@@ -53,13 +52,13 @@ class PsclientesController extends Controller
 
     }
 	
-	public function ShowPsclientes($nitempresa) {
+	public function ShowPstipodocidenti($nitempresa) {
 			
 			
 			try {
 
 
-				$qry = "select id as value, nomcliente as label from psclientes where nitempresa = :nitempresa";
+				$qry = "select codtipdocid as value, nomtipodocumento as label from pstipodocidenti where nitempresa = :nitempresa";
 				$binds = array(
 						'nitempresa' => $nitempresa
 				);
@@ -83,7 +82,7 @@ class PsclientesController extends Controller
 
         try {
 
-            $data = Psclientes::create($request->all());
+            $data = Pstipodocidenti::create($request->all());
 
             return response()->json($data, 201);
 
@@ -102,7 +101,7 @@ class PsclientesController extends Controller
 
         try {
 
-            $data = Psclientes::findOrFail($id);
+            $data = Pstipodocidenti::findOrFail($id);
             $data->update($request->all());
 
             return response()->json($data, 200);
@@ -134,7 +133,6 @@ class PsclientesController extends Controller
 
 
     }
-	
 	
 	
 }

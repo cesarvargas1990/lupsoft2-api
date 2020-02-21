@@ -20,7 +20,8 @@ class PsmenuTableSeeder extends Seeder
             'ruta' => 'dashboard',
 			'icono' => 'dashboard',
 			'id_perfil' => 1,
-			'ind_activo' => 1
+			'ind_activo' => 1,
+			'nitempresa' => 1
         ]);
 		
 		DB::table('psmenu')->insert([
@@ -29,7 +30,8 @@ class PsmenuTableSeeder extends Seeder
             'ruta' => 'logout',
 			'icono' => 'logout',
 			'id_perfil' => 1,
-			'ind_activo' => 1
+			'ind_activo' => 1,
+			'nitempresa' => 1
         ]);
 		
 		DB::table('psmenu')->insert([
@@ -38,7 +40,8 @@ class PsmenuTableSeeder extends Seeder
             'ruta' => 'clientes',
 			'icono' => 'person',
 			'id_perfil' => 1,
-			'ind_activo' => 1
+			'ind_activo' => 1,
+			'nitempresa' => 1
         ]);
 		
 			DB::table('psmenu')->insert([
@@ -48,7 +51,8 @@ class PsmenuTableSeeder extends Seeder
 				'icono' => 'add',
 				'id_perfil' => 1,
 				'ind_activo' => 1,
-				'id_mpadre' => 3
+				'id_mpadre' => 3,
+				'nitempresa' => 1
 			]);
 			
 			DB::table('psmenu')->insert([
@@ -58,7 +62,19 @@ class PsmenuTableSeeder extends Seeder
 				'icono' => 'list',
 				'id_perfil' => 1,
 				'ind_activo' => 1,
-				'id_mpadre' => 3
+				'id_mpadre' => 3,
+				'nitempresa' => 1
+			]);
+			
+			DB::table('psmenu')->insert([
+				'orden' => '2',
+				'nombre' => 'Crear Prestamo',
+				'ruta' => 'clientes/crearPrestamo',
+				'icono' => 'add',
+				'id_perfil' => 1,
+				'ind_activo' => 1,
+				'id_mpadre' => 3,
+				'nitempresa' => 1
 			]);
     }
 }

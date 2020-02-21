@@ -9,3 +9,6 @@ php artisan db:seed --class=PsperfilTableSeeder
 php artisan db:seed --class=PsempresaTableSeeder
 php artisan db:seed --class=PsmenuTableSeeder
 php artisan db:seed --class=PsusperfilTableSeeder
+php artisan db:seed --class=PstipodocidentiSeeder
+
+https://formly.dev/examples/advanced/json-schema

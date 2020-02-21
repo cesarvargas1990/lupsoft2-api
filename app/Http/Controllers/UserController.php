@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use  App\User;
+use DB;
 
 class UserController extends Controller
 {
@@ -48,6 +49,25 @@ class UserController extends Controller
             $user = User::findOrFail($id);
 
             return response()->json(['user' => $user], 200);
+
+        } catch (\Exception $e) {
+
+            return response()->json(['message' => 'user not found!'], 404);
+        }
+
+    }
+	
+    public function getUsers($id)
+    {
+        try {
+            
+			
+			$qry = "select id as value, name as label from users where id_user = :id_user";
+				$binds = array(
+						'id_user' => $id
+				);
+				$data = DB::select($qry,$binds);				
+               return response()->json($data);
 
         } catch (\Exception $e) {
 

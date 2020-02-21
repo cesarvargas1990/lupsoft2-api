@@ -16,21 +16,23 @@ class CreatePsclientesTable extends Migration
 
 
         Schema::create('psclientes', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('nomcliente')->nullable();
-            $table->integer('codtipdocid')->nullable();
-            $table->string('numdocumento',30)->nullable();
-	    $table->string('ciudad',50)->nullable();
-            $table->string('telefijo',20)->nullable();
-            $table->string('celular',20)->nullable();
-            $table->string('direcasa',200)->nullable();
-            $table->string('diretrabajo',200)->nullable();
-            $table->string('ubicasa',255)->nullable();
-            $table->string('ubictrabajo',255)->nullable();
-            $table->string('nitempresa',30);
-	    $table->string('ref1',255)->nullable();
-	    $table->string('ref2',255)->nullable();
-            $table->timestamps();
+			$table->increments('id');
+			$table->string('nomcliente')->nullable();
+			$table->integer('codtipdocid')->nullable();
+			$table->string('numdocumento',30)->nullable();
+			$table->string('ciudad',50)->nullable();
+			$table->string('telefijo',20)->nullable();
+			$table->string('celular',20)->nullable();
+			$table->string('direcasa',200)->nullable();
+			$table->string('diretrabajo',200)->nullable();
+			$table->string('ubicasa',255)->nullable();
+			$table->string('ubictrabajo',255)->nullable();
+			$table->string('nitempresa',30);
+			$table->string('ref1',255)->nullable();
+			$table->string('ref2',255)->nullable();
+			$table->integer('id_cobrador')->nullable();
+			$table->integer('id_user');
+			$table->timestamps();
         });
     }
 

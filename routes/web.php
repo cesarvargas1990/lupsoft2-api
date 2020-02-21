@@ -40,6 +40,21 @@ $router->group(['prefix' => 'api'], function () use ($router) {
    $router->put('psclientes/{id}', ['uses' => 'PsclientesController@update']);
    $router->delete('psclientes/{id}', ['uses' => 'PsclientesController@delete']);
 
+   // REST FULL SERVICES FOR TABLE => pstipodocidenti
+   $router->get('pstipodocidenti',  ['uses' => 'PstipodocidentiController@showAllpstipodocidenti']);
+   $router->get('pstipodocidenti/{id}', ['uses' => 'PstipodocidentiController@ShowPstipodocidenti']);
+   $router->post('pstipodocidenti', ['uses' => 'PstipodocidentiController@create']);
+   $router->put('pstipodocidenti/{id}', ['uses' => 'PstipodocidentiController@update']);
+   $router->delete('pstipodocidenti/{id}', ['uses' => 'PstipodocidentiController@delete']);
+
+   // SOME SERVICES
+
+   $router->get('cobradores/{id}',  ['uses' => 'UserController@getUsers']);
+   $router->get('listadoclientes/{id}',  ['uses' => 'PsclientesController@ShowPsclientes']);
+   $router->post('calcularCuotas', ['uses' => 'CuotasController@calcularCuotas']);
+    $router->get('listaformaspago/{nit_empresa}', ['uses' => 'PsformaspagoController@ShowPsformapago']);
+
+
 
 
 });

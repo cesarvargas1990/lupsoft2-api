@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 //this is new
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Psclientes extends Model
+class Psformapago extends Model
 {
 
 
@@ -20,29 +20,16 @@ class Psclientes extends Model
      */
 
 
-    protected $fillable = [
-	'nomcliente',
-	'codtipdocid',
-	'numdocumento',
-	'ciudad',
-	'telefijo',
-	'celular',
-	'direcasa',
-	'diretrabajo',
-	'ubicasa',
-	'ubictrabajo',
-	'nitempresa',
-	'ref1',
-	'ref2',
-	'id_cobrador',
-	'id_user'
-    ];
+  
 
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
+	 
+	 protected $table = 'psformapago';
+	 
     protected $hidden = [
 
     ];
