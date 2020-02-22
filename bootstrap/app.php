@@ -103,5 +103,5 @@ $app->router->group([
 $app->middleware([
     App\Http\Middleware\CorsMiddleware::class
 ]);
-
+app('translator')->setLocale('es');
 return $app;

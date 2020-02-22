@@ -44,37 +44,62 @@ class PsmenuTableSeeder extends Seeder
 			'nitempresa' => 1
         ]);
 		
-			DB::table('psmenu')->insert([
-				'orden' => '1',
-				'nombre' => 'Crear',
-				'ruta' => 'clientes/crear',
-				'icono' => 'add',
-				'id_perfil' => 1,
-				'ind_activo' => 1,
-				'id_mpadre' => 3,
-				'nitempresa' => 1
-			]);
+				DB::table('psmenu')->insert([
+					'orden' => '1',
+					'nombre' => 'Crear',
+					'ruta' => 'clientes/crear',
+					'icono' => 'add',
+					'id_perfil' => 1,
+					'ind_activo' => 1,
+					'id_mpadre' => 3,
+					'nitempresa' => 1
+				]);
+				
+				DB::table('psmenu')->insert([
+					'orden' => '2',
+					'nombre' => 'Listar',
+					'ruta' => 'clientes/listar',
+					'icono' => 'list',
+					'id_perfil' => 1,
+					'ind_activo' => 1,
+					'id_mpadre' => 3,
+					'nitempresa' => 1
+				]);
+				
+				DB::table('psmenu')->insert([
+					'orden' => '2',
+					'nombre' => 'Crear Prestamo',
+					'ruta' => 'clientes/crearPrestamo',
+					'icono' => 'add',
+					'id_perfil' => 1,
+					'ind_activo' => 1,
+					'id_mpadre' => 3,
+					'nitempresa' => 1
+				]);
 			
-			DB::table('psmenu')->insert([
-				'orden' => '2',
-				'nombre' => 'Listar',
-				'ruta' => 'clientes/listar',
-				'icono' => 'list',
-				'id_perfil' => 1,
-				'ind_activo' => 1,
-				'id_mpadre' => 3,
-				'nitempresa' => 1
-			]);
 			
-			DB::table('psmenu')->insert([
-				'orden' => '2',
-				'nombre' => 'Crear Prestamo',
-				'ruta' => 'clientes/crearPrestamo',
-				'icono' => 'add',
-				'id_perfil' => 1,
-				'ind_activo' => 1,
-				'id_mpadre' => 3,
-				'nitempresa' => 1
-			]);
+	   DB::table('psmenu')->insert([
+            'orden' => '3',
+            'nombre' => 'Parametros',
+            'ruta' => 'parametros',
+			'icono' => 'settings',
+			'id_perfil' => 1,
+			'ind_activo' => 1,
+			'nitempresa' => 1
+        ]);
+		
+				
+				DB::table('psmenu')->insert([
+					'orden' => '3',
+					'nombre' => 'Formas de pago',
+					'ruta' => 'parametros',
+					'icono' => 'playlist_add',
+					'id_perfil' => 1,
+					'id_mpadre' => 8,
+					'ind_activo' => 1,
+					'nitempresa' => 1
+				]);
+
+		
     }
 }

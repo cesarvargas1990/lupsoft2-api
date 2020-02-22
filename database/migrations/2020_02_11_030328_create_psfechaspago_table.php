@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePstipodocidentiTable extends Migration
+class CreatePsfechaspagoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreatePstipodocidentiTable extends Migration
      */
     public function up()
     {
-        Schema::create('pstipodocidenti', function (Blueprint $table) {
+        Schema::create('psfechaspago', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('codtipdocid');
-            $table->string('nomtipodocumento');
-            $table->string('nitempresa',30);
+            $table->integer('id_prestamo');
+            $table->date('fecha_pago');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreatePstipodocidentiTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pstipodocidenti');
+        Schema::dropIfExists('psfechaspago');
     }
 }

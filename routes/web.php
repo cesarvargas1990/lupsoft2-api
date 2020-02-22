@@ -54,6 +54,14 @@ $router->group(['prefix' => 'api'], function () use ($router) {
    $router->post('calcularCuotas', ['uses' => 'CuotasController@calcularCuotas']);
     $router->get('listaformaspago/{nit_empresa}', ['uses' => 'PsformaspagoController@ShowPsformapago']);
 
+    $router->post('calcularCuotas2', ['uses' => 'CuotasController@calcularCuotas2']);
+
+    $router->post('guardarPrestamo' , ['uses' => 'PrestamosController@guardarPrestamo']);
+
+
+
+    $router->post('test' , ['uses' => 'PrestamosController@guardarPrestamo']);
+
 
 
 

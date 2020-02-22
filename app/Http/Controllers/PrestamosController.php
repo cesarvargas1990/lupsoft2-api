@@ -11,25 +11,31 @@ use App\Http\Traits\General\prestamosTrait;
 use DB;
 use App\Http\Traits\General\calculadoraCuotasPrestamosTrait;
 
-class CuotasController extends Controller
+class PrestamosController extends Controller
 {
 
-    use calculadoraCuotasPrestamosTrait;
+
     use prestamosTrait;
+    use calculadoraCuotasPrestamosTrait;
 
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    public function calcularCuotas(Request $request)
+
+
+
+    public function guardarPrestamo(Request $request)
     {
 
 
         try {
 
-            $datos = $this->generarTablaAmortizacion($request);
-            return response()->json($datos);
+
+
+            $salida = $this->guardarPrestamoFechas($request);
+            return response()->json($salida);
 
 
         } catch (\Exception $e) {
@@ -42,7 +48,7 @@ class CuotasController extends Controller
 
     }
 
-    public function calcularCuotas2(Request $request)
+    public function test(Request $request)
     {
 
 
@@ -50,26 +56,6 @@ class CuotasController extends Controller
 
             $datos = $this->calcularCuota($request);
             return response()->json($datos);
-
-
-        } catch (\Exception $e) {
-
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
-
-        }
-
-
-    }
-
-    public function guardarPrestamo($request)
-    {
-
-
-        try {
-
-            $salida = $this->guardarPrestamoFechas($request);
-            return response()->json($salida);
 
 
         } catch (\Exception $e) {

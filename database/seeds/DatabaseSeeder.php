@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
 		
 		
 		$this->call('UsersTableSeeder');
+		$this->call('PsclientesTableSeeder');
 		$this->call('PsperfilTableSeeder');
 		$this->call('PsempresaTableSeeder');
 		$this->call('PsmenuTableSeeder');
