@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class PstipodocidentiSeeder extends Seeder
+class PstipodocidentiTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

@@ -20,7 +20,24 @@ class Psformapago extends Model
      */
 
 
-  
+
+   
+
+    protected $fillable = [
+        'codfpago', 
+        'id_periodo_pago', 
+        'nomperiodopago', 
+        'valseguro',
+        'porcint', 
+        'ind_solicseguro', 
+        'ind_solicporcint', 
+        'ind_solivalorpres', 
+        'nomfpago',
+        'nitempresa',
+        'numcuotas',
+        'ind_solinumc',
+        'valorpres'
+        ];
 
     /**
      * The attributes excluded from the model's JSON form.

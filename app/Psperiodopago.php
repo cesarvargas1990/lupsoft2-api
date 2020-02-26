@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 //this is new
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Psclientes extends Model
+class Psperiodopago extends Model
 {
-
+  
 
     /**
      * The attributes that are mass assignable.
@@ -20,31 +20,16 @@ class Psclientes extends Model
      */
 
 
-    protected $fillable = [
-	'nomcliente',
-	'codtipdocid',
-	'numdocumento',
-	'ciudad',
-	'telefijo',
-	'celular',
-	'direcasa',
-	'diretrabajo',
-	'ubicasa',
-	'ubictrabajo',
-	'nitempresa',
-	'ref1',
-	'ref2',
-	'id_cobrador',
-	'id_user',
-	'email',
-	'perfil_facebook'
-    ];
+  
 
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
+	 
+	 protected $table = 'psperiodopago';
+	 
     protected $hidden = [
 
     ];

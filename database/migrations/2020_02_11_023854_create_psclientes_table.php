@@ -30,7 +30,9 @@ class CreatePsclientesTable extends Migration
 			$table->string('nitempresa',30);
 			$table->string('ref1',255)->nullable();
 			$table->string('ref2',255)->nullable();
-			$table->integer('id_cobrador')->nullable();
+            $table->integer('id_cobrador')->nullable();
+            $table->string('email',255)->nullable();
+            $table->string('perfil_facebook',1000)->nullable();
 			$table->integer('id_user');
 			$table->timestamps();
         });

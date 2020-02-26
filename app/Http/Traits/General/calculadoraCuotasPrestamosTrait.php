@@ -18,7 +18,7 @@ trait calculadoraCuotasPrestamosTrait
         $valorpres = $request->get('valorpres');
         $numcuotas = $request->get('numcuotas');
         $porcint = $request->get('porcint'); // PORC INT ANUAL
-        $id_forma_pago = $request->get('codfpago');
+        $id_forma_pago = $request->get('id_forma_pago');
         $valor_seguro = $request->get('valseguro');
         $fec_inicial = $request->get('fec_inicial');
 

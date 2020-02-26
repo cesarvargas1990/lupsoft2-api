@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Psformapago;
+use App\Psperiodopago;
 
 use Illuminate\Http\Request;
 
 use DB;
 
-class PsformaspagoController extends Controller
+class PsperiodopagoController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    public function showAllPsformapago()
+    public function showAllPsperiodopago()
     {
 
 
         try {
 
-            return response()->json(Psformapago::all());
+            return response()->json(Psperiodopago::all());
 
 
         } catch (\Exception $e) {
@@ -34,13 +34,13 @@ class PsformaspagoController extends Controller
 
     }
 
-    public function showOnePsformapago($id)
+    public function showOnePsperiodopago($id)
     {
 
 
         try {
 
-            return response()->json(Psformapago::find($id));
+            return response()->json(Psperiodopago::find($id));
 
 
         } catch (\Exception $e) {
@@ -52,17 +52,14 @@ class PsformaspagoController extends Controller
 
     }
 	
-	public function ShowPsformapago($nitempresa) {
+	public function ShowPsperiodopago() {
 			
 			
 			try {
 
 
-				$qry = "select codfpago as value, nomfpago as label from psformapago where nitempresa = :nitempresa";
-				$binds = array(
-						'nitempresa' => $nitempresa
-				);
-				$data = DB::select($qry,$binds);				
+				$qry = "select id as value, nomperiodopago as label from psperiodopago";
+				$data = DB::select($qry);				
                return response()->json($data);
 
 
@@ -82,7 +79,7 @@ class PsformaspagoController extends Controller
 
         try {
 
-            $data = Psformapago::create($request->all());
+            $data = Psperiodopago::create($request->all());
 
             return response()->json($data, 201);
 
@@ -101,7 +98,7 @@ class PsformaspagoController extends Controller
 
         try {
 
-            $data = Psformapago::findOrFail($id);
+            $data = Psperiodopago::findOrFail($id);
             $data->update($request->all());
 
             return response()->json($data, 200);
@@ -122,7 +119,7 @@ class PsformaspagoController extends Controller
 
         try {
 
-            Psformapago::findOrFail($id)->delete();
+            Psperiodopago::findOrFail($id)->delete();
             return response(array('message' => 'Deleted Successfully') , 200);
 
         } catch (\Exception $e) {
@@ -133,6 +130,8 @@ class PsformaspagoController extends Controller
 
 
     }
+
+  
 	
 	
 }

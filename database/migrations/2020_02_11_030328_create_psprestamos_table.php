@@ -20,7 +20,7 @@ class CreatePsprestamosTable extends Migration
             $table->integer('id_cliente')->nullable();
 			$table->double('valorpres', 13,2)->nullable();
 			$table->integer('numcuotas')->nullable();
-			$table->integer('codfpago')->nullable();
+			$table->integer('id_forma_pago')->nullable();
 			$table->double('valseguro', 13,2)->nullable();
 			$table->double('valcuota', 13,2)->nullable();
 			$table->double('porcint', 10,2)->nullable();

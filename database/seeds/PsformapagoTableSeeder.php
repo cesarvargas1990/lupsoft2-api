@@ -16,40 +16,76 @@ class PsformapagoTableSeeder extends Seeder
 
 
          DB::table('psformapago')->insert([
-            'codfpago' => 1,
+            
+            'id_periodo_pago' => 1,
 			'nomfpago' => 'Diario',
-			'nitempresa' => 1
+            'nitempresa' => 1,
+            'ind_solicporcint' => 1,
+            'ind_solicseguro' => 1,
+            'valseguro' => 0,
+            'porcint' => 10,
+            'numcuotas'=>20,
+            'ind_solinumc' => 1
 
         ]);
 		
 		
 		DB::table('psformapago')->insert([
-            'codfpago' => 2,
+            
+            'id_periodo_pago' => 2,
 			'nomfpago' => 'Semanal',
-			'nitempresa' => 1
+            'nitempresa' => 1,
+            'ind_solicporcint' => 1,
+            'ind_solicseguro' => 1,
+            'valseguro' => 0,
+            'porcint' => 10,
+            'numcuotas'=>15,
+            'ind_solinumc' => 1
 
         ]);
 		
 		
 		DB::table('psformapago')->insert([
-            'codfpago' => 3,
+            
+            'id_periodo_pago' => 3,
 			'nomfpago' => 'Quincenal',
-			'nitempresa' => 1
+            'nitempresa' => 1,
+            'ind_solicporcint' => 1,
+            'ind_solicseguro' => 1,
+            'valseguro' => 0,
+            'porcint' => 10,
+            'numcuotas'=>2,
+            'ind_solinumc' => 0
 
         ]);
 		
 		
 		DB::table('psformapago')->insert([
-            'codfpago' => 4,
+            
+            'id_periodo_pago' => 4,
 			'nomfpago' => 'Mensual',
-			'nitempresa' => 1
+            'nitempresa' => 1,
+            'ind_solicporcint' => 1,
+            'ind_solicseguro' => 1,
+            'valseguro' => 0,
+            'porcint' => 10,
+            'numcuotas'=>12,
+            'ind_solinumc' => 1
 
         ]);
 		
 		DB::table('psformapago')->insert([
-            'codfpago' => 5,
+            
+            'id_periodo_pago' => 5,
 			'nomfpago' => 'Anual',
-			'nitempresa' => 1
+            'nitempresa' => 1,
+            'ind_solicporcint' => 1,
+            'ind_solicseguro' => 1,
+            'valseguro' => 0,
+            'porcint' => 10,
+            'numcuotas'=>2,
+            'ind_solinumc' => 0
+
 
         ]);
     }

@@ -9,6 +9,8 @@ use DB;
 trait prestamosTrait
 {
 
+     
+
     function guardarPrestamoFechas($request)
     {
 
@@ -21,7 +23,7 @@ trait prestamosTrait
         $now = new \DateTime();
 
         $now->getTimestamp();
-
+ 
         $id_prestamo = DB::table('psprestamos')->insertGetId(
                 [   'nitempresa' => $request->get('nitempresa'),
                     'id_cliente' => $request->get('id_cliente'),
@@ -29,7 +31,7 @@ trait prestamosTrait
                     'numcuotas' => $request->get('numcuotas'),
                     'valcuota' => $valor_cuota,
                     'porcint' => $request->get('porcint'),
-                    'codfpago' => $request->get('codfpago'),
+                    'id_forma_pago' => $request->get('id_forma_pago'),
                     'valseguro' => $request->get('valseguro'),
                     'fec_inicial' => date("Y-m-d", strtotime(str_replace('/', '-', $request->get('fec_inicial'))) ),
                     'id_cobrador' => $request->get('id_cobrador'),
