@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
     $this->call('PstipodocidentiTableSeeder');
     $this->call('PsperiodopagoTableSeeder');
 		$this->call('PsformapagoTableSeeder');
-		$this->call('PstdocadjuntosTableSeeder');
+    $this->call('PstdocadjuntosTableSeeder');
+    $this->call('PstdocplantTableSeeder');
 
 
 

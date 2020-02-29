@@ -134,10 +134,10 @@ class PsformapagoController extends Controller
 
     }
 
-    public function consultaFormasPago(Request $request){
+    public function consultaFormasPago($nid_empresa){
         
 
-        $nitempresa = $request->get('nitempresa');
+       
 
                 $qry = "SELECT fp.id, 
                     fp.id_periodo_pago, 
@@ -156,7 +156,7 @@ class PsformapagoController extends Controller
                 WHERE fp.id_periodo_pago = pp.id
                 AND fp.nitempresa = :nitempresa";
 				$binds = array(
-						'nitempresa' => $nitempresa
+						'nitempresa' => $nid_empresa
 				);
 				$data = DB::select($qry,$binds);				
                return response()->json($data);
@@ -166,25 +166,41 @@ class PsformapagoController extends Controller
     public function consultaFormaPago($id){
         
 
+       
 
-                $qry = "SELECT fp.id, 
-                    fp.id_periodo_pago, 
-                    pp.nomperiodopago, 
-                    fp.valseguro,
-                    fp.porcint, 
-                    fp.ind_solicseguro, 
-                    fp.ind_solicporcint, 
-                    fp.ind_solivalorpres,
-                    fp.valorpres,
-                    nomfpago,
-                    nitempresa ,
-                    fp.numcuotas,
-                    fp.ind_solinumc
-                FROM psformapago fp, psperiodopago pp 
-                WHERE fp.id_periodo_pago = pp.id
-                AND fp.id = :id";
+        $qry = "SELECT fp.id, 
+            fp.id_periodo_pago, 
+            pp.nomperiodopago, 
+            fp.valseguro,
+            fp.porcint, 
+            fp.ind_solicseguro, 
+            fp.ind_solicporcint, 
+            fp.ind_solivalorpres,
+            fp.valorpres,
+            nomfpago,
+            nitempresa ,
+            fp.numcuotas,
+            fp.ind_solinumc
+        FROM psformapago fp, psperiodopago pp 
+        WHERE fp.id_periodo_pago = pp.id
+        AND fp.nitempresa = :id";
+        $binds = array(
+                'id' => $id
+        );
+        $data = DB::select($qry,$binds);				
+       return response()->json($data);
+
+}
+
+    public function consultaTipoDocPlantilla(Request $request){
+        
+
+            $nit_empresa = $request->get('nitempresa');
+                $qry = "SELECT *
+                FROM pstdocplant td
+                WHERE td.nitempresa = :nitempresa";
 				$binds = array(
-						'id' => $id
+						'nitempresa' => $nit_empresa
 				);
 				$data = DB::select($qry,$binds);				
                return response()->json($data);

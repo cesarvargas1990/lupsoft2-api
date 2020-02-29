@@ -1,16 +1,15 @@
 <?php
 
 namespace App;
- 
+
 
 use Illuminate\Database\Eloquent\Model;
 
-use Carbon\Carbon;
 
 //this is new
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Psclientes extends Model
+class Pstdocplant extends Model
 {
 
 
@@ -20,43 +19,25 @@ class Psclientes extends Model
      * @var array
      */
 
-
     protected $fillable = [
-	'nomcliente',
-	'codtipdocid',
-	'numdocumento',
-	'ciudad',
-	'telefijo',
-	'celular',
-	'direcasa',
-	'diretrabajo',
-	'ubicasa',
-	'ubictrabajo',
-	'nitempresa',
-	'ref1',
-	'ref2',
-	'id_cobrador',
-	'id_user',
-	'email',
-	'perfil_facebook',
-	'fch_expdocumento',
-	'fch_nacimiento'
-	
+        
+        'nombre',
+        'plantilla_html',
+        'nitempresa'
     ];
+  
 
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
+	 
+	 protected $table = 'pstdocplant';
+	 
     protected $hidden = [
 
-	];
-
-	//protected $dateFormat = 'd/m/Y';
-
-	
-
+    ];
 
 
 

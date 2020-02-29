@@ -6,7 +6,7 @@ use App\Psclientes;
 
 use Illuminate\Http\Request;
 
-
+ 
 use DB;
 
 class PsclientesController extends Controller
@@ -16,13 +16,44 @@ class PsclientesController extends Controller
         $this->middleware('auth');
     }
 
-    public function showAllPsclientes()
+    public function showAllPsclientes($nitempresa)
     {
 
 
         try {
+            $qry = "SELECT 
+                        id,
+                        nomcliente,
+                        codtipdocid,
+                        numdocumento,
+                        ciudad,
+                        telefijo,
+                        celular,
+                        direcasa,
+                        diretrabajo,
+                        ubicasa,
+                        ubictrabajo,
+                        nitempresa,
+                        ref1,
+                        ref2,
+                        id_cobrador,
+                        email,
+                        perfil_facebook,
+                        fch_expdocumento , 
+                        fch_nacimiento , 
+                        id_user,
+                        created_at,
+                        updated_at
+                    FROM psclientes
+                    WHERE nitempresa = :nitempresa";
 
-            return response()->json(Psclientes::all());
+            $binds = [
+                'nitempresa' => $nitempresa
+            ];
+            
+            $data = DB::select($qry,$binds);
+            //dd($data);
+            return response()->json($data);
 
 
         } catch (\Exception $e) {
@@ -41,7 +72,39 @@ class PsclientesController extends Controller
 
         try {
 
-            return response()->json(Psclientes::find($id));
+            $qry = "SELECT 
+                        id,
+                        nomcliente,
+                        codtipdocid,
+                        numdocumento,
+                        ciudad,
+                        telefijo,
+                        celular,
+                        direcasa,
+                        diretrabajo,
+                        ubicasa,
+                        ubictrabajo,
+                        nitempresa,
+                        ref1,
+                        ref2,
+                        id_cobrador,
+                        email,
+                        perfil_facebook,
+                        fch_expdocumento fch_expdocumento, 
+                        fch_nacimiento  fch_nacimiento, 
+                        id_user,
+                        created_at,
+                        updated_at
+                    FROM psclientes
+                    WHERE nitempresa = :nitempresa";
+
+            $binds = [
+                'id' => $id
+            ];
+            
+            $data = DB::select($qry,$binds);
+
+            return response()->json($data);
 
 
         } catch (\Exception $e) {
@@ -75,14 +138,27 @@ class PsclientesController extends Controller
         }
 		
 		
-	}
+	} 
 
     public function create(Request $request)
     {
 
-
+ 
         try {
 
+            if ($request->has('fch_expdocumento')) {
+                $fch_expdocumento = $request->get('fch_expdocumento');
+                $request->request->remove('fch_expdocumento');
+
+                
+                $request->request->add(['fch_expdocumento' => substr($fch_expdocumento,0,10) ]);
+            }
+ 
+            if ($request->has('fch_nacimiento')) {
+                $fch_nacimiento = $request->get('fch_nacimiento');
+                $request->request->remove('fch_nacimiento');
+                $request->request->add(['fch_nacimiento' => substr($fch_nacimiento,0,10)  ]);
+            }
             $data = Psclientes::create($request->all());
 
             return response()->json($data, 201);
@@ -99,6 +175,20 @@ class PsclientesController extends Controller
     public function update($id,Request $request)
     {
 
+
+        if ($request->has('fch_expdocumento')) {
+            $fch_expdocumento = $request->get('fch_expdocumento');
+            $request->request->remove('fch_expdocumento');
+
+            
+            $request->request->add(['fch_expdocumento' => substr($fch_expdocumento,0,10) ]);
+        }
+
+        if ($request->has('fch_nacimiento')) {
+            $fch_nacimiento = $request->get('fch_nacimiento');
+            $request->request->remove('fch_nacimiento');
+            $request->request->add(['fch_nacimiento' => substr($fch_nacimiento,0,10)  ]);
+        }
 
         try {
 

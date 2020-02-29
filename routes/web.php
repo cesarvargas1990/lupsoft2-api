@@ -33,9 +33,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('users', 'UserController@allUsers');
     $router->get('cobradores/{id}',  ['uses' => 'UserController@getUsers']);
 
-
+  
     // REST FULL SERVICES FOR TABLE => psclientes
-    $router->get('psclientes',  ['uses' => 'PsclientesController@showAllPsclientes']);
+    $router->post('psclientes/{nitempresa}',  ['uses' => 'PsclientesController@showAllPsclientes']);
     $router->get('psclientes/{id}', ['uses' => 'PsclientesController@showOnePsclientes']);
     $router->post('psclientes', ['uses' => 'PsclientesController@create']);
     $router->put('psclientes/{id}', ['uses' => 'PsclientesController@update']);
@@ -75,15 +75,27 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->put('pstdocadjuntos/{id}', ['uses' => 'PstdocadjuntosController@update']);
     $router->delete('pstdocadjuntos/{id}', ['uses' => 'PstdocadjuntosController@delete']);
     $router->get('listatdocadjuntos', ['uses' => 'PsperiodopagoController@ShowPstdocadjuntos']);
+
+
+    // REST FULL SERVICES FOR TABLE => pstdocplant
+    $router->get('pstdocplant',  ['uses' => 'PstdocplantController@showAllpstdocplant']);
+    $router->get('pstdocplant/{id}', ['uses' => 'PstdocplantController@ShowPstdocplant']);
+    $router->post('pstdocplant', ['uses' => 'PstdocplantController@create']);
+    $router->put('pstdocplant/{id}', ['uses' => 'PstdocplantController@update']);
+    $router->delete('pstdocplant/{id}', ['uses' => 'PstdocplantController@delete']);
+
    
 
     // COMPLEX QUERYS (selects of multiple tables, inner custom querys)
 
     $router->get('consultaFormaPago/{id}' , ['uses' => 'PsformapagoController@consultaFormaPago']);
-    $router->post('consultaFormasPago' , ['uses' => 'PsformapagoController@consultaFormasPago']);
+    $router->post('consultaFormasPago/{nitempresa}' , ['uses' => 'PsformapagoController@consultaFormasPago']);
+    $router->post('consultaTipoDocPlantilla' , ['uses' => 'PsformapagoController@consultaTipoDocPlantilla']);
     $router->post('calcularCuotas', ['uses' => 'CuotasController@calcularCuotas']);
     $router->post('calcularCuotas2', ['uses' => 'CuotasController@calcularCuotas2']);
     $router->post('listadoPrestamos' , ['uses' => 'PrestamosController@listadoPrestamos']  );
+    $router->post('prestamosCliente', ['uses' => 'PrestamosController@prestamosCliente']);
+    $router->post('renderTemplates', ['uses' => 'PrestamosController@getPlantillasDocumentosPrestamo']);
 
 
 
@@ -91,7 +103,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->post('test' , ['uses' => 'PrestamosController@guardarPrestamo']);
     $router->post('guardarPrestamo' , ['uses' => 'PrestamosController@guardarPrestamo']);
-
+    $router->get('generarVariablesPlantillas/{nit_empresa}' , ['uses' => 'PrestamosController@generarVariablesPlantillas']);
     $router->post('guardarArchivoAdjunto' , ['uses' => 'GuardarArchivoController@guardarArchivoAdjunto']);
 
 

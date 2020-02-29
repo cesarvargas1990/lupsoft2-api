@@ -90,10 +90,21 @@ class PsmenuTableSeeder extends Seeder
 		
 				
 				DB::table('psmenu')->insert([
-					'orden' => '3',
+					'orden' => '1',
 					'nombre' => 'Formas de pago',
 					'ruta' => 'parametros/formaspago',
 					'icono' => 'playlist_add',
+					'id_perfil' => 1,
+					'id_mpadre' => 7,
+					'ind_activo' => 1,
+					'nitempresa' => 1
+				]);
+
+				DB::table('psmenu')->insert([
+					'orden' => '2',
+					'nombre' => 'Documentos',
+					'ruta' => 'parametros/documentos',
+					'icono' => 'file_copy',
 					'id_perfil' => 1,
 					'id_mpadre' => 7,
 					'ind_activo' => 1,

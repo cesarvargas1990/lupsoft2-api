@@ -29,7 +29,9 @@ class PsclientesTableSeeder extends Seeder
 			'ref2' => 'Nombre de alguna ref personal 2',
 			'id_cobrador' =>  1,
 			'id_user' => 1,
-			'email' => 'usuarioprueba@gmail.com'
+			'email' => 'usuarioprueba@gmail.com',
+			'fch_nacimiento' => '1990-02-20',
+			'fch_expdocumento' => '2008-03-01'
         ]);
 		
 
