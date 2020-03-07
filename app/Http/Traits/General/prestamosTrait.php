@@ -4,7 +4,7 @@
 namespace App\Http\Traits\General;
 
 use DB;
-
+use App\Psquerytabla;
 
 trait prestamosTrait
 {
@@ -63,9 +63,11 @@ trait prestamosTrait
     {
         $qry = "
         SELECT 
+        date_format (CURDATE(),'%d/%m/%Y') fecha_actual,
+        date_format (CURRENT_TIME(), '%H:%i:%s %p') hora_actua,
+        pre.id id_prestamo,
         pre.*,
         cli.*,
-        fp.*,
         em.*,
         ide.*,
         pp.*
@@ -133,16 +135,76 @@ trait prestamosTrait
         $id_prestamo = $request->get('id_prestamo');
         $nit_empresa = $request->get('nitempresa');
         $variables = $this->consultaVariablesPrestamo($nit_empresa, $id_prestamo)[0];
-        //dd($variables);
+
         $array = json_decode(json_encode($variables), true);
         $data = $this->getPlantillasDocumentos($request);
         $html_templates = [];
         if (count($data) > 0) {
             $renderTemplate = '';
-  
+
             foreach ($data as $documento) {
 
                 $renderTemplate = $this->replaceVariablesInTemplate($documento->plantilla_html, $array) . '<br>';
+
+
+                $start_tag = '<!--QRT';
+                $end_tag = 'QRT-->';
+
+
+                if (preg_match_all('/' . preg_quote($start_tag) . '(.*?)' . preg_quote($end_tag) . '/s', $renderTemplate, $matches)) {
+
+                    $matches = ($matches[1]);
+
+                    $nitempresa = $nit_empresa;
+                    $str2 = '';
+                    foreach ($matches as $value) {
+
+                        $qt = $value[0];
+                        $str = ltrim($value, $qt);
+
+                        if ((preg_match_all('/' . preg_quote('[') . '(.*?)' . preg_quote(']') . '/s', $str, $matchesv))) {
+
+                            $qt = Psquerytabla::where('codigo', $qt)->where('nitempresa', $nitempresa)->first()->sql;
+
+
+                            $vars = $this->consultaVariablesPrestamo($nit_empresa, $id_prestamo)[0];
+
+                            $array = json_decode(json_encode($vars), true);
+
+                            $qt = $this->replaceVariablesInTemplate($qt,$array);
+                            
+                            $query =  DB::select($qt);
+                            $variables = $matchesv[1];
+
+
+
+                            foreach ($query as $val1) {
+
+
+                                $cadenaReemplazada = '';
+                                $cadenaSubstituir = $str;
+                                foreach ($variables as $key => $val2) {
+
+
+                                    $valorAsubstituir = $val1->{$val2};
+
+                                    $queSeVaASubstituir = '[' . $val2 . ']';
+                                    $cadenaSubstituir = str_replace($queSeVaASubstituir, (string) $valorAsubstituir, $cadenaSubstituir);
+                                }
+
+
+                                $str2 .= $cadenaSubstituir;
+                            }
+                        }
+
+
+                        $renderTemplate = str_replace($matches[0], $str2, $renderTemplate);
+                        $renderTemplate = str_replace('<!--QRT', '',  $renderTemplate);
+                        $renderTemplate = str_replace('QRT-->', '',  $renderTemplate);
+                    }
+                }
+
+
 
                 $html_templates[] = array(
                     'id' => $documento->id,
@@ -155,6 +217,8 @@ trait prestamosTrait
 
         return $html_templates;
     }
+
+
 
     public function getPlantillasDocumentos($request)
     {

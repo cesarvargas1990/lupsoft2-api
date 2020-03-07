@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 //this is new
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Pspagos extends Model
+class Psfechaspago extends Model
 {
 
 
@@ -19,11 +19,7 @@ class Pspagos extends Model
      * @var array
      */
 
-    protected $fillable = [
-        
-        'fecha_pago',
-        
-    ];
+    
   
 
     /**
@@ -32,7 +28,7 @@ class Pspagos extends Model
      * @var array
      */
 	 
-	 protected $table = 'pspagos';
+	 protected $table = 'psfechaspago';
 	 
     protected $hidden = [
 

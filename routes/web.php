@@ -11,10 +11,21 @@
 |
 */
 
-$router->get('/', function () use ($router) {
+
+use Illuminate\Http\Request;
+$router->get('/', function (Request $request) use ($router) {
+
+    
     return $router->app->version();
 });
 
+
+$router->group(['prefix' => 'prueba'], function () use ($router) {
+    
+    $router->get('/prueba',  ['uses' => 'PruebaController@prueba']);
+
+    return $router->app->version();
+});
 
 // API route group
 $router->group(['prefix' => 'api'], function () use ($router) {
@@ -84,7 +95,31 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->put('pstdocplant/{id}', ['uses' => 'PstdocplantController@update']);
     $router->delete('pstdocplant/{id}', ['uses' => 'PstdocplantController@delete']);
 
-   
+ 
+    // REST FULL SERVICES FOR TABLE => pspagos
+    $router->get('pspagos',  ['uses' => 'PspagosController@showAllPspagos']);
+    $router->post('pspagos', ['uses' => 'PspagosController@create']);
+    $router->put('pspagos/{id}', ['uses' => 'PspagosController@update']);
+    $router->delete('pspagos/{id}', ['uses' => 'PspagosController@delete']);
+
+
+    // REST FULL SERVICES FOR TABLE => psfechaspago
+    $router->get('psfechaspago/{id_prestamo}',  ['uses' => 'PsfechaspagoController@showAllPsfechaspago']);
+    $router->post('psfechaspago', ['uses' => 'PsfechaspagoController@create']);
+    $router->put('psfechaspago/{id}', ['uses' => 'PsfechaspagoController@update']);
+    $router->delete('psfechaspago/{id}', ['uses' => 'PsfechaspagoController@delete']);
+
+
+    // REST FULL SERVICES FOR TABLE => psdocadjuntos
+
+
+    $router->get('psdocadjuntos',  ['uses' => 'PsdocadjuntosController@showAllPstdocadjuntos']);
+    $router->get('psdocadjuntos/{id}', ['uses' => 'PsdocadjuntosController@showOnePsdocadjuntos']);
+    $router->post('psdocadjuntos', ['uses' => 'PsdocadjuntosController@create']);
+    $router->put('psdocadjuntos/{id}', ['uses' => 'PsdocadjuntosController@update']);
+    $router->delete('psdocadjuntos/{id}', ['uses' => 'PsdocadjuntosController@delete']);
+
+
 
     // COMPLEX QUERYS (selects of multiple tables, inner custom querys)
 
@@ -105,8 +140,13 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('guardarPrestamo' , ['uses' => 'PrestamosController@guardarPrestamo']);
     $router->get('generarVariablesPlantillas/{nit_empresa}' , ['uses' => 'PrestamosController@generarVariablesPlantillas']);
     $router->post('guardarArchivoAdjunto' , ['uses' => 'GuardarArchivoController@guardarArchivoAdjunto']);
+    $router->put('editarArchivoAdjunto' , ['uses' => 'GuardarArchivoController@editarArchivoAdjunto']);
+    $router->get('prueba',  ['uses' => 'PruebaController@prueba']);
 
 
- 
+
+
+    
+
 
 });

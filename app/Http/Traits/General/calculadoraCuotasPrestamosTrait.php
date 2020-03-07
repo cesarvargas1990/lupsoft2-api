@@ -37,33 +37,11 @@ trait calculadoraCuotasPrestamosTrait
 
         $tabla = [];
 
-        for ($x = 2; $x <= $numcuotas; $x++) {
-            switch ($id_forma_pago) {
-                case 1:
-                    $fechas[$x] = $date->add(new \DateInterval('P1D'))->format('Y-m-d');
-                    break;
-                case 2:
-                    $fechas[$x] = $date->add(new \DateInterval('P7D'))->format('Y-m-d');
-                    break;
-                case 3:
-                    $fechas[$x] = $date->add(new \DateInterval('P15D'))->format('Y-m-d');
-                    break;
-                case 4:
-                    $fechas[$x] = $date->add(new \DateInterval('P1M'))->format('Y-m-d');
-                    break;
-                case 5:
-                    $fechas[$x] = $date->add(new \DateInterval('P1Y'))->format('Y-m-d');
-                    break;
-                default:
-                    break;
-            }
-        }
-
-
+       
 
 
         for ($x = 1; $x <= $numcuotas; $x++) {
-
+            $fechas[$x] = $this->adicionarFechas($date,$id_forma_pago);
             $int = round($capital[$x - 1 ] * $tem);
             $amort = $valorCuota - $int;
             $capital[$x] = $capital[$x - 1 ] - $amort;
@@ -135,6 +113,28 @@ trait calculadoraCuotasPrestamosTrait
         $mesesN=array(1=>"Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio",
             "Agosto","Septiembre","Octubre","Noviembre","Diciembre");
         return $diassemanaN[$diasemana].", $dia de ". $mesesN[$mes] ." de $ano";
+    }
+
+    function adicionarFechas ($date,$id_forma_pago) {
+        switch ($id_forma_pago) {
+            case 1:
+                return $date->add(new \DateInterval('P1D'))->format('Y-m-d');
+                break;
+            case 2:
+                return $date->add(new \DateInterval('P7D'))->format('Y-m-d');
+                break;
+            case 3:
+                return $date->add(new \DateInterval('P15D'))->format('Y-m-d');
+                break;
+            case 4:
+                return $date->add(new \DateInterval('P1M'))->format('Y-m-d');
+                break;
+            case 5:
+                return $date->add(new \DateInterval('P1Y'))->format('Y-m-d');
+                break;
+            default:
+                break;
+        }
     }
 
 
