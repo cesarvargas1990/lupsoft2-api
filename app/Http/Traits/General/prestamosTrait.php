@@ -70,7 +70,8 @@ trait prestamosTrait
         cli.*,
         em.*,
         ide.*,
-        pp.*
+        pp.*,
+        fp.nomfpago
         FROM 
         psprestamos pre ,
         psclientes cli, 

@@ -176,13 +176,26 @@ class PrestamosController extends Controller
 
         }
     }
-
+ 
     public function prueba (Request $request) {
         $request->request->add(['nit_empresa' => 1]);
         $request->request->add(['id_prestamo' => 1]);
         //$obj = new prestamosTrait();
         $value = $this->renderTemplate( $request);
         dd($value);
+    }
+
+    public function eliminarPrestamo ($id_prestamo) {
+
+        if ($id_prestamo != "") {
+            
+            DB::table('psprestamos')->where('id' ,'=',$id_prestamo)->delete();
+            DB::table('psfechaspago')->where('id_prestamo' ,'=',$id_prestamo)->delete();
+            DB::table('pspagos')->where('id_prestamo' ,'=',$id_prestamo)->delete();
+        }
+        
+        
+        
     }
 
 }

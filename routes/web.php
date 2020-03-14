@@ -142,6 +142,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('guardarArchivoAdjunto' , ['uses' => 'GuardarArchivoController@guardarArchivoAdjunto']);
     $router->put('editarArchivoAdjunto' , ['uses' => 'GuardarArchivoController@editarArchivoAdjunto']);
     $router->get('prueba',  ['uses' => 'PruebaController@prueba']);
+    $router->delete('eliminarPrestamo/{id_prestamo}' , ['uses' => 'PrestamosController@eliminarPrestamo']);
 
 
 
