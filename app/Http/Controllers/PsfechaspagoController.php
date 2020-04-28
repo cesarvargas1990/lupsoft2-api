@@ -30,6 +30,8 @@ class PsfechaspagoController extends Controller
             pres.id id_prestamo, 
             date_format(fp.fecha_pago,'%d/%m/%Y') fecha_pago , 
             format(pres.valcuota,2) valcuota,
+            format(pres.valseguro,2) valseguro,
+            format(pres.valcuota + pres.valseguro, 2) valtotal,
             (select p.id_fecha_pago from pspagos p where p.id_fecha_pago = fp.id  ) id_fecha_pago
                       from psfechaspago fp, psprestamos  pres
                where fp.id_prestamo = pres.id 

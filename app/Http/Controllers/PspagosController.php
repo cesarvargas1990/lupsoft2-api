@@ -66,7 +66,11 @@ class PspagosController extends Controller
 
             if ($request->has('fecha_pago')) {
 
-                $valorCuota = Psprestamos::find($request->get('id_prestamo'))->valcuota;
+                $valorCuota = Psprestamos::find($request->get('id_prestamo'))->valcuota + Psprestamos::find($request->get('id_prestamo'))->valseguro;
+
+                if ($valorCuota != "" && $valorCuota <> 0) {
+
+                    
                 
                 $fecha_pago = $request->get('fecha_pago');
                 $request->request->remove('fecha_pago');
@@ -75,7 +79,7 @@ class PspagosController extends Controller
                 $now = new \DateTime();
                   
 
-                DB::table('pspagos')->insert(
+                $data = DB::table('pspagos')->insert(
                     [
                         'fecha_pago' => $date->format('Y-m-d'),
                         'id_cliente' => $request->get('id_cliente'),
@@ -87,10 +91,14 @@ class PspagosController extends Controller
                         'valcuota' => $valorCuota
                     ]
                 );
+
+                }
+
+                
                
             }
 
-            $data = Pspagos::create($request->all());
+            //$data = Pspagos::create($request->all());
 
             return response()->json($data, 201);
 

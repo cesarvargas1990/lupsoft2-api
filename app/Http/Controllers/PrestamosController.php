@@ -72,9 +72,6 @@ class PrestamosController extends Controller
         }
 
 
-     
-        //dd($data);
-        //return $data;
 
     }
 
@@ -106,17 +103,20 @@ class PrestamosController extends Controller
             'nit_empresa' => $nit_empresa
         ];
         $data = DB::select($qry,$binds);
-
-        $array = json_decode(json_encode($data[0]), true);
-        $data = [];
-        foreach (array_keys($array) as $key=>$value) {
-                $data[] = [
-                    'title' => $value,
-                    'content' => '{'.$value.'}'
-                ];
+        if (count($data)> 0) {
+            $array = json_decode(json_encode($data[0]), true);
+            $data = [];
+            foreach (array_keys($array) as $key=>$value) {
+                    $data[] = [
+                        'title' => $value,
+                        'content' => '{'.$value.'}'
+                    ];
+            }
+            return $data;
+        } else {
+            return null;
         }
-        //dd($array);
-        return $data;
+        
 
     }
 
