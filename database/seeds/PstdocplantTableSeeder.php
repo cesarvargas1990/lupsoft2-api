@@ -21,6 +21,7 @@ class PstdocplantTableSeeder extends Seeder
             'nombre' => 'Contrato compraventa',
             'plantilla_html' => '',
             'nitempresa' => 1,
+			'idtipaccionsist' => 2
 
         ]);
 		
@@ -30,6 +31,7 @@ class PstdocplantTableSeeder extends Seeder
             'nombre' => 'Anexo #1 (Credito)',
             'plantilla_html' => '',
             'nitempresa' => 1,
+			'idtipaccionsist' => 2
 
         ]);
 		
@@ -39,6 +41,7 @@ class PstdocplantTableSeeder extends Seeder
             'nombre' => 'Anexo #2 (Detalles Producto)',
             'plantilla_html' => '',
             'nitempresa' => 1,
+			'idtipaccionsist' => 2
 
 
         ]);
@@ -48,6 +51,7 @@ class PstdocplantTableSeeder extends Seeder
             'nombre' => 'Anexo #3 (Informacion)',
             'plantilla_html' => '',
             'nitempresa' => 1,
+			'idtipaccionsist' => 2
 
 
         ]);
@@ -57,6 +61,7 @@ class PstdocplantTableSeeder extends Seeder
             'nombre' => 'Pagare',
             'plantilla_html' => '',
             'nitempresa' => 1,
+			'idtipaccionsist' => 2
 
 
         ]);

@@ -25,6 +25,8 @@ class CreatePspagosTable extends Migration
             $table->integer('id_usureg')->nullable();
             $table->integer('id_fecha_pago')->nullable();
             $table->string('nitempresa',30)->nullable();
+            $table->integer('ind_estado');
+			$table->integer('ind_abonocapital');
             $table->timestamps();
         });
     }

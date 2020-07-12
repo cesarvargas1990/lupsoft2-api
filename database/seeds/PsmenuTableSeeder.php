@@ -110,6 +110,17 @@ class PsmenuTableSeeder extends Seeder
 					'ind_activo' => 1,
 					'nitempresa' => 1
 				]);
+				
+				DB::table('psmenu')->insert([
+					'orden' => '3',
+					'nombre' => 'Empresa',
+					'ruta' => 'parametros/empresa',
+					'icono' => 'business',
+					'id_perfil' => 1,
+					'id_mpadre' => 7,
+					'ind_activo' => 1,
+					'nitempresa' => 1
+				]);
 
 		
     }

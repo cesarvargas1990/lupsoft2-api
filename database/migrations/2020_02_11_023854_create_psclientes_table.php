@@ -35,7 +35,8 @@ class CreatePsclientesTable extends Migration
             $table->string('perfil_facebook',1000)->nullable();
             $table->date('fch_expdocumento')->nullable();
             $table->date('fch_nacimiento')->nullable();
-			$table->integer('id_user');
+            $table->integer('id_user');
+            $table->integer('ind_estado');
 			$table->timestamps();
         });
     }

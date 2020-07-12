@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Traits\General\menuPrincipalTrait;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Routing\Controller as BaseController;
-
+use App\Psempresa;
 class Controller extends BaseController
 {
 
@@ -12,7 +12,7 @@ class Controller extends BaseController
     protected function respondWithToken($token)
     {
 
-
+		$empresa = Psempresa::where('nitempresa',Auth::user()->nitempresa);
         return response()->json([
             'id' => Auth::user()->id,
             'name' => Auth::user()->name,
@@ -25,7 +25,9 @@ class Controller extends BaseController
             'expires_in' => Auth::factory()->getTTL() * 60,
             'time'=> time(),
             'is_admin' => Auth::user()->is_admin,
-            'nit_empresa' => Auth::user()->nitempresa
+            'nit_empresa' => Auth::user()->nitempresa,
+            'id_empresa' => $empresa->first()->id,
+			'nom_conc_adicional' => $empresa->first()->nom_conc_adicional
         ], 200);
     }
 }

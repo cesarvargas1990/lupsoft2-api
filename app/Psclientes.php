@@ -40,8 +40,8 @@ class Psclientes extends Model
 	'email',
 	'perfil_facebook',
 	'fch_expdocumento',
-	'fch_nacimiento'
-	
+	'fch_nacimiento',
+	'ind_estado'
     ];
 
     /**

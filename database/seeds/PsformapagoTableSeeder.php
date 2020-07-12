@@ -25,7 +25,8 @@ class PsformapagoTableSeeder extends Seeder
             'valseguro' => 0,
             'porcint' => 10,
             'numcuotas'=>20,
-            'ind_solinumc' => 1
+            'ind_solinumc' => 1,
+			'codtipsistemap' => 1
 
         ]);
 		
@@ -40,7 +41,8 @@ class PsformapagoTableSeeder extends Seeder
             'valseguro' => 0,
             'porcint' => 10,
             'numcuotas'=>15,
-            'ind_solinumc' => 1
+            'ind_solinumc' => 1,
+			'codtipsistemap' => 1
 
         ]);
 		
@@ -55,7 +57,8 @@ class PsformapagoTableSeeder extends Seeder
             'valseguro' => 0,
             'porcint' => 10,
             'numcuotas'=>2,
-            'ind_solinumc' => 0
+            'ind_solinumc' => 0,
+			'codtipsistemap' => 1
 
         ]);
 		
@@ -70,7 +73,8 @@ class PsformapagoTableSeeder extends Seeder
             'valseguro' => 0,
             'porcint' => 10,
             'numcuotas'=>12,
-            'ind_solinumc' => 1
+            'ind_solinumc' => 1,
+			'codtipsistemap' => 1
 
         ]);
 		
@@ -84,7 +88,8 @@ class PsformapagoTableSeeder extends Seeder
             'valseguro' => 0,
             'porcint' => 10,
             'numcuotas'=>2,
-            'ind_solinumc' => 0
+            'ind_solinumc' => 0,
+			'codtipsistemap' => 1
 
 
         ]);

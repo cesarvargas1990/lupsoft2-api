@@ -5,6 +5,7 @@ namespace App\Http\Traits\General;
 
 use DB;
 use App\Psquerytabla;
+use App\Psformapago;
 
 trait prestamosTrait
 {
@@ -24,12 +25,19 @@ trait prestamosTrait
 
         $now->getTimestamp();
 
+
+        $formaPago = Psformapago::find( $request->get('id_forma_pago'));
+        $sistemaPrestamo = $formaPago->codtipsistemap;
+
+        
+
         $id_prestamo = DB::table('psprestamos')->insertGetId(
             [
                 'nitempresa' => $request->get('nitempresa'),
                 'id_cliente' => $request->get('id_cliente'),
                 'valorpres' => $request->get('valorpres'),
                 'numcuotas' => $request->get('numcuotas'),
+                'codtipsistemap' => $sistemaPrestamo,
                 'valcuota' => $valor_cuota,
                 'porcint' => $request->get('porcint'),
                 'id_forma_pago' => $request->get('id_forma_pago'),
@@ -38,7 +46,8 @@ trait prestamosTrait
                 'id_cobrador' => $request->get('id_cobrador'),
                 'nitempresa' => $request->get('nitempresa'),
                 'id_usureg' => $request->get('id_usureg'),
-                'created_at' => $now
+                'created_at' => $now,
+                'ind_estado' => 1
             ]
         );
 
@@ -48,7 +57,13 @@ trait prestamosTrait
                 [
                     'id_prestamo' => $id_prestamo,
                     'fecha_pago' => $fechas['fecha'],
-                    'created_at' => $now
+                    'valor_cuota' => $fechas['interes'],
+                    'valor_seguro' => $fechas['c_seguro'],
+                    'valor_pagar' => $fechas['t_pagomes'],
+                    'ind_renovar' => $fechas['ind_renovar'],
+                    'created_at' => $now,
+                    'ind_estado' => 1,
+                    'id_cliente' => $request->get('id_cliente'),
                 ]
             );
         }
@@ -84,6 +99,7 @@ trait prestamosTrait
         AND pre.id_cliente = cli.id
         AND em.nitempresa = pre.nitempresa
         AND  cli.codtipdocid = ide.id
+        AND pre.ind_estado = 1
         AND fp.id_periodo_pago = pp.id";
 
         return $qry;
@@ -233,5 +249,113 @@ trait prestamosTrait
         $data = DB::select($qry, $binds);
 
         return $data;
+    }
+  
+
+    public function getCapitalPrestado ($nitempresa) {  
+        $qry =  "select sum(valorpres) valorpres from psprestamos WHERE nitempresa = :nit_empresa and ind_estado = 1"; 
+       $binds = array(  
+           'nit_empresa'=>  $nitempresa
+       );
+        $data = DB::select($qry,$binds);
+        
+        return $data[0]->valorpres; 
+    }
+    public function getCapitalInicial ($nitempresa) {
+        $qry =  "SELECT vlr_capinicial FROM psempresa WHERE nitempresa = :nit_empresa";
+       $binds = array(
+           'nit_empresa'=>  $nitempresa
+       );
+        $data = DB::select($qry,$binds);
+        
+        return $data[0]->vlr_capinicial; 
+    }
+    public function getTotalCapital ($nit_empresa) {
+        
+        $capitalinicial = $this->getCapitalInicial($nit_empresa);
+        $capitalPrestado = $this->getCapitalPrestado($nit_empresa);
+        return $capitalinicial - $capitalPrestado;
+        
+    }  
+
+    public function getTotalPrestadoHoy ($request) {
+
+
+        $nitempresa = $request->get('nitempresa');
+        $fecha = $request->get('fecha');
+        $fecIni = strtotime($fecha.' 00:00:00'); 
+        $fecFin = strtotime($fecha.' 23:59:59'); 
+        
+
+         $qry =  "select sum(valorpres) valorpres from psprestamos 
+         WHERE nitempresa = :nit_empresa
+         and UNIX_TIMESTAMP(created_at) >= :fec_ini
+         and UNIX_TIMESTAMP(created_at) <= :fec_fin
+         and ind_estado = 1
+         "; 
+        $binds = array(
+            'nit_empresa'=>  $nitempresa,
+            'fec_ini' => $fecIni,
+            'fec_fin' => $fecFin
+        );
+         $data = DB::select($qry,$binds);
+         
+         return $data[0]->valorpres; 
+
+    }
+
+
+
+
+    public function getTotalintereseshoy ($request) {
+
+        $nitempresa = $request->get('nitempresa');
+        $fecha = $request->get('fecha');
+        $fecIni = strtotime($fecha.' 00:00:00'); 
+        $fecFin = strtotime($fecha.' 23:59:59'); 
+        
+         $qry =  "select sum(valcuota) totalintereseshoy from pspagos 
+         WHERE nitempresa = :nit_empresa
+         and UNIX_TIMESTAMP(fecha_realpago) >= :fec_ini
+         and UNIX_TIMESTAMP(fecha_realpago) <= :fec_fin
+         and ind_estado = 1
+         "; 
+        $binds = array(
+            'nit_empresa'=>  $nitempresa,
+            'fec_ini' => $fecIni,
+            'fec_fin' => $fecFin 
+        );
+        
+         $data = DB::select($qry,$binds);
+         
+         return $data[0]->totalintereseshoy; 
+
+    }
+
+    public function getTotalintereses ($request) {
+
+        $nitempresa = $request->get('nitempresa');
+        
+        
+         $qry =  "select sum(valcuota) totalintereses from pspagos 
+         WHERE nitempresa = :nit_empresa and ind_estado = 1"; 
+        $binds = array(
+            'nit_empresa'=>  $nitempresa
+        
+        );
+        
+         $data = DB::select($qry,$binds);
+         
+         return $data[0]->totalintereses; 
+
+    }
+
+
+    public function totalPrestadoHoy ($nit_empresa) {
+        
+        $capitalinicial = $this->getCapitalInicial($nit_empresa);
+        $capitalPrestado = $this->getCapitalPrestado($nit_empresa);
+        return $capitalinicial + $capitalPrestado;
+        
     }
 }

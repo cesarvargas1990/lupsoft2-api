@@ -32,6 +32,6 @@ class CreatePsusperfilTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('psusuperfil');
+        Schema::dropIfExists('psusperfil');
     }
 }

@@ -121,6 +121,23 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
 
 
+     // REST FULL SERVICES FOR TABLE => PspstiposistemaprestController
+     $router->get('pstiposistemaprest',  ['uses' => 'PspstiposistemaprestController@showAll']);
+     $router->get('pstiposistemaprest/{id}', ['uses' => 'PspstiposistemaprestController@Show']);
+     $router->post('pstiposistemaprest', ['uses' => 'PspstiposistemaprestController@create']);
+     $router->put('pstiposistemaprest/{id}', ['uses' => 'PspstiposistemaprestController@update']);
+     $router->delete('pstiposistemaprest/{id}', ['uses' => 'PspstiposistemaprestController@delete']);
+     $router->get('listatiposistemaprest/', ['uses' => 'PspstiposistemaprestController@list']); // combo listas
+
+
+	 
+	  
+	 // REST FULL SERVICES FOR TABLE => psempresa
+    
+    $router->get('psempresa/{id}', ['uses' => 'PsempresaController@showOnePsempresa']);
+    $router->put('psempresa/{id}', ['uses' => 'PsempresaController@update']);
+	
+
     // COMPLEX QUERYS (selects of multiple tables, inner custom querys)
 
     $router->get('consultaFormaPago/{id}' , ['uses' => 'PsformapagoController@consultaFormaPago']);
@@ -132,8 +149,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('prestamosCliente', ['uses' => 'PrestamosController@prestamosCliente']);
     $router->post('renderTemplates', ['uses' => 'PrestamosController@getPlantillasDocumentosPrestamo']);
 
-
-
+ 
+ 
     // COMPLEX PROCESS (procedures, multiples insert into table, bussiness logic etc.)
 
     $router->post('test' , ['uses' => 'PrestamosController@guardarPrestamo']);
@@ -143,7 +160,11 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->put('editarArchivoAdjunto' , ['uses' => 'GuardarArchivoController@editarArchivoAdjunto']);
     $router->get('prueba',  ['uses' => 'PruebaController@prueba']);
     $router->delete('eliminarPrestamo/{id_prestamo}' , ['uses' => 'PrestamosController@eliminarPrestamo']);
-
+    $router->get('capitalprestado/{nit_empresa}',['uses'=>'PrestamosController@totalcapital']);
+    $router->post('totalprestadohoy',['uses'=>'PrestamosController@totalprestadohoy']);
+    $router->post('totalintereshoy',['uses'=>'PrestamosController@totalintereshoy']);
+    $router->post('totalinteres',['uses'=>'PrestamosController@totalinteres']);
+    $router->get('totalprestado/{nit_empresa}',['uses'=>'PrestamosController@totalprestado']);
 
 
 

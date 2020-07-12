@@ -6,10 +6,13 @@ use App\Psformapago;
 
 use Illuminate\Http\Request;
 
+
 use DB;
 
 class PsformapagoController extends Controller
 {
+
+    
     public function __construct()
     {
         $this->middleware('auth');
@@ -183,7 +186,7 @@ class PsformapagoController extends Controller
             fp.ind_solinumc
         FROM psformapago fp, psperiodopago pp 
         WHERE fp.id_periodo_pago = pp.id
-        AND fp.nitempresa = :id";
+        AND fp.id = :id";
         $binds = array(
                 'id' => $id
         );

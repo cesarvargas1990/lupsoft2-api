@@ -36,7 +36,8 @@ class Psformapago extends Model
         'nitempresa',
         'numcuotas',
         'ind_solinumc',
-        'valorpres'
+        'valorpres',
+        'codtipsistemap'
         ];
 
     /**

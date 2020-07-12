@@ -31,7 +31,8 @@ class PsclientesTableSeeder extends Seeder
 			'id_user' => 1,
 			'email' => 'usuarioprueba@gmail.com',
 			'fch_nacimiento' => '1990-02-20',
-			'fch_expdocumento' => '2008-03-01'
+			'fch_expdocumento' => '2008-03-01',
+			'ind_estado' => 1
         ]);
 		
 

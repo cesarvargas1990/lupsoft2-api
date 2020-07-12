@@ -17,6 +17,8 @@ class CreatePstdocadjuntosTable extends Migration
             $table->increments('id');
 			$table->string('nombre',100)->nullable();
 			$table->string('nitempresa',30);
+			$table->integer('idtipaccionsist')->nullable();
+			
             $table->timestamps();
         });
     }

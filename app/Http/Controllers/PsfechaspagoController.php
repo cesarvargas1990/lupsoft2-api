@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\General\calculadoraCuotasPrestamosTrait;
 use App\Psfechaspago;
 
 
@@ -9,8 +10,10 @@ use Illuminate\Http\Request;
 
 use DB;
 
+
 class PsfechaspagoController extends Controller
 {
+    use calculadoraCuotasPrestamosTrait;
     public function __construct()
     { 
         $this->middleware('auth');
@@ -28,11 +31,12 @@ class PsfechaspagoController extends Controller
             fp.id,
             pres.id_cliente, 
             pres.id id_prestamo, 
-            date_format(fp.fecha_pago,'%d/%m/%Y') fecha_pago , 
-            format(pres.valcuota,2) valcuota,
-            format(pres.valseguro,2) valseguro,
-            format(pres.valcuota + pres.valseguro, 2) valtotal,
-            (select p.id_fecha_pago from pspagos p where p.id_fecha_pago = fp.id  ) id_fecha_pago
+            fecha_pago , 
+            format(fp.valor_cuota,2) valcuota,
+            format(fp.valor_seguro,2) valseguro,
+            format(fp.valor_pagar, 2) valtotal,
+            (select p.id_fecha_pago from pspagos p where p.id_fecha_pago = fp.id and ind_abonocapital = 0 ) id_fecha_pago,
+            (select p.fecha_realpago from pspagos p where p.id_fecha_pago = fp.id  and ind_abonocapital = 0) fecha_realpago
                       from psfechaspago fp, psprestamos  pres
                where fp.id_prestamo = pres.id 
                
@@ -41,7 +45,16 @@ class PsfechaspagoController extends Controller
                 'id_prestamo' => $id_prestamo
             ];
             $data = DB::select($qry,$binds);
-
+            foreach($data as $key => $value) {
+                //dd($value->fecha_pago);
+                $data[$key]->fecha_pago = $this->SpanishDate(strtotime($value->fecha_pago) ); 
+                if ($value->fecha_realpago != "") {
+                    $data[$key]->fecha_realpago = $this->SpanishDate(strtotime($value->fecha_realpago) ); 
+                } else {
+                    $data[$key]->fecha_realpago = 'Pendiente de pago'; 
+                }
+                
+            }
             return response()->json($data);
 
 

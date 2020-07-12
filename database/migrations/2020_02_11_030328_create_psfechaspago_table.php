@@ -16,7 +16,13 @@ class CreatePsfechaspagoTable extends Migration
         Schema::create('psfechaspago', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('id_prestamo');
+			$table->double('valor_cuota',13,2);
+			$table->double('valor_seguro',13,2);
+			$table->double('valor_pagar',13,2);
             $table->date('fecha_pago');
+            $table->integer('ind_renovar');
+            $table->integer('ind_estado');
+            $table->integer('id_cliente');
             $table->timestamps();
         });
     }

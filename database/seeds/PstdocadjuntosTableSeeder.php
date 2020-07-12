@@ -20,6 +20,7 @@ class PstdocadjuntosTableSeeder extends Seeder
            
 			'nombre' => 'Cedula ciudadania',
             'nitempresa' => 1,
+			'idtipaccionsist' => 1
             
         ]);
 
@@ -28,6 +29,7 @@ class PstdocadjuntosTableSeeder extends Seeder
            
 			'nombre' => 'Foto',
             'nitempresa' => 1,
+			'idtipaccionsist' => 1
             
         ]);
 		

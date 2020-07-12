@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Psclientes;
-
+use App\Psfechaspago;
+use App\Pspagos;
+use App\Psprestamos;
 use Illuminate\Http\Request;
 
  
@@ -45,7 +47,7 @@ class PsclientesController extends Controller
                         created_at,
                         updated_at
                     FROM psclientes
-                    WHERE nitempresa = :nitempresa";
+                    WHERE nitempresa = :nitempresa and ind_estado = 1";
 
             $binds = [
                 'nitempresa' => $nitempresa
@@ -122,7 +124,7 @@ class PsclientesController extends Controller
 			try {
 
 
-				$qry = "select id as value, nomcliente as label from psclientes where nitempresa = :nitempresa";
+				$qry = "select id as value, nomcliente as label from psclientes where nitempresa = :nitempresa and ind_estado = 1";
 				$binds = array(
 						'nitempresa' => $nitempresa
 				);
@@ -157,8 +159,10 @@ class PsclientesController extends Controller
             if ($request->has('fch_nacimiento')) {
                 $fch_nacimiento = $request->get('fch_nacimiento');
                 $request->request->remove('fch_nacimiento');
+                
                 $request->request->add(['fch_nacimiento' => substr($fch_nacimiento,0,10)  ]);
             }
+            $request->request->add(['ind_estado'=> 1] );
             $data = Psclientes::create($request->all());
 
             return response()->json($data, 201);
@@ -213,7 +217,10 @@ class PsclientesController extends Controller
 
         try {
 
-            Psclientes::findOrFail($id)->delete();
+            Psclientes::findOrFail($id)->update(['ind_estado'=>0]);
+            Psprestamos::where(['id_cliente'=>$id])->update(['ind_estado'=>0]);
+            Pspagos::where(['id_cliente' =>$id])->update(['ind_estado'=>0]);
+            Psfechaspago::where(['id_cliente' =>$id])->update(['ind_estado'=>0]);
             return response(array('message' => 'Deleted Successfully') , 200);
 
         } catch (\Exception $e) {

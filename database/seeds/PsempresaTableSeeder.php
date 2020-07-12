@@ -13,7 +13,8 @@ class PsempresaTableSeeder extends Seeder
     {
          DB::table('psempresa')->insert([
             'nombre' => 'Empresa pruebas',
-			'nitempresa' => 1
+			'nitempresa' => 1,
+			'nom_conc_adicional' => 'Aval'
 
         ]);
     }
