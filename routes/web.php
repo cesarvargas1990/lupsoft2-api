@@ -28,7 +28,7 @@ $router->group(['prefix' => 'prueba'], function () use ($router) {
 });
 
 // API route group
-$router->group(['prefix' => 'api'], function () use ($router) {
+$router->group(['prefix' => ''], function () use ($router) {
 
     // AUTH SERVICES
     // Matches "/api/register

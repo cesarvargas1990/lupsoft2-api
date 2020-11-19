@@ -78,8 +78,8 @@ trait prestamosTrait
     {
         $qry = "
         SELECT 
-        date_format (CURDATE(),'%d/%m/%Y') fecha_actual,
-        date_format (CURRENT_TIME(), '%H:%i:%s %p') hora_actua,
+        date_format(CURDATE(),'%d/%m/%Y') fecha_actual,
+        date_format(CURRENT_TIME(), '%H:%i:%s %p') hora_actua,
         pre.id id_prestamo,
         pre.*,
         cli.*,

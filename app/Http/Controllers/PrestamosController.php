@@ -10,7 +10,7 @@ use App\Http\Traits\General\prestamosTrait;
 
 use DB;
 use App\Http\Traits\General\calculadoraCuotasPrestamosTrait;
-use App\Psempresa;
+use App\PsEmpresa;
 class PrestamosController extends Controller
 {
 
@@ -126,7 +126,7 @@ class PrestamosController extends Controller
 
         
         $nit_empresa = $request->get('nitempresa');
-        $empresa = Psempresa::where('nitempresa',$nit_empresa )->first();
+        $empresa = PsEmpresa::where('nitempresa',$nit_empresa )->first();
         $nom_conc_adicional = $empresa->nom_conc_adicional;
        
         $id_cliente = $request->get('id_cliente');

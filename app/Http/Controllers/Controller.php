@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Traits\General\menuPrincipalTrait;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Routing\Controller as BaseController;
-use App\Psempresa;
+use App\PsEmpresa;
 class Controller extends BaseController
 {
 

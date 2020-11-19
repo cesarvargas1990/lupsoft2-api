@@ -5,7 +5,7 @@ namespace App\Http\Traits\General;
 
 use DB;
 use App\Psformapago;
-use App\Psempresa;
+use App\PsEmpresa;
 
 
 trait calculadoraCuotasPrestamosTrait
