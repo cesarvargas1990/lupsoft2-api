@@ -38,7 +38,6 @@ class Psclientes extends Model
 	'id_cobrador',
 	'id_user',
 	'email',
-	'perfil_facebook',
 	'fch_expdocumento',
 	'fch_nacimiento',
 	'ind_estado'

@@ -32,7 +32,6 @@ class CreatePsclientesTable extends Migration
 			$table->string('ref2',255)->nullable();
             $table->integer('id_cobrador')->nullable();
             $table->string('email',255)->nullable();
-            $table->string('perfil_facebook',1000)->nullable();
             $table->date('fch_expdocumento')->nullable();
             $table->date('fch_nacimiento')->nullable();
             $table->integer('id_user');

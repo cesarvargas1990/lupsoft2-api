@@ -28,12 +28,11 @@ class PsfechaspagoController extends Controller
         try {
 
             $qry = "select 
-            fp.id,
+            fp.id, 
             pres.id_cliente, 
             pres.id id_prestamo, 
             fecha_pago , 
             format(fp.valor_cuota,2) valcuota,
-            format(fp.valor_seguro,2) valseguro,
             format(fp.valor_pagar, 2) valtotal,
             (select p.id_fecha_pago from pspagos p where p.id_fecha_pago = fp.id and ind_abonocapital = 0 ) id_fecha_pago,
             (select p.fecha_realpago from pspagos p where p.id_fecha_pago = fp.id  and ind_abonocapital = 0) fecha_realpago

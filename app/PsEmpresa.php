@@ -19,7 +19,6 @@ class PsEmpresa extends Model
 		'telefono',
 		'pagina',
 		'email',
-		'nom_conc_adicional',
 		'vlr_capinicial'
     ];
 

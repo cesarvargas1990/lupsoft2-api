@@ -17,7 +17,6 @@ class CreatePsfechaspagoTable extends Migration
             $table->increments('id');
             $table->integer('id_prestamo');
 			$table->double('valor_cuota',13,2);
-			$table->double('valor_seguro',13,2);
 			$table->double('valor_pagar',13,2);
             $table->date('fecha_pago');
             $table->integer('ind_renovar');

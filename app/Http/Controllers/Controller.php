@@ -26,8 +26,7 @@ class Controller extends BaseController
             'time'=> time(),
             'is_admin' => Auth::user()->is_admin,
             'nit_empresa' => Auth::user()->nitempresa,
-            'id_empresa' => $empresa->first()->id,
-			'nom_conc_adicional' => $empresa->first()->nom_conc_adicional
+            'id_empresa' => $empresa->first()->id
         ], 200);
     }
 }

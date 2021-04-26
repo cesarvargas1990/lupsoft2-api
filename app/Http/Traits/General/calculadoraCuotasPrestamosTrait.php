@@ -32,11 +32,7 @@ trait calculadoraCuotasPrestamosTrait
             $porcint = $formaPago->porcint;
         }
         
-        if ($request->has('valseguro')) {
-            $valor_seguro = $request->get('valseguro');
-        } else {
-            $valor_seguro = $formaPago->valseguro;
-        }
+      
 
         if ($request->has('valorpres')) {
             $valorpres = $request->get('valorpres');
@@ -47,12 +43,12 @@ trait calculadoraCuotasPrestamosTrait
         // Sistema frances
         if ($sistemaPrestamo == 1) {
 
-            return $this->sistemaPrestMetodoFrances($request,$valorpres,$porcint,$id_periodo_pago,$numcuotas,$valor_seguro);
+            return $this->sistemaPrestMetodoFrances($request,$valorpres,$porcint,$id_periodo_pago,$numcuotas);
 
         // Sistema ingles
         } else if ($sistemaPrestamo == 2) {
 
-            return $this->sistemaPrestMedodoIngles($request,$valorpres,$porcint,$id_periodo_pago,$numcuotas,$valor_seguro);
+            return $this->sistemaPrestMedodoIngles($request,$valorpres,$porcint,$id_periodo_pago,$numcuotas);
 
         } else {
             return [];
@@ -70,7 +66,6 @@ trait calculadoraCuotasPrestamosTrait
         $sistemaPrestamo = $formaPago->codtipsistemap;
 
         $empresa = Psempresa::where('nitempresa',$nit_empresa )->first();
-        $nom_conc_adicional = $empresa->nom_conc_adicional;
 
         $datos = $this->calcularCuota($request);
 
@@ -89,7 +84,6 @@ trait calculadoraCuotasPrestamosTrait
                         'Saldo' => number_format($dato['saldo'],2),
                         'D. final' => number_format($dato['d_final'],2),
                         'Cuota Fija Mensual' => '$'.' '.number_format($dato['cfija_mensual'],2),
-                        $nom_conc_adicional  => '$'.' '.number_format($dato['c_seguro'],2),
                         'Total a pagar por mes' =>   '$'.' '.number_format(round($dato['t_pagomes'],2),2)
         
                     );
@@ -107,7 +101,6 @@ trait calculadoraCuotasPrestamosTrait
                         'Fecha Cuota' =>  $dato['fecha_cuota_descrpcion'],
                         'Interes' => number_format($dato['interes'],2),
                         'Capital' => '$'.' '.number_format($dato['cfija_mensual'],2),
-                        $nom_conc_adicional  => '$'.' '.number_format($dato['c_seguro'],2),
                         'Total a pagar por mes' =>   '$'.' '.number_format(round($dato['t_pagomes'],2),2)
         
                     );
@@ -168,7 +161,7 @@ trait calculadoraCuotasPrestamosTrait
         }
     }
 
-    function sistemaPrestMetodoFrances($request,$valorpres,$porcint,$id_periodo_pago,$numcuotas,$valor_seguro) {
+    function sistemaPrestMetodoFrances($request,$valorpres,$porcint,$id_periodo_pago,$numcuotas) {
 
         $fec_inicial = $request->get('fec_inicial');
         $fecha = $fec_inicial;
@@ -196,8 +189,7 @@ trait calculadoraCuotasPrestamosTrait
                 'saldo' => $capital[$x - 1 ],
                 'd_final' => $capital[$x - 1 ] -  $valorCuota,
                 'cfija_mensual' => $valorCuota,
-                'c_seguro' => $valor_seguro,
-                't_pagomes' => $valorCuota+ $valor_seguro,
+                't_pagomes' => $valorCuota,
                 'ind_renovar' => 0
             );
         }
@@ -210,7 +202,7 @@ trait calculadoraCuotasPrestamosTrait
         return $tabla;
     }
 
-    function sistemaPrestMedodoIngles ($request,$valorpres,$porcint,$id_periodo_pago,$numcuotas,$valor_seguro) {
+    function sistemaPrestMedodoIngles ($request,$valorpres,$porcint,$id_periodo_pago,$numcuotas) {
 
 
         $fec_inicial = $request->get('fec_inicial');
@@ -222,9 +214,7 @@ trait calculadoraCuotasPrestamosTrait
         $capital[0] = $valorpres;
         $valorCuota = round($valorpres * ($porcint / 100));
         $tem = ($porcint / 100) / 12; // TASA EFECTIVA MENSUAL
-        $tabla['tabla'][0]['c_seguro'] = $valor_seguro;
         $tabla['tabla'][0]['cfija_mensual'] = 0;
-        $tabla['tabla'][0]['t_pagomes'] =  $valor_seguro;
         $tabla['tabla'][0]['indice'] =  '-';
         $tabla['tabla'][0]['fecha_cuota_descrpcion'] =   $this->SpanishDate( strtotime($fechas[0]));
         $tabla['tabla'][0]['fecha'] =    $fechas[0];
@@ -233,8 +223,6 @@ trait calculadoraCuotasPrestamosTrait
         $tabla['tabla'][0]['saldo'] = 0;
         $tabla['tabla'][0]['d_final'] = 0;
         $tabla['tabla'][0]['cfija_mensual'] = 0;
-        $tabla['tabla'][0]['c_seguro'] = $valor_seguro;
-        $tabla['tabla'][0]['t_pagomes'] = $valor_seguro;
         $tabla['tabla'][0]['ind_renovar'] = 0;
 
         for ($x = 1; $x < $numcuotas; $x++) {
@@ -250,7 +238,6 @@ trait calculadoraCuotasPrestamosTrait
                 'saldo' => 0,
                 'd_final' => 0,
                 'cfija_mensual' => 0,
-                'c_seguro' => 0,
                 't_pagomes' => $valorCuota,
                 'ind_renovar' => 0
             );
@@ -258,9 +245,7 @@ trait calculadoraCuotasPrestamosTrait
 
 
         $fechas[$x] = $this->adicionarFechas($date,$id_periodo_pago);
-        $tabla['tabla'][$x]['c_seguro'] = $valor_seguro;
         $tabla['tabla'][$x]['cfija_mensual'] = 0;
-        $tabla['tabla'][$x]['t_pagomes'] =  $valor_seguro;
         $tabla['tabla'][$x]['indice'] =  $x;
         $tabla['tabla'][$x]['fecha'] =    $fechas[$x];
         $tabla['tabla'][$x]['fecha_cuota_descrpcion'] =   $this->SpanishDate( strtotime($fechas[$x]));
@@ -270,7 +255,6 @@ trait calculadoraCuotasPrestamosTrait
         $tabla['tabla'][$x]['saldo'] = 0;
         $tabla['tabla'][$x]['d_final'] = 0;
         $tabla['tabla'][$x]['cfija_mensual'] = $valorpres;
-        $tabla['tabla'][$x]['c_seguro'] = 0;
         $tabla['tabla'][$x]['t_pagomes'] = $valorpres + $valorCuota;
         $tabla['tabla'][$x]['ind_renovar'] = 1;
         // en esta ultima se agrega marca para hacer el nuevo ciclo completo

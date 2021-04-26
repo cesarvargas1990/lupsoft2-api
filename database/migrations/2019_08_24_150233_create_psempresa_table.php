@@ -25,7 +25,6 @@ class CreatePsempresaTable extends Migration
 			$table->string('telefono',	60)->nullable();
 			$table->string('pagina'	,100 )->nullable();
 			$table->string('email'	,100)->nullable();
-			$table->string('nom_conc_adicional'	,100)->nullable();
 			$table->double('vlr_capinicial',10,3)->nullable();
             $table->timestamps();
         });

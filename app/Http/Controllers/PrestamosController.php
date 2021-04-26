@@ -120,21 +120,20 @@ class PrestamosController extends Controller
 
     }
 
-     
+        
 
     public function prestamosCliente (Request $request) {
 
         
         $nit_empresa = $request->get('nitempresa');
         $empresa = PsEmpresa::where('nitempresa',$nit_empresa )->first();
-        $nom_conc_adicional = $empresa->nom_conc_adicional;
+        
        
         $id_cliente = $request->get('id_cliente');
         $qry = "SELECT 
         pres.id AS 'Codigo Prestamo',
         pres.numcuotas AS 'Numero Cuotas',
         FORMAT(pres.valorpres, 2) AS 'Valor Prestamo',
-        FORMAT(pres.valseguro, 2) AS '".$nom_conc_adicional."',
         (SELECT 
           FORMAT(SUM(psf.valor_pagar), 2)  
         FROM
