@@ -19,7 +19,7 @@ class PsformapagoTableSeeder extends Seeder
             
             'id_periodo_pago' => 1,
 			'nomfpago' => 'Diario',
-            'nitempresa' => 1,
+            'nitempresa' => '12345',
             'ind_solicporcint' => 1,
             'porcint' => 10,
             'numcuotas'=>20,
@@ -33,7 +33,7 @@ class PsformapagoTableSeeder extends Seeder
             
             'id_periodo_pago' => 2,
 			'nomfpago' => 'Semanal',
-            'nitempresa' => 1,
+            'nitempresa' => '12345',
             'ind_solicporcint' => 1,
             'porcint' => 10,
             'numcuotas'=>15,
@@ -47,7 +47,7 @@ class PsformapagoTableSeeder extends Seeder
             
             'id_periodo_pago' => 3,
 			'nomfpago' => 'Quincenal',
-            'nitempresa' => 1,
+            'nitempresa' => '12345',
             'ind_solicporcint' => 1,
             'porcint' => 10,
             'numcuotas'=>2,
@@ -61,7 +61,7 @@ class PsformapagoTableSeeder extends Seeder
             
             'id_periodo_pago' => 4,
 			'nomfpago' => 'Mensual',
-            'nitempresa' => 1,
+            'nitempresa' => '12345',
             'ind_solicporcint' => 1,
             'porcint' => 10,
             'numcuotas'=>12,
@@ -74,7 +74,7 @@ class PsformapagoTableSeeder extends Seeder
             
             'id_periodo_pago' => 5,
 			'nomfpago' => 'Anual',
-            'nitempresa' => 1,
+            'nitempresa' => '12345',
             'ind_solicporcint' => 1,
             'porcint' => 10,
             'numcuotas'=>2,

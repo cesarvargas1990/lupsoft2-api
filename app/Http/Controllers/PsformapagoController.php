@@ -141,7 +141,7 @@ class PsformapagoController extends Controller
         
 
        
-
+ 
                 $qry = "SELECT fp.id, 
                     fp.id_periodo_pago, 
                     pp.nomperiodopago, 
@@ -152,7 +152,8 @@ class PsformapagoController extends Controller
                     nomfpago,
                     nitempresa ,
                     fp.numcuotas,
-                    fp.ind_solinumc
+                    fp.ind_solinumc,
+                    fp.codtipsistemap
                 FROM psformapago fp, psperiodopago pp 
                 WHERE fp.id_periodo_pago = pp.id
                 AND fp.nitempresa = :nitempresa";

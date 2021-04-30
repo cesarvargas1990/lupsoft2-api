@@ -21,7 +21,7 @@ class PsmenuTableSeeder extends Seeder
 			'icono' => 'dashboard',
 			'id_perfil' => 1,
 			'ind_activo' => 1,
-			'nitempresa' => 1
+			'nitempresa' => '12345'
         ]);
 		
 		DB::table('psmenu')->insert([
@@ -31,7 +31,7 @@ class PsmenuTableSeeder extends Seeder
 			'icono' => 'logout',
 			'id_perfil' => 1,
 			'ind_activo' => 1,
-			'nitempresa' => 1
+			'nitempresa' => '12345'
         ]);
 		
 		DB::table('psmenu')->insert([
@@ -41,29 +41,29 @@ class PsmenuTableSeeder extends Seeder
 			'icono' => 'person',
 			'id_perfil' => 1,
 			'ind_activo' => 1,
-			'nitempresa' => 1
+			'nitempresa' => '12345'
         ]);
 		
 				DB::table('psmenu')->insert([
 					'orden' => '1',
-					'nombre' => 'Crear',
-					'ruta' => 'clientes/crear',
-					'icono' => 'add',
-					'id_perfil' => 1,
-					'ind_activo' => 1,
-					'id_mpadre' => 3,
-					'nitempresa' => 1
-				]);
-				
-				DB::table('psmenu')->insert([
-					'orden' => '2',
 					'nombre' => 'Listar',
 					'ruta' => 'clientes/listar',
 					'icono' => 'list',
 					'id_perfil' => 1,
 					'ind_activo' => 1,
 					'id_mpadre' => 3,
-					'nitempresa' => 1
+					'nitempresa' => '12345'
+				]);
+
+				DB::table('psmenu')->insert([
+					'orden' => '2',
+					'nombre' => 'Crear',
+					'ruta' => 'clientes/crear',
+					'icono' => 'add',
+					'id_perfil' => 1,
+					'ind_activo' => 1,
+					'id_mpadre' => 3,
+					'nitempresa' => '12345'
 				]);
 				
 				DB::table('psmenu')->insert([
@@ -74,7 +74,7 @@ class PsmenuTableSeeder extends Seeder
 					'id_perfil' => 1,
 					'ind_activo' => 1,
 					'id_mpadre' => 3,
-					'nitempresa' => 1
+					'nitempresa' => '12345'
 				]);
 			
 			
@@ -85,7 +85,7 @@ class PsmenuTableSeeder extends Seeder
 			'icono' => 'settings',
 			'id_perfil' => 1,
 			'ind_activo' => 1,
-			'nitempresa' => 1
+			'nitempresa' => '12345'
         ]);
 		
 				
@@ -97,7 +97,7 @@ class PsmenuTableSeeder extends Seeder
 					'id_perfil' => 1,
 					'id_mpadre' => 7,
 					'ind_activo' => 1,
-					'nitempresa' => 1
+					'nitempresa' => '12345'
 				]);
 
 				DB::table('psmenu')->insert([
@@ -108,7 +108,7 @@ class PsmenuTableSeeder extends Seeder
 					'id_perfil' => 1,
 					'id_mpadre' => 7,
 					'ind_activo' => 1,
-					'nitempresa' => 1
+					'nitempresa' => '12345'
 				]);
 				
 				DB::table('psmenu')->insert([
@@ -119,7 +119,7 @@ class PsmenuTableSeeder extends Seeder
 					'id_perfil' => 1,
 					'id_mpadre' => 7,
 					'ind_activo' => 1,
-					'nitempresa' => 1
+					'nitempresa' => '12345'
 				]);
 
 		

@@ -297,11 +297,11 @@ class PrestamosController extends Controller
       }
     }
 
-    public function totalcapital($nit_empresa)
+    public function totalcapital($nit_empresa,Request $request)
     {
         try {
-
-          $datos = number_format($this->getTotalCapital($nit_empresa), 2);
+          $request->request->add(['nitempresa'=>$nit_empresa]);
+          $datos = number_format($this->getTotalCapital($nit_empresa) + $this->getTotalintereses($request), 2);
           return response()->json($datos);
 
 

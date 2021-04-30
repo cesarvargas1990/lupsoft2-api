@@ -12,8 +12,14 @@ class PsempresaTableSeeder extends Seeder
     public function run()
     {
          DB::table('psempresa')->insert([
-            'nombre' => 'Empresa pruebas',
-			'nitempresa' => 1
+            'nombre' => 'Empresa de pruebas',
+			'nitempresa' => '12345',
+            'vlr_capinicial'=>'1500000',
+            'email'=>'demo@email.com',
+            'pagina'=>'https://credisoft.co',
+            'telefono'=>'3184469889',
+            'ciudad'=>'Cali - Valle del cauca',
+            'ddirec'=>'Calle xx # yy-zz'
 
         ]);
     }

@@ -60,11 +60,9 @@ class PstdocplantController extends Controller
 			try {
 
 
-				$qry = "select codtipdocid as value, nomtipodocumento as label from pstdocplant where nitempresa = :nitempresa";
-				$binds = array(
-						'nitempresa' => $nitempresa
-				);
-				$data = DB::select($qry,$binds);				
+				$qry = "select codtipdocid as value, nomtipodocumento as label from pstdocplant";
+			
+				$data = DB::select($qry);				
                return response()->json($data);
 
 

@@ -28,7 +28,7 @@ class PruebaController extends Controller
 
     public function prueba (Request $request) {
         $request->request->add(['id_prestamo' => 1]);
-        $request->request->add(['nitempresa' => 1]);
+        $request->request->add(['nitempresa' => '12345']);
         dd($this->renderTemplate($request));
 
     }

@@ -18,14 +18,14 @@ class PstipodocidentiTableSeeder extends Seeder
 		 
             'codtipdocid' => 1,
             'nomtipodocumento' => 'Cédula',
-			'nitempresa' => 1
+			
         ]);
 		
 		  DB::table('pstipodocidenti')->insert([
 		 
             'codtipdocid' => 2,
             'nomtipodocumento' => 'Nit',
-			'nitempresa' => 1
+			
         ]);
 		
 		

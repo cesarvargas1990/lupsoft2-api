@@ -62,6 +62,7 @@ trait prestamosTrait
                     'created_at' => $now,
                     'ind_estado' => 1,
                     'id_cliente' => $request->get('id_cliente'),
+                    'nitempresa' => $request->get('nitempresa'),
                 ]
             );
         }
@@ -334,7 +335,7 @@ trait prestamosTrait
 
         $nitempresa = $request->get('nitempresa');
         
-        
+         
          $qry =  "select sum(valcuota) totalintereses from pspagos 
          WHERE nitempresa = :nit_empresa and ind_estado = 1"; 
         $binds = array(

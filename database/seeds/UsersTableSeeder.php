@@ -16,7 +16,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'admin@admin.com',
             'password' => app('hash')->make('password'),
              'is_admin' => 1,
-             'nitempresa' => 1,
+             'nitempresa' => '12345',
 			 'ind_activo' => 1
         ]);
 		
@@ -25,9 +25,9 @@ class UsersTableSeeder extends Seeder
             'email' => 'cobrador1@admin.com',
             'password' => app('hash')->make('password'),
              'is_admin' => 0,
-             'nitempresa' => 1,
+             'nitempresa' => '12345',
 			 'ind_activo' => 1,
 			 'id_user' => 1
-        ]);
+        ]); 
     }
 }

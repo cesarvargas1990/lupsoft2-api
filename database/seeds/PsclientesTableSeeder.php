@@ -24,7 +24,7 @@ class PsclientesTableSeeder extends Seeder
 			'diretrabajo' => 'Calle 73 1f-45 barrio gaitan' ,
 			'ubicasa' => '',
 			'ubictrabajo' =>'',
-			'nitempresa' =>  1,
+			'nitempresa' =>  '12345',
 			'ref1' =>  'Nombre de alguna ref personal 1',
 			'ref2' => 'Nombre de alguna ref personal 2',
 			'id_cobrador' =>  1,

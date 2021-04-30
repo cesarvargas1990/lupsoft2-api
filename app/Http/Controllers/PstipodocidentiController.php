@@ -58,11 +58,9 @@ class PstipodocidentiController extends Controller
 			try {
 
 
-				$qry = "select codtipdocid as value, nomtipodocumento as label from pstipodocidenti where nitempresa = :nitempresa";
-				$binds = array(
-						'nitempresa' => $nitempresa
-				);
-				$data = DB::select($qry,$binds);				
+				$qry = "select codtipdocid as value, nomtipodocumento as label from pstipodocidenti";
+				
+				$data = DB::select($qry);				
                return response()->json($data);
 
 

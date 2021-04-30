@@ -17,7 +17,6 @@ class CreatePstipodocidentiTable extends Migration
             $table->increments('id');
             $table->integer('codtipdocid');
             $table->string('nomtipodocumento');
-            $table->string('nitempresa',30);
             $table->timestamps();
         });
     }
