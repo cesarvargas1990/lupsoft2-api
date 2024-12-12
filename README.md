@@ -1,6 +1,6 @@
-# lumen-auth-example
+# LUMEN prestasoft api
 
-## Usage
+## Usage Local
 
 -   `git clone https://github.com/ndiecodes/lumen-auth-example.git auth-api`
 -   `cd auth-api`
@@ -14,10 +14,8 @@
 
 -   `docker-compose build`
 -   `docker-compose up -d`
--   `docker-compose exec app composer install`
--   `docker-compose exec app php artisan migrate`
--   `docker-compose exec app php artisan db:seed`
-## test curl
+
+## Test curl
 
 - ``` curl --location 'localhost:8000/auth/login' \
      --header 'Content-Type: application/json' \
