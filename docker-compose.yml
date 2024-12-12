@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_KEY: base64:gHi3fVVFsjFhKsGI7cfx5tCuTwICamQjLY4EDK3Pm8VQTfMcu3xlzvSKi3tSZUzE
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: saequi_psofapi
+      DB_USERNAME: saequi_psofapi
+      DB_PASSWORD: c354rv4rg45
+    depends_on:
+      - db
+    networks:
+      - app_network
+    command: >
+      sh -c "composer install &&
+             php artisan migrate --force &&
+             php artisan db:seed --force && php -S 0.0.0.0:8000 index.php"
+
+  db:
+    image: mysql:5.6
+    container_name: lumen_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: c354rv4rg45
+      MYSQL_DATABASE: saequi_psofapi
+      MYSQL_USER: saequi_psofapi
+      MYSQL_PASSWORD: c354rv4rg45
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app_network
+    
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  db_data:
