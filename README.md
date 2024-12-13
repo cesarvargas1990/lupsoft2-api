@@ -12,8 +12,7 @@
 
 ## Usage Docker
 
--   `docker-compose build`
--   `docker-compose up -d`
+-   `docker-compose build && docker-compose up -d`
 
 ## Test curl
 

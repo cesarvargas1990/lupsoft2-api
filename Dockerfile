@@ -35,4 +35,4 @@ RUN chown -R www-data:www-data /var/www/html
 EXPOSE 8000
 
 # Comando para iniciar el servidor PHP embebido
-CMD ["php", "-S", "0.0.0.0:8000", "index.php"]
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
