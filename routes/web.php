@@ -12,13 +12,19 @@
 */
 
 
+
 use Illuminate\Http\Request;
-$router->get('/', function (Request $request) use ($router) {
 
-    
-    return $router->app->version();
+$router->get('/upload/documentosAdjuntos/{filepath:.*}', function (Request $request, $filepath) use ($router) {
+    dd("Ruta alcanzada: $filepath");
+    $file = storage_path("app/$filepath");
+
+    if (file_exists($file)) {
+        return response()->download($file);
+    }
+
+    return response()->json(['error' => 'File not found'], 404);
 });
-
 
 $router->group(['prefix' => 'prueba'], function () use ($router) {
     
