@@ -6,7 +6,7 @@ namespace App\Http\Traits\General;
 use DB;
 use App\Psformapago;
 use App\PsEmpresa;
-
+use App\Pspstiposistemaprest;
 
 trait calculadoraCuotasPrestamosTrait
 {
@@ -47,48 +47,103 @@ trait calculadoraCuotasPrestamosTrait
     }
 
     function generarTablaAmortizacion($request) {
-
         $nit_empresa = $request->get('nitempresa');
         $id_forma_pago = $request->get('id_forma_pago');
+        $id_sistema_pago = $request->get('id_sistema_pago');
+    
+        // Obtener datos de la empresa y forma de pago
         $formaPago = Psformapago::find($id_forma_pago);
-        $sistemaPrestamo = $request->get('id_sistema_pago');
         $empresa = Psempresa::where('nitempresa', $nit_empresa)->first();
     
-        // Cálculo de los valores de la tabla de amortización
-        $datos = $this->calcularCuota($request);
+        // Calcular la tabla de amortización con el sistema seleccionado
+        $datos = $this->obtengoTablaresumenPrestamos($id_sistema_pago, $request, 
+            $request->get('valorpres'), 
+            $request->get('porcint'), 
+            $request->get('id_periodo_pago'), 
+            $request->get('numcuotas')
+        );
+    
+        // Validar si hay datos de amortización generados
         if (array_key_exists('tabla', $datos)) {
-            // Sistema Francés
-            if ($sistemaPrestamo == 1) {
-                foreach ($datos['tabla'] as $dato) {
-                    $tabla[] = array(
-                        'N° Cuota' => $dato['indice'],
-                        'Fecha Cuota' => $dato['fecha_cuota_descrpcion'],
-                        'Interes' => '$' . ' ' . number_format($dato['interes'], 2),
-                        'Amortizacion' => '$' . ' ' . number_format($dato['amortizacion'], 2),
-                        'Saldo' => '$' . ' ' . number_format($dato['saldo'], 2),
-                        'Cuota Fija Mensual' => '$' . ' ' . number_format($dato['cfija_mensual'], 2),
-                        'Total a pagar por mes' => '$' . ' ' . number_format($dato['t_pagomes'], 2)
-                    );
-                }
-                return $tabla;
-            } else if ($sistemaPrestamo == 2) {
-               foreach ($datos['tabla'] as $dato) {
-				    $tabla[] = array(
-				        'N° Cuota' => $dato['indice'],
-				        'Fecha Cuota' => $dato['fecha_cuota_descrpcion'],
-				        'Interes' => '$' . ' ' . number_format($dato['interes'], 2), // Formatear interés
-				        'Capital' => '$' . ' ' . number_format($dato['amortizacion'], 2), // Amortización de capital
-				        'Saldo' => '$' . ' ' . number_format($dato['saldo'], 2), // Saldo restante
-				        'Total a pagar por mes' => '$' . ' ' . number_format($dato['t_pagomes'], 2) // Total de la cuota
-				    );
-				}
-				return $tabla;
+            $tabla = [];
+    
+            // Construir tabla de amortización formateada
+            foreach ($datos['tabla'] as $dato) {
+                $tabla[] = array(
+                    'N° Cuota' => $dato['indice'],
+                    'Fecha Cuota' => $dato['fecha_cuota_descrpcion'],
+                    'Interes' => '$' . ' ' . number_format($dato['interes'], 2),
+                    'Amortizacion' => '$' . ' ' . number_format($dato['amortizacion'], 2),
+                    'Saldo' => '$' . ' ' . number_format($dato['saldo']??0, 2),
+                    'Cuota Fija Mensual' => '$' . ' ' . number_format($dato['cfija_mensual'] ?? 0, 2),
+                    'Total a pagar por mes' => '$' . ' ' . number_format($dato['t_pagomes'], 2),
+                );
             }
+    
+            return $tabla;
         } else {
             return [];
         }
     }
     
+
+
+    function obtengoTablaresumenPrestamos($idSistemaPrest, $request, $valorpres, $porcint, $id_periodo_pago, $numcuotas) {
+        // Obtener la fórmula desde la base de datos usando Eloquent
+        $sistema = Pspstiposistemaprest::where('codtipsistemap',$idSistemaPrest)->first();
+  
+        if (!$sistema || !$sistema->formula_calculo) {
+            throw new \Exception("Fórmula no encontrada para el sistema de préstamos ID: $idSistemaPrest");
+        }
+    
+        // Generar la tabla de amortización
+        return $this->calculaTablaAmortizacion(
+            $request,
+            $valorpres,
+            $porcint,
+            $id_periodo_pago,
+            $numcuotas,
+            $sistema->formula_calculo
+        );
+    }
+
+    function calculaTablaAmortizacion($request, $valorpres, $porcint, $id_periodo_pago, $numcuotas, $formula) {
+        $fec_inicial = $request->get('fec_inicial');
+        $fecha = $fec_inicial;
+        $date = new \DateTime($fecha);
+        $tabla = [];
+        $saldo = $valorpres; // Saldo inicial del préstamo
+        $tem = ($porcint / 100) / 12; // Tasa efectiva mensual
+    
+        for ($x = 1; $x <= $numcuotas; $x++) {
+            // Generar la fecha de la cuota actual
+            $cuotaFecha = $this->adicionarFechas($date, $id_periodo_pago);
+    
+            // Parámetros disponibles para la fórmula
+            $indice = $x;
+    
+            // Evaluar la fórmula
+            eval("\$resultado = $formula;");
+    
+            // Agregar fila a la tabla
+            $tabla['tabla'][] = array_merge($resultado, [
+                'fecha_cuota_descrpcion' => $this->SpanishDate(strtotime($resultado['fecha'])),
+            ]);
+    
+            // Actualizar el saldo para la siguiente iteración
+            if (isset($resultado['amortizacion'])) {
+                $saldo -= $resultado['amortizacion'];
+            }
+        }
+    
+        // Detalles adicionales del préstamo
+        $tabla['datosprestamo'] = [
+            'tem' => $tem,
+            'valor_cuota' => $resultado['cfija_mensual'] ?? 0
+        ];
+    
+        return $tabla;
+    }
 
     function SpanishDate($FechaStamp)
     {
