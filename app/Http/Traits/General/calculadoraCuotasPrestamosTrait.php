@@ -109,6 +109,10 @@ trait calculadoraCuotasPrestamosTrait
 
     function calculaTablaAmortizacion($request, $valorpres, $porcint, $id_periodo_pago, $numcuotas, $formula) {
         $fec_inicial = $request->get('fec_inicial');
+        if (!strtotime($fec_inicial)) {
+            throw new Exception("La fecha inicial no es válida.");
+        }
+    
         $fecha = $fec_inicial;
         $date = new \DateTime($fecha);
         $tabla = [];
@@ -122,7 +126,7 @@ trait calculadoraCuotasPrestamosTrait
             // Parámetros disponibles para la fórmula
             $indice = $x;
     
-            // Evaluar la fórmula
+            // Evaluar la fórmula (usando saldo actual)
             eval("\$resultado = $formula;");
     
             // Agregar fila a la tabla
@@ -131,16 +135,8 @@ trait calculadoraCuotasPrestamosTrait
             ]);
     
             // Actualizar el saldo para la siguiente iteración
-            if (isset($resultado['amortizacion'])) {
-                $saldo -= $resultado['amortizacion'];
-            }
+            $saldo -= $resultado['amortizacion'];
         }
-    
-        // Detalles adicionales del préstamo
-        $tabla['datosprestamo'] = [
-            'tem' => $tem,
-            'valor_cuota' => $resultado['cfija_mensual'] ?? 0
-        ];
     
         return $tabla;
     }
