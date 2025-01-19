@@ -19,7 +19,7 @@ trait prestamosTrait
 
 
 
-        $valor_cuota = $datosCuota['datosprestamo']['valor_cuota'];
+        $valor_cuota = $datosCuota['datosprestamo']['valor_cuota']??0; // Para prestamos sin cuota fija es 0
 
         $now = new \DateTime();
 
@@ -27,7 +27,7 @@ trait prestamosTrait
 
 
         $formaPago = Psformapago::find( $request->get('id_forma_pago'));
-        $sistemaPrestamo = $formaPago->codtipsistemap;
+        $sistemaPrestamo = $request->get('id_sistema_pago');
 
         
 
@@ -58,7 +58,7 @@ trait prestamosTrait
                     'fecha_pago' => $fechas['fecha'],
                     'valor_cuota' => $fechas['interes'],
                     'valor_pagar' => $fechas['t_pagomes'],
-                    'ind_renovar' => $fechas['ind_renovar'],
+                    'ind_renovar' => $fechas['ind_renovar']??0,
                     'created_at' => $now,
                     'ind_estado' => 1,
                     'id_cliente' => $request->get('id_cliente'),
@@ -310,23 +310,23 @@ trait prestamosTrait
 
         $nitempresa = $request->get('nitempresa');
         $fecha = $request->get('fecha');
-        $fecIni = strtotime($fecha.' 00:00:00'); 
-        $fecFin = strtotime($fecha.' 23:59:59'); 
-        
+       
+       // dd( $fecIni);
+        //  sum(valcuota) totalintereseshoy
          $qry =  "select sum(valcuota) totalintereseshoy from pspagos 
          WHERE nitempresa = :nit_empresa
-         and UNIX_TIMESTAMP(fecha_realpago) >= :fec_ini
-         and UNIX_TIMESTAMP(fecha_realpago) <= :fec_fin
-         and ind_estado = 1
+           and fecha_realpago = :fec_ini
+         
+          and ind_estado = 1
          "; 
         $binds = array(
             'nit_empresa'=>  $nitempresa,
-            'fec_ini' => $fecIni,
-            'fec_fin' => $fecFin 
+            'fec_ini' => $fecha,
+            //'fec_fin' => $fecFin 
         );
         
          $data = DB::select($qry,$binds);
-         
+         //dd($data);
          return $data[0]->totalintereseshoy; 
 
     }
