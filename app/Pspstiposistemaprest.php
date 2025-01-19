@@ -31,6 +31,8 @@ class Pspstiposistemaprest extends Model
 	 
 	 protected $table = 'pstiposistemaprest';
 	 
+
+    protected $fillable = [ 'formula_calculo'];
     protected $hidden = [
 
     ];
