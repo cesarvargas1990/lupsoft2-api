@@ -19,7 +19,7 @@ trait prestamosTrait
 
 
 
-        $valor_cuota = $datosCuota['datosprestamo']['valor_cuota'];
+        $valor_cuota = $datosCuota['datosprestamo']['valor_cuota']??0;
 
         $now = new \DateTime();
 
