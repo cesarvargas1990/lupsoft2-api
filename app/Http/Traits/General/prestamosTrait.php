@@ -6,6 +6,7 @@ namespace App\Http\Traits\General;
 use DB;
 use App\Psquerytabla;
 use App\Psperiodopago;
+use App\Psempresa;
 
 trait prestamosTrait
 {
@@ -250,14 +251,19 @@ trait prestamosTrait
   
 
     public function getCapitalPrestado ($nitempresa) {  
-        $qry =  "select sum(valorpres) valorpres from psprestamos WHERE nitempresa = :nit_empresa and ind_estado = 1"; 
+
+        $qry= "select  sum(p2.valorpres) valorpres
+
+			from psprestamos p2 where p2.nitempresa  = :nit_empresa 
+				and p2.ind_estado = 1 "; 
        $binds = array(  
            'nit_empresa'=>  $nitempresa
        );
         $data = DB::select($qry,$binds);
-        
-        return $data[0]->valorpres; 
+        $valorpres = $data[0]->valorpres;
+      	return (float) $valorpres;
     }
+
     public function getCapitalInicial ($nitempresa) {
         $qry =  "SELECT vlr_capinicial FROM psempresa WHERE nitempresa = :nit_empresa";
        $binds = array(
@@ -267,6 +273,7 @@ trait prestamosTrait
         
         return $data[0]->vlr_capinicial; 
     }
+
     public function getTotalCapital ($nit_empresa) {
         
         $capitalinicial = $this->getCapitalInicial($nit_empresa);
@@ -327,6 +334,18 @@ trait prestamosTrait
          
          return $data[0]->totalintereseshoy; 
 
+    }
+
+
+    public function getValorPrestamos ($request) {
+        $nitempresa = $request->get('nitempresa');
+        $qry = "select sum(valorpres) valorpres from psprestamos p where nitempresa = :nit_empresa and ind_estado =1";
+        $binds = array(
+            'nit_empresa'=>  $nitempresa
+        
+        );
+        $data = DB::select($qry,$binds);
+        return $data[0]->valorpres; 
     }
 
     public function getTotalintereses ($request) {
