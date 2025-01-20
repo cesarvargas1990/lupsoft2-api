@@ -311,30 +311,34 @@ trait prestamosTrait
 
 
 
-    public function getTotalintereseshoy ($request) {
+    public function getTotalintereseshoy($request)
+{
+    $nitempresa = $request->get('nitempresa');
+    $fecha = $request->get('fecha'); // Se espera que sea en formato '2020-01-20'
 
-        $nitempresa = $request->get('nitempresa');
-        $fecha = $request->get('fecha');
-        $fecIni = strtotime($fecha.' 00:00:00'); 
-        $fecFin = strtotime($fecha.' 23:59:59'); 
-        
-         $qry =  "select sum(valcuota) totalintereseshoy from pspagos 
-         WHERE nitempresa = :nit_empresa
-         and UNIX_TIMESTAMP(fecha_realpago) >= :fec_ini
-         and UNIX_TIMESTAMP(fecha_realpago) <= :fec_fin
-         and ind_estado = 1
-         "; 
-        $binds = array(
-            'nit_empresa'=>  $nitempresa,
-            'fec_ini' => $fecIni,
-            'fec_fin' => $fecFin 
-        );
-        
-         $data = DB::select($qry,$binds);
-         
-         return $data[0]->totalintereseshoy; 
+    // Definir el rango de fechas para la consulta (día completo)
+    $fecIni = $fecha . ' 00:00:00';
+    $fecFin = $fecha . ' 23:59:59';
 
-    }
+    // Consulta SQL ajustada para manejar el rango de fechas
+    $qry = "SELECT SUM(valcuota) as totalintereseshoy 
+            FROM pspagos 
+            WHERE nitempresa = :nit_empresa
+            AND fecha_realpago BETWEEN :fec_ini AND :fec_fin
+            AND ind_estado = 1";
+
+    $binds = [
+        'nit_empresa' => $nitempresa,
+        'fec_ini' => $fecIni,
+        'fec_fin' => $fecFin,
+    ];
+
+    // Ejecutar la consulta
+    $data = DB::select($qry, $binds);
+
+    // Retornar el total asegurándose de que no haya errores
+    return $data[0]->totalintereseshoy ?? 0;
+}
 
 
     public function getValorPrestamos ($request) {
