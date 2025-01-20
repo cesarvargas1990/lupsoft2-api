@@ -27,7 +27,7 @@ trait prestamosTrait
 
 
         $formaPago = Psformapago::find( $request->get('id_forma_pago'));
-        $sistemaPrestamo = $formaPago->codtipsistemap;
+      
 
         
 
@@ -37,7 +37,6 @@ trait prestamosTrait
                 'id_cliente' => $request->get('id_cliente'),
                 'valorpres' => $request->get('valorpres'),
                 'numcuotas' => $request->get('numcuotas'),
-                'codtipsistemap' => $sistemaPrestamo,
                 'valcuota' => $valor_cuota,
                 'porcint' => $request->get('porcint'),
                 'id_forma_pago' => $request->get('id_forma_pago'),

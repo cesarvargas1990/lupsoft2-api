@@ -56,6 +56,7 @@ trait calculadoraCuotasPrestamosTrait
     
         // Cálculo de los valores de la tabla de amortización
         $datos = $this->calcularCuota($request);
+        //dd($datos);
         if (array_key_exists('tabla', $datos)) {
             // Sistema Francés
             if ($sistemaPrestamo == 1) {
@@ -66,8 +67,7 @@ trait calculadoraCuotasPrestamosTrait
                         'Interes' => '$' . ' ' . number_format($dato['interes'], 2),
                         'Amortizacion' => '$' . ' ' . number_format($dato['amortizacion'], 2),
                         'Saldo' => '$' . ' ' . number_format($dato['saldo'], 2),
-                        'Cuota Fija Mensual' => '$' . ' ' . number_format($dato['cfija_mensual'], 2),
-                        'Total a pagar por mes' => '$' . ' ' . number_format($dato['t_pagomes'], 2)
+                        'Total a pagar cuota' => '$' . ' ' . number_format($dato['t_pagomes'], 2)
                     );
                 }
                 return $tabla;
@@ -79,7 +79,7 @@ trait calculadoraCuotasPrestamosTrait
 				        'Interes' => '$' . ' ' . number_format($dato['interes'], 2), // Formatear interés
 				        'Capital' => '$' . ' ' . number_format($dato['amortizacion'], 2), // Amortización de capital
 				        'Saldo' => '$' . ' ' . number_format($dato['saldo'], 2), // Saldo restante
-				        'Total a pagar por mes' => '$' . ' ' . number_format($dato['t_pagomes'], 2) // Total de la cuota
+				        'Total a pagar cuota' => '$' . ' ' . number_format($dato['t_pagomes'], 2) // Total de la cuota
 				    );
 				}
 				return $tabla;
@@ -176,7 +176,6 @@ trait calculadoraCuotasPrestamosTrait
                 'interes' => $int,
                 'amortizacion' => $amort,
                 'saldo' => $capital[$x], // Saldo restante después de la cuota
-              
                 'cfija_mensual' => $valorCuota, // Cuota fija mensual
                 't_pagomes' => $valorCuota      // Total a pagar (constante)
             );

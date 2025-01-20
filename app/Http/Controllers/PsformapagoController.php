@@ -152,8 +152,7 @@ class PsformapagoController extends Controller
                     nomfpago,
                     nitempresa ,
                     fp.numcuotas,
-                    fp.ind_solinumc,
-                    fp.codtipsistemap
+                    fp.ind_solinumc
                 FROM psformapago fp, psperiodopago pp 
                 WHERE fp.id_periodo_pago = pp.id
                 AND fp.nitempresa = :nitempresa";

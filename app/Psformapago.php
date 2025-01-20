@@ -35,7 +35,6 @@ class Psformapago extends Model
         'numcuotas',
         'ind_solinumc',
         'valorpres',
-        'codtipsistemap'
         ];
 
     /**
