@@ -40,6 +40,7 @@ trait prestamosTrait
                 'valcuota' => $valor_cuota,
                 'porcint' => $request->get('porcint'),
                 'id_forma_pago' => $request->get('id_forma_pago'),
+                'codtipsistemap' => $request->get('id_sistema_pago'),
                 'fec_inicial' => date("Y-m-d", strtotime(str_replace('/', '-', $request->get('fec_inicial')))),
                 'id_cobrador' => $request->get('id_cobrador'),
                 'nitempresa' => $request->get('nitempresa'),
@@ -84,7 +85,7 @@ trait prestamosTrait
         em.*,
         ide.*,
         pp.*,
-        null nomfpago
+        pp.nomperiodopago nomfpago
         FROM 
         psprestamos pre ,
         psclientes cli, 
@@ -93,6 +94,7 @@ trait prestamosTrait
         psperiodopago pp
         WHERE pre.nitempresa = :nit_empresa
         AND pre.id_cliente = cli.id
+        and pp.id = pre.id_forma_pago
         AND em.nitempresa = pre.nitempresa
         AND  cli.codtipdocid = ide.id
         AND pre.ind_estado = 1";
