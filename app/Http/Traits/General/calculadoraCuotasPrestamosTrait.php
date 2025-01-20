@@ -4,7 +4,7 @@
 namespace App\Http\Traits\General;
 
 use DB;
-use App\Psformapago;
+use App\Psperiodopago;
 use App\PsEmpresa;
 
 
@@ -15,8 +15,8 @@ trait calculadoraCuotasPrestamosTrait
 
         setlocale(LC_ALL,"es_ES@euro","es_ES","esp");
         $id_forma_pago = $request->get('id_forma_pago');
-        $formaPago = Psformapago::find( $id_forma_pago);
-        $id_periodo_pago = $formaPago->id_periodo_pago;
+        $formaPago = Psperiodopago::find( $id_forma_pago);
+        $id_periodo_pago = $formaPago->id;
         $sistemaPrestamo =$request->get('id_sistema_pago');
 
         if ($request->has('numcuotas') ){
@@ -50,8 +50,10 @@ trait calculadoraCuotasPrestamosTrait
 
         $nit_empresa = $request->get('nitempresa');
         $id_forma_pago = $request->get('id_forma_pago');
-        $formaPago = Psformapago::find($id_forma_pago);
+        $formaPago = Psperiodopago::find($id_forma_pago);
+        
         $sistemaPrestamo = $request->get('id_sistema_pago');
+       
         $empresa = Psempresa::where('nitempresa', $nit_empresa)->first();
     
         // Cálculo de los valores de la tabla de amortización

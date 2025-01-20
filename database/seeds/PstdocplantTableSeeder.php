@@ -26,35 +26,12 @@ class PstdocplantTableSeeder extends Seeder
         ]);
 		
 		
-		DB::table('pstdocplant')->insert([
-            
-            'nombre' => 'Anexo #1 (Credito)',
-            'plantilla_html' => '',
-            'nitempresa' => '12345',
-			'idtipaccionsist' => 2
-
-        ]);
+	
 		
 		
-		DB::table('pstdocplant')->insert([
-            
-            'nombre' => 'Anexo #2 (Detalles Producto)',
-            'plantilla_html' => '',
-            'nitempresa' => '12345',
-			'idtipaccionsist' => 2
+	
 
-
-        ]);
-
-        DB::table('pstdocplant')->insert([
-            
-            'nombre' => 'Anexo #3 (Informacion)',
-            'plantilla_html' => '',
-            'nitempresa' => '12345',
-			'idtipaccionsist' => 2
-
-
-        ]);
+    
 
         DB::table('pstdocplant')->insert([
             

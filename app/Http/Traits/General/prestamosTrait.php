@@ -5,7 +5,7 @@ namespace App\Http\Traits\General;
 
 use DB;
 use App\Psquerytabla;
-use App\Psformapago;
+use App\Psperiodopago;
 
 trait prestamosTrait
 {
@@ -26,7 +26,7 @@ trait prestamosTrait
         $now->getTimestamp();
 
 
-        $formaPago = Psformapago::find( $request->get('id_forma_pago'));
+        $formaPago = Psperiodopago::find( $request->get('id_forma_pago'));
       
 
         
@@ -57,7 +57,7 @@ trait prestamosTrait
                     'fecha_pago' => $fechas['fecha'],
                     'valor_cuota' => $fechas['interes'],
                     'valor_pagar' => $fechas['t_pagomes'],
-                    'ind_renovar' => $fechas['ind_renovar'],
+                    'ind_renovar' => $fechas['ind_renovar']??0,
                     'created_at' => $now,
                     'ind_estado' => 1,
                     'id_cliente' => $request->get('id_cliente'),
@@ -84,21 +84,18 @@ trait prestamosTrait
         em.*,
         ide.*,
         pp.*,
-        fp.nomfpago
+        null nomfpago
         FROM 
         psprestamos pre ,
         psclientes cli, 
-        psformapago fp, 
         psempresa em, 
         pstipodocidenti ide, 
         psperiodopago pp
         WHERE pre.nitempresa = :nit_empresa
-        AND pre.id_forma_pago = fp.id
         AND pre.id_cliente = cli.id
         AND em.nitempresa = pre.nitempresa
         AND  cli.codtipdocid = ide.id
-        AND pre.ind_estado = 1
-        AND fp.id_periodo_pago = pp.id";
+        AND pre.ind_estado = 1";
 
         return $qry;
     }

@@ -58,7 +58,7 @@ class PspstiposistemaprestController extends Controller
 			try {
 
 
-				$qry = "select id as value, nomfpago as label from psformapago where nitempresa = :nitempresa";
+				$qry = "select id as value, nomperiodopago as label from psperiodopago where nitempresa = :nitempresa";
 				$binds = array(
 						'nitempresa' => $nitempresa
 				);

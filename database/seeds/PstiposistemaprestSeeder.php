@@ -31,13 +31,6 @@ class PstiposistemaprestSeeder extends Seeder
 
         ]);
 		
-		DB::table('pstiposistemaprest')->insert([
-            
-            
-            'codtipsistemap' => '3',
-            'nomtipsistemap' => 'Sistema Aleman',
-
-        ]);
 		
 		
 		

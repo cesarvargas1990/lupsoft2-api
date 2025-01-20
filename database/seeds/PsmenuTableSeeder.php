@@ -88,17 +88,7 @@ class PsmenuTableSeeder extends Seeder
 			'nitempresa' => '12345'
         ]);
 		
-				
-				DB::table('psmenu')->insert([
-					'orden' => '1',
-					'nombre' => 'Formas de pago',
-					'ruta' => 'parametros/formaspago',
-					'icono' => 'playlist_add',
-					'id_perfil' => 1,
-					'id_mpadre' => 7,
-					'ind_activo' => 1,
-					'nitempresa' => '12345'
-				]);
+			
 
 				DB::table('psmenu')->insert([
 					'orden' => '2',
