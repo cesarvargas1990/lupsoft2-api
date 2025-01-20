@@ -19,7 +19,8 @@ class PstiposistemaprestSeeder extends Seeder
             
             
             'codtipsistemap' => '1',
-            'nomtipsistemap' => 'Sistema Frances',
+            'nomtipsistemap' => 'Sistema Frances'
+
 
         ]);
 		
@@ -27,7 +28,7 @@ class PstiposistemaprestSeeder extends Seeder
             
             
             'codtipsistemap' => '2',
-            'nomtipsistemap' => 'Sistema Ingles',
+             'nomtipsistemap' => 'Sistema Ingles'
 
         ]);
 		
