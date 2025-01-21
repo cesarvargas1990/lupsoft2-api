@@ -18,7 +18,7 @@ trait calculadoraCuotasPrestamosTrait
         $formaPago = Psperiodopago::find( $id_forma_pago);
         $id_periodo_pago = $formaPago->id;
         $sistemaPrestamo =$request->get('id_sistema_pago');
-        $formula = Pspstiposistemaprest::find($sistemaPrestamo)->formula;
+        $formula = Pspstiposistemaprest::where('codtipsistemap',$sistemaPrestamo)->first()->formula;
         if ($request->has('numcuotas') ){
             $numcuotas = $request->get('numcuotas');
         } else {
