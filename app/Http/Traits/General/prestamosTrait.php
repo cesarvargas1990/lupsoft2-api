@@ -79,10 +79,12 @@ trait prestamosTrait
         date_format(CURDATE(),'%d/%m/%Y') fecha_actual,
         date_format(CURRENT_TIME(), '%H:%i:%s %p') hora_actua,
         pre.id id_prestamo,
+        format(pre.valorpres,2) valorpresf,
         pre.*,
         cli.*,
         em.*,
         ide.*,
+        tsip.*,
         pp.*,
         pp.nomperiodopago nomfpago
         FROM 
@@ -90,6 +92,7 @@ trait prestamosTrait
         psclientes cli, 
         psempresa em, 
         pstipodocidenti ide, 
+        pstiposistemaprest tsip,
         psperiodopago pp
         WHERE pre.nitempresa = :nit_empresa
         AND pre.id_cliente = cli.id
