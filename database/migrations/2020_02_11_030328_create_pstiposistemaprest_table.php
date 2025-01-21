@@ -17,6 +17,7 @@ class CreatePstiposistemaprestTable extends Migration
             $table->increments('id');
             $table->integer('codtipsistemap');
             $table->string('nomtipsistemap');
+            $table->longText('formula');
             $table->timestamps();
         });
     }

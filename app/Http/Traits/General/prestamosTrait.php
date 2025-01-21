@@ -18,8 +18,6 @@ trait prestamosTrait
 
         $datosCuota = $this->calcularCuota($request);
 
-
-
         $valor_cuota = $datosCuota['datosprestamo']['valor_cuota']??0;
 
         $now = new \DateTime();

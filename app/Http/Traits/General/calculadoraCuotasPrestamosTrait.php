@@ -6,19 +6,19 @@ namespace App\Http\Traits\General;
 use DB;
 use App\Psperiodopago;
 use App\PsEmpresa;
+use App\Pspstiposistemaprest;
 
 
 trait calculadoraCuotasPrestamosTrait
 {
 
     public function calcularCuota($request){
-
         setlocale(LC_ALL,"es_ES@euro","es_ES","esp");
         $id_forma_pago = $request->get('id_forma_pago');
         $formaPago = Psperiodopago::find( $id_forma_pago);
         $id_periodo_pago = $formaPago->id;
         $sistemaPrestamo =$request->get('id_sistema_pago');
-
+        $formula = Pspstiposistemaprest::find($sistemaPrestamo)->formula;
         if ($request->has('numcuotas') ){
             $numcuotas = $request->get('numcuotas');
         } else {
@@ -34,16 +34,8 @@ trait calculadoraCuotasPrestamosTrait
         } else {
             $valorpres = $formaPago->valorpres;
         }
-        // Sistema frances
-        if ($sistemaPrestamo == 1) {
-            return $this->sistemaPrestMetodoFrances($request,$valorpres,$porcint,$id_periodo_pago,$numcuotas);
-        // Sistema ingles
-        } else if ($sistemaPrestamo == 2) {
-            return $this->sistemaPrestMedodoIngles($request,$valorpres,$porcint,$id_periodo_pago,$numcuotas);
-        } else {
-        // todo: Implementar logica sistema aleman u otro
-            return [];
-        }
+        $salida =  eval($formula);
+        return $salida;
     }
 
     function generarTablaAmortizacion($request) {
@@ -51,44 +43,11 @@ trait calculadoraCuotasPrestamosTrait
         $nit_empresa = $request->get('nitempresa');
         $id_forma_pago = $request->get('id_forma_pago');
         $formaPago = Psperiodopago::find($id_forma_pago);
-        
         $sistemaPrestamo = $request->get('id_sistema_pago');
-       
         $empresa = Psempresa::where('nitempresa', $nit_empresa)->first();
-    
         // Cálculo de los valores de la tabla de amortización
-        $datos = $this->calcularCuota($request);
-        //dd($datos);
-        if (array_key_exists('tabla', $datos)) {
-            // Sistema Francés
-            if ($sistemaPrestamo == 1) {
-                foreach ($datos['tabla'] as $dato) {
-                    $tabla[] = array(
-                        'N° Cuota' => $dato['indice'],
-                        'Fecha Cuota' => $dato['fecha_cuota_descrpcion'],
-                        'Interes' => '$' . ' ' . number_format($dato['interes'], 2),
-                        'Amortizacion' => '$' . ' ' . number_format($dato['amortizacion'], 2),
-                        'Saldo' => '$' . ' ' . number_format($dato['saldo'], 2),
-                        'Total a pagar cuota' => '$' . ' ' . number_format($dato['t_pagomes'], 2)
-                    );
-                }
-                return $tabla;
-            } else if ($sistemaPrestamo == 2) {
-               foreach ($datos['tabla'] as $dato) {
-				    $tabla[] = array(
-				        'N° Cuota' => $dato['indice'],
-				        'Fecha Cuota' => $dato['fecha_cuota_descrpcion'],
-				        'Interes' => '$' . ' ' . number_format($dato['interes'], 2), // Formatear interés
-				        'Capital' => '$' . ' ' . number_format($dato['amortizacion'], 2), // Amortización de capital
-				        'Saldo' => '$' . ' ' . number_format($dato['saldo'], 2), // Saldo restante
-				        'Total a pagar cuota' => '$' . ' ' . number_format($dato['t_pagomes'], 2) // Total de la cuota
-				    );
-				}
-				return $tabla;
-            }
-        } else {
-            return [];
-        }
+        return $this->calcularCuota($request)['tabla_formato'];
+        
     }
     
 
@@ -198,7 +157,6 @@ trait calculadoraCuotasPrestamosTrait
         $tem = ($porcint / 100) / 12; // Tasa efectiva mensual
         $interesFijo = round($valorpres * $tem, 2); // Intereses fijos en cada cuota
         $tabla = [];
-
         for ($x = 1; $x <= $numcuotas; $x++) {
             // Generar fechas de las cuotas
             $fechas[$x] = $this->adicionarFechas($date, $id_periodo_pago);
