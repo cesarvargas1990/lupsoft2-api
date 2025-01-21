@@ -18,7 +18,6 @@ class CreatePsformapagoTable extends Migration
         Schema::create('psformapago', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('id_periodo_pago'); 
-			$table->integer('codtipsistemap')->nullable();
             $table->double('porcint',13,2)->nullable();
             $table->integer('ind_solicporcint')->nullable();
             $table->integer('ind_solinumc')->nullable();

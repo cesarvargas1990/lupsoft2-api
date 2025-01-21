@@ -12,7 +12,10 @@
 
 ## Usage Docker
 
--   `docker-compose build && docker-compose up -d`
+-   `docker-compose build`
+-   `docker-compose up -d`
+-   `docker-compose exec app sh -c "php artisan migrate --force || true && php artisan db:seed"`
+
 
 ## Test curl
 

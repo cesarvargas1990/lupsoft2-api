@@ -17,6 +17,7 @@ class PsperiodopagoTableSeeder extends Seeder
          DB::table('psperiodopago')->insert([
             
 			'nomperiodopago' => 'Diario',
+            'nitempresa' => '12345'
           
 
         ]);
@@ -25,6 +26,7 @@ class PsperiodopagoTableSeeder extends Seeder
 		DB::table('psperiodopago')->insert([
           
 			'nomperiodopago' => 'Semanal',
+            'nitempresa' => '12345'
           
 
         ]);
@@ -33,6 +35,7 @@ class PsperiodopagoTableSeeder extends Seeder
 		DB::table('psperiodopago')->insert([
            
 			'nomperiodopago' => 'Quincenal',
+            'nitempresa' => '12345'
             
 
         ]);
@@ -40,6 +43,7 @@ class PsperiodopagoTableSeeder extends Seeder
 		
 		DB::table('psperiodopago')->insert([
             'nomperiodopago' => 'Mensual',
+            'nitempresa' => '12345'
 		
 
         ]);
@@ -47,6 +51,7 @@ class PsperiodopagoTableSeeder extends Seeder
 		DB::table('psperiodopago')->insert([
           
 			'nomperiodopago' => 'Anual',
+            'nitempresa' => '12345'
            
 
 

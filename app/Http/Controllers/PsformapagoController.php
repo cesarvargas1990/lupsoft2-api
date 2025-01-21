@@ -61,7 +61,7 @@ class PsformapagoController extends Controller
 			try {
 
 
-				$qry = "select id as value, nomfpago as label from psformapago where nitempresa = :nitempresa";
+				$qry = "select id as value, nomperiodopago as label from psperiodopago where nitempresa = :nitempresa";
 				$binds = array(
 						'nitempresa' => $nitempresa
 				);
@@ -152,8 +152,7 @@ class PsformapagoController extends Controller
                     nomfpago,
                     nitempresa ,
                     fp.numcuotas,
-                    fp.ind_solinumc,
-                    fp.codtipsistemap
+                    fp.ind_solinumc
                 FROM psformapago fp, psperiodopago pp 
                 WHERE fp.id_periodo_pago = pp.id
                 AND fp.nitempresa = :nitempresa";
@@ -170,20 +169,19 @@ class PsformapagoController extends Controller
 
        
 
-        $qry = "SELECT fp.id, 
-            fp.id_periodo_pago, 
+        $qry = "SELECT pp.id, 
+            null  id_periodo_pago, 
             pp.nomperiodopago, 
-            fp.porcint, 
-            fp.ind_solicporcint, 
-            fp.ind_solivalorpres,
-            fp.valorpres,
-            nomfpago,
+            null porcint, 
+            null ind_solicporcint, 
+            null ind_solivalorpres,
+            null valorpres,
+            pp.nomperiodopago nomfpago,
             nitempresa ,
-            fp.numcuotas,
-            fp.ind_solinumc
-        FROM psformapago fp, psperiodopago pp 
-        WHERE fp.id_periodo_pago = pp.id
-        AND fp.id = :id";
+            null numcuotas,
+            null ind_solinumc
+        FROM   psperiodopago pp 
+        where pp.id = :id";
         $binds = array(
                 'id' => $id
         );

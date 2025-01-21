@@ -13,7 +13,7 @@ use App\Http\Traits\General\calculadoraCuotasPrestamosTrait;
 
 class CuotasController extends Controller
 {
-
+ 
     use calculadoraCuotasPrestamosTrait;
     use prestamosTrait;
 

@@ -19,6 +19,7 @@ class CreatePsperiodopagoTable extends Migration
         Schema::create('psperiodopago', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nomperiodopago');
+            $table->string('nitempresa');
             $table->timestamps();
         });
     }

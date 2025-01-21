@@ -88,7 +88,8 @@ class PsmenuTableSeeder extends Seeder
 			'nitempresa' => '12345'
         ]);
 		
-				
+			
+
 				DB::table('psmenu')->insert([
 					'orden' => '2',
 					'nombre' => 'Documentos',

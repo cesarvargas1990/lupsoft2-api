@@ -23,8 +23,7 @@ services:
     networks:
       - app_network
     command: >
-      sh -c "php artisan migrate --force ;
-             php artisan db:seed --force ; php -S 0.0.0.0:8000 -t public"
+      sh -c "php -S 0.0.0.0:8000 -t public"
 
   db:
     image: mysql:5.6
