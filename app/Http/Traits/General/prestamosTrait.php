@@ -96,6 +96,7 @@ trait prestamosTrait
         psperiodopago pp
         WHERE pre.nitempresa = :nit_empresa
         AND pre.id_cliente = cli.id
+        and pre.codtipsistemap  = tsip.codtipsistemap 
         and pp.id = pre.id_forma_pago
         AND em.nitempresa = pre.nitempresa
         AND  cli.codtipdocid = ide.id
