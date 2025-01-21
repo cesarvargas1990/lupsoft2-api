@@ -13,16 +13,15 @@ class DatabaseSeeder extends Seeder
     {
 		
 
-		// $this->call('UsersTableSeeder');
-		// $this->call('PsclientesTableSeeder');
-		// $this->call('PsperfilTableSeeder');
-		// $this->call('PsempresaTableSeeder');
-		// $this->call('PsmenuTableSeeder');
-		// $this->call('PsusperfilTableSeeder');
-		// $this->call('PstipodocidentiTableSeeder');
-		// $this->call('PsperiodopagoTableSeeder');
-		// $this->call('PstdocadjuntosTableSeeder');
-	
+		$this->call('UsersTableSeeder');
+		$this->call('PsclientesTableSeeder');
+		$this->call('PsperfilTableSeeder');
+		$this->call('PsempresaTableSeeder');
+		$this->call('PsmenuTableSeeder');
+		$this->call('PsusperfilTableSeeder');
+		$this->call('PstipodocidentiTableSeeder');
+		$this->call('PsperiodopagoTableSeeder');
+		$this->call('PstdocadjuntosTableSeeder');
 		$this->call('PstdocplantTableSeeder');
 		$this->call('PstiposistemaprestSeeder');
 		$this->call('PstipaccionSistemaTableSeeder');
