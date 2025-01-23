@@ -16,7 +16,7 @@ class CreatePsperfilTable extends Migration
         Schema::create('psperfil', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nombre');
-            $table->string('ind_activo')->unique()->notNullable();
+            $table->string('ind_activo')->notNullable();
 			$table->string('nitempresa',30)->nullable();
             $table->timestamps();
         });

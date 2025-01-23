@@ -15,5 +15,9 @@ class PsperfilTableSeeder extends Seeder
             'nombre' => 'Administrador',
             'ind_activo' => 1
         ]);
+        DB::table('psperfil')->insert([
+            'nombre' => 'Cobrador',
+            'ind_activo' => 1
+        ]);
     }
 }

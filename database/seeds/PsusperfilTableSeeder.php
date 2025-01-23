@@ -20,6 +20,13 @@ class PsusperfilTableSeeder extends Seeder
             'ind_activo' => 1,
 			'nitempresa' => '12345'
         ]);
+
+        DB::table('psusperfil')->insert([
+            'id_user' => 2,
+            'id_perfil' => 2,
+            'ind_activo' => 1,
+			'nitempresa' => '12345'
+        ]);
 		
 		
     }
