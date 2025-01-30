@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
 		$this->call('PstiposistemaprestSeeder');
 		$this->call('PstipaccionSistemaTableSeeder');
 		$this->call('PsperfilaccionTableSeeder');
+		$this->call('PsQuerytablaTableSeeder');
 
 
     }
