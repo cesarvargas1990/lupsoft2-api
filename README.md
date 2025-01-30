@@ -14,7 +14,7 @@
 
 -   `docker-compose build`
 -   `docker-compose up -d`
--   `docker-compose exec app sh -c "php artisan migrate --force || true && php artisan db:seed"`
+-   `docker-compose exec app sh -c "composer install && php artisan migrate --force && true && php artisan db:seed"`
 
 
 ## Test curl
