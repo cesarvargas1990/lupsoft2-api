@@ -21,12 +21,14 @@ COPY --from=composer:1 /usr/bin/composer /usr/bin/composer
 # Establece el directorio de trabajo
 WORKDIR /var/www/html
 
-# Copiar los archivos de la aplicación
-COPY . .
+# Copiar solo los archivos necesarios para instalar dependencias
+COPY composer.json composer.lock ./
 
 # Instalar las dependencias con Composer
-RUN composer install
-RUN php artisan jwt:secret
+
+
+# Copiar el resto de los archivos de la aplicación
+COPY . .
 
 # Establecer permisos
 RUN chown -R www-data:www-data /var/www/html
