@@ -4,6 +4,8 @@
 namespace App\Http\Traits\General;
 
 use DB;
+use App\Psusuperfil;
+
 
 
 trait menuPrincipalTrait
@@ -32,6 +34,23 @@ trait menuPrincipalTrait
 
     }
 
+    public function perfilAccion($idUSer) {
+
+       
+        $qry =("select p.nom_accion from psusperfil pu, psperfilaccion p
+                where p.id_perfil = pu.id_perfil 
+                and pu.id_user  = :iduser");
+
+        $binds = ['iduser'=>$idUSer];
+
+        $data = DB::select($qry,$binds);
+
+        $acciones = array_map(function ($item) {
+            return $item->nom_accion;
+        }, $data);
+       
+        return $acciones;
+    }
 
     public function hacerMenuUsuario($datosMenu, $parent_id = 0)
     {

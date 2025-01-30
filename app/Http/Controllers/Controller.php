@@ -5,6 +5,7 @@ use App\Http\Traits\General\menuPrincipalTrait;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use App\PsEmpresa;
+
 class Controller extends BaseController
 {
 
@@ -22,6 +23,7 @@ class Controller extends BaseController
             'user' => Auth::user(),
             'status' => 'success',
             'menu_usuario' => $this->hacerMenuUsuario( $this->getDatosMenu(Auth::user()->id)),
+            'permisos'=> $this->perfilAccion(Auth::user()->id),
             'expires_in' => Auth::factory()->getTTL() * 60,
             'time'=> time(),
             'is_admin' => Auth::user()->is_admin,
