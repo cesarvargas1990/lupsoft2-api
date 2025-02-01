@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Pspstiposistemaprest;
-
+use App\Psperiodopago;
 use Illuminate\Http\Request;
 
 use DB;
@@ -52,29 +52,22 @@ class PspstiposistemaprestController extends Controller
 
     }
 	
-	public function Show($nitempresa) {
-			
-			
-			try {
+	public function Show($nitempresa)
+    {
+        try {
+            $data = Psperiodopago::where('nitempresa', $nitempresa)
+                ->get(['id as value', 'nomperiodopago as label']);
 
-
-				$qry = "select id as value, nomperiodopago as label from psperiodopago where nitempresa = :nitempresa";
-				$binds = array(
-						'nitempresa' => $nitempresa
-				);
-				$data = DB::select($qry,$binds);				
-               return response()->json($data);
-
-
+            return response()->json($data);
         } catch (\Exception $e) {
-
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
-
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
-		
-		
-	}
+    }
 
     public function create(Request $request)
     {
@@ -135,26 +128,18 @@ class PspstiposistemaprestController extends Controller
     }
 
     public function list() {
-			
-			 
         try {
-
-
-            $qry = "select codtipsistemap as value, nomtipsistemap as label from pstiposistemaprest";
-           
-            $data = DB::select($qry);				
-           return response()->json($data);
-
-
-    } catch (\Exception $e) {
-
-        echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-            ->header('Content-Type', 'application/json');
-
+            $data = Pspstiposistemaprest::select('codtipsistemap as value', 'nomtipsistemap as label')->get();
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
+        }
     }
-    
-    
-}
 
 
 	

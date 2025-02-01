@@ -20,51 +20,24 @@ class PsclientesController extends Controller
 
     public function showAllPsclientes($nitempresa)
     {
-
-
         try {
-            $qry = "SELECT 
-                        id,
-                        nomcliente,
-                        codtipdocid,
-                        numdocumento,
-                        ciudad,
-                        telefijo,
-                        celular,
-                        direcasa,
-                        diretrabajo,
-                        ubicasa,
-                        ubictrabajo,
-                        nitempresa,
-                        ref1,
-                        ref2,
-                        id_cobrador,
-                        email,
-                        fch_expdocumento , 
-                        fch_nacimiento , 
-                        id_user,
-                        created_at,
-                        updated_at
-                    FROM psclientes
-                    WHERE nitempresa = :nitempresa and ind_estado = 1";
-
-            $binds = [
-                'nitempresa' => $nitempresa
-            ];
             
-            $data = DB::select($qry,$binds);
-            //dd($data);
+            $data = Psclientes::where('nitempresa', $nitempresa)
+                            ->where('ind_estado', 1)
+                            ->get();
+                            
+          
             return response()->json($data);
 
-
         } catch (\Exception $e) {
-
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
-
+           
+            return response()->json([
+                'message' => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 500); // 500 por error de servidor
         }
-
-
     }
 
     public function showOnePsclientes($id)
@@ -117,28 +90,26 @@ class PsclientesController extends Controller
     }
 	
 	public function ShowPsclientes($nitempresa) {
-			
-			
-			try {
-
-
-				$qry = "select id as value, nomcliente as label from psclientes where nitempresa = :nitempresa and ind_estado = 1";
-				$binds = array(
-						'nitempresa' => $nitempresa
-				);
-				$data = DB::select($qry,$binds);				
-               return response()->json($data);
-
-
+        try {
+          
+            $data = Psclientes::select('id as value', 'nomcliente as label')
+                             ->where('nitempresa', $nitempresa)
+                             ->where('ind_estado', 1)
+                             ->get();
+    
+          
+            return response()->json($data);
+    
         } catch (\Exception $e) {
-
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
-
+           
+            return response()->json([
+                'message' => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
-		
-		
-	} 
+    }
 
     public function create(Request $request)
     {

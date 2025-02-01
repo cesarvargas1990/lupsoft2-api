@@ -7,7 +7,8 @@ use DB;
 use App\Psquerytabla;
 use App\Psperiodopago;
 use App\Psempresa;
-
+use App\Pstdocplant;
+use Illuminate\Support\Facades\Auth;
 trait prestamosTrait
 {
 
@@ -238,22 +239,21 @@ trait prestamosTrait
 
 
     public function getPlantillasDocumentos($request)
-    {
-        $nit_empresa = $request->get('nitempresa');
-        $qry = "select * from pstdocplant where nitempresa = :nitempresa";
-        $binds = array(
+{
+    $nit_empresa = $request->get('nitempresa');
 
-            'nitempresa' => $nit_empresa
 
-        );
-        $data = DB::select($qry, $binds);
+    $data = Pstdocplant::where('nitempresa', $nit_empresa)->get();
 
-        return $data;
-    }
+   
+    return $data;
+}
   
 
     public function getCapitalPrestado ($nitempresa) {  
 
+        $iduser = Auth::user()->id;
+        //dd($iduser);
         $qry= "select  sum(p2.valorpres) valorpres
 
 			from psprestamos p2 where p2.nitempresa  = :nit_empresa 
@@ -267,6 +267,8 @@ trait prestamosTrait
     }
 
     public function getCapitalInicial ($nitempresa) {
+       
+        
         $qry =  "SELECT vlr_capinicial FROM psempresa WHERE nitempresa = :nit_empresa";
        $binds = array(
            'nit_empresa'=>  $nitempresa

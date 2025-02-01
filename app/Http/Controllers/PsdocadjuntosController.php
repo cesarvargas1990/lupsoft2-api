@@ -38,26 +38,18 @@ class PsdocadjuntosController extends Controller
 
     public function showOnePsdocadjuntos($id)
     {
-
-
         try {
+            $data = Psdocadjuntos::where('id_cliente', $id)->get();
 
-             
-            $qry = "select * from psdocadjuntos where id_cliente = :id_cliente";
-            $binds = array(
-                'id_cliente' => $id
-            );
-            $data = DB::select($qry,$binds);
             return response()->json($data);
-
-
         } catch (\Exception $e) {
-
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
-
+            return response([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
-
-
     }
 	
 	

@@ -52,29 +52,23 @@ class PstdocadjuntosController extends Controller
 
     }
 	
-	public function ShowPstdocadjuntos($nitempresa) {
-			
-			
-			try {
+	public function ShowPstdocadjuntos($nitempresa)
+    {
+        try {
+            $data = Pstdocadjuntos::where('nitempresa', $nitempresa)
+                ->select('id as value', 'nombre as label')
+                ->get();
 
-
-				$qry = "select id as value, nombre as label from pstdocadjuntos where nitempresa = :nitempresa";
-				$binds = array(
-						'nitempresa' => $nitempresa
-				);
-				$data = DB::select($qry,$binds);				
-               return response()->json($data);
-
-
+            return response()->json($data);
         } catch (\Exception $e) {
-
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
-
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
-		
-		
-	}
+    }
 
     public function create(Request $request)
     {

@@ -60,8 +60,7 @@ $router->group(['prefix' => ''], function () use ($router) {
     $router->get('listadoclientes/{id}',  ['uses' => 'PsclientesController@ShowPsclientes']); // combo listas
 
     // REST FULL SERVICES FOR TABLE => pstipodocidenti
-    $router->get('pstipodocidenti',  ['uses' => 'PstipodocidentiController@showAllpstipodocidenti']);
-    $router->get('pstipodocidenti/{id}', ['uses' => 'PstipodocidentiController@ShowPstipodocidenti']);
+    $router->get('pstipodocidenti',  ['uses' => 'PstipodocidentiController@ShowPstipodocidenti']);
     $router->post('pstipodocidenti', ['uses' => 'PstipodocidentiController@create']);
     $router->put('pstipodocidenti/{id}', ['uses' => 'PstipodocidentiController@update']);
     $router->delete('pstipodocidenti/{id}', ['uses' => 'PstipodocidentiController@delete']);
@@ -91,7 +90,7 @@ $router->group(['prefix' => ''], function () use ($router) {
     $router->post('pstdocadjuntos', ['uses' => 'PstdocadjuntosController@create']);
     $router->put('pstdocadjuntos/{id}', ['uses' => 'PstdocadjuntosController@update']);
     $router->delete('pstdocadjuntos/{id}', ['uses' => 'PstdocadjuntosController@delete']);
-    $router->get('listatdocadjuntos', ['uses' => 'PsperiodopagoController@ShowPstdocadjuntos']);
+    $router->get('listatdocadjuntos/{nitempresa}', ['uses' => 'PstdocadjuntosController@ShowPstdocadjuntos']);
 
 
     // REST FULL SERVICES FOR TABLE => pstdocplant
@@ -146,8 +145,6 @@ $router->group(['prefix' => ''], function () use ($router) {
 
     // COMPLEX QUERYS (selects of multiple tables, inner custom querys)
 
-    $router->get('consultaFormaPago/{id}' , ['uses' => 'PsformapagoController@consultaFormaPago']);
-    $router->post('consultaFormasPago/{nitempresa}' , ['uses' => 'PsformapagoController@consultaFormasPago']);
     $router->post('consultaTipoDocPlantilla' , ['uses' => 'PsformapagoController@consultaTipoDocPlantilla']);
     $router->post('calcularCuotas', ['uses' => 'CuotasController@calcularCuotas']);
     $router->post('calcularCuotas2', ['uses' => 'CuotasController@calcularCuotas2']);

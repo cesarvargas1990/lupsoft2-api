@@ -34,23 +34,30 @@ trait menuPrincipalTrait
 
     }
 
-    public function perfilAccion($idUSer) {
-
+    public function perfilAccion($idUser)
+{
+    try {
        
-        $qry =("select p.nom_accion from psusperfil pu, psperfilaccion p
-                where p.id_perfil = pu.id_perfil 
-                and pu.id_user  = :iduser");
+        $acciones = Psusuperfil::where('id_user', $idUser)
+                              ->join('psperfilaccion as p', 'psusperfil.id_perfil', '=', 'p.id_perfil')
+                              ->select('p.nom_accion')
+                              ->get()
+                              ->pluck('nom_accion')
+                              ->toArray();
 
-        $binds = ['iduser'=>$idUSer];
-
-        $data = DB::select($qry,$binds);
-
-        $acciones = array_map(function ($item) {
-            return $item->nom_accion;
-        }, $data);
        
         return $acciones;
+
+    } catch (\Exception $e) {
+        // Manejo de errores
+        return response()->json([
+            'message' => $e->getMessage(),
+            'errorCode' => $e->getCode(),
+            'lineError' => $e->getLine(),
+            'file' => $e->getFile()
+        ], 500);
     }
+}
 
     public function hacerMenuUsuario($datosMenu, $parent_id = 0)
     {

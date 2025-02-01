@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Psformapago;
 
 use Illuminate\Http\Request;
-
-
+use App\Psperiodopago;
+use App\Pstdocplant;
 use DB;
 
 class PsformapagoController extends Controller
@@ -55,29 +55,22 @@ class PsformapagoController extends Controller
 
     }
 	
-	public function ShowPsformapago($nitempresa) {
-			
-			
-			try {
+	public function ShowPsformapago($nitempresa)
+    {
+        try {
+            $data = Psperiodopago::where('nitempresa', $nitempresa)
+                ->get(['id as value', 'nomperiodopago as label']);
 
-
-				$qry = "select id as value, nomperiodopago as label from psperiodopago where nitempresa = :nitempresa";
-				$binds = array(
-						'nitempresa' => $nitempresa
-				);
-				$data = DB::select($qry,$binds);				
-               return response()->json($data);
-
-
+            return response()->json($data);
         } catch (\Exception $e) {
-
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
-
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
-		
-		
-	}
+    }
 
     public function create(Request $request)
     {
@@ -137,72 +130,24 @@ class PsformapagoController extends Controller
 
     }
 
-    public function consultaFormasPago($nid_empresa){
-        
-
-       
- 
-                $qry = "SELECT fp.id, 
-                    fp.id_periodo_pago, 
-                    pp.nomperiodopago, 
-                    fp.porcint, 
-                    fp.ind_solicporcint, 
-                    fp.ind_solivalorpres,
-                    fp.valorpres,
-                    nomfpago,
-                    nitempresa ,
-                    fp.numcuotas,
-                    fp.ind_solinumc
-                FROM psformapago fp, psperiodopago pp 
-                WHERE fp.id_periodo_pago = pp.id
-                AND fp.nitempresa = :nitempresa";
-				$binds = array(
-						'nitempresa' => $nid_empresa
-				);
-				$data = DB::select($qry,$binds);				
-               return response()->json($data);
-        
-    }
     
-    public function consultaFormaPago($id){
-        
 
-       
-
-        $qry = "SELECT pp.id, 
-            null  id_periodo_pago, 
-            pp.nomperiodopago, 
-            null porcint, 
-            null ind_solicporcint, 
-            null ind_solivalorpres,
-            null valorpres,
-            pp.nomperiodopago nomfpago,
-            nitempresa ,
-            null numcuotas,
-            null ind_solinumc
-        FROM   psperiodopago pp 
-        where pp.id = :id";
-        $binds = array(
-                'id' => $id
-        );
-        $data = DB::select($qry,$binds);				
-       return response()->json($data);
-
-}
-
-    public function consultaTipoDocPlantilla(Request $request){
-        
-
+    public function consultaTipoDocPlantilla(Request $request)
+    {
+        try {
             $nit_empresa = $request->get('nitempresa');
-                $qry = "SELECT *
-                FROM pstdocplant td
-                WHERE td.nitempresa = :nitempresa";
-				$binds = array(
-						'nitempresa' => $nit_empresa
-				);
-				$data = DB::select($qry,$binds);				
-               return response()->json($data);
-        
+
+            $data = Pstdocplant::where('nitempresa', $nit_empresa)->get();
+
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
+        }
     }
 	
 }

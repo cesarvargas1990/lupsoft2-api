@@ -52,27 +52,24 @@ class PstipodocidentiController extends Controller
 
     }
 	
-	public function ShowPstipodocidenti($nitempresa) {
-			
-			
-			try {
+	
 
+    public function ShowPstipodocidenti()
+    {
+        try {
+            $data = Pstipodocidenti::select('codtipdocid as value', 'nomtipodocumento as label')
+                ->get();
 
-				$qry = "select codtipdocid as value, nomtipodocumento as label from pstipodocidenti";
-				
-				$data = DB::select($qry);				
-               return response()->json($data);
-
-
+            return response()->json($data);
         } catch (\Exception $e) {
-
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
-
+            return response([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404)->header('Content-Type', 'application/json');
         }
-		
-		
-	}
+    }       
 
     public function create(Request $request)
     {

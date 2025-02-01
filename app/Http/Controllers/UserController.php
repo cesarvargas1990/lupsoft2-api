@@ -60,20 +60,17 @@ class UserController extends Controller
     public function getUsers($id)
     {
         try {
-            
-			
-			$qry = "select id as value, name as label from users where id_user = :id_user";
-				$binds = array(
-						'id_user' => $id
-				);
-				$data = DB::select($qry,$binds);				
-               return response()->json($data);
+            $data = User::select('id as value', 'name as label')
+                        ->where('id_user', $id)
+                        ->get();
+            if ($data->isEmpty()) {
+                return response()->json(['message' => 'User not found!'], 404);
+            }
+            return response()->json($data);
 
         } catch (\Exception $e) {
-
-            return response()->json(['message' => 'user not found!'], 404);
+            return response()->json(['message' => 'Error retrieving user!'], 500);
         }
-
     }
 
 }

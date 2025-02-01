@@ -54,27 +54,21 @@ class PstdocplantController extends Controller
 
     }
 	
-	public function ShowPstdocplant($nitempresa) {
-			
-			
-			try {
+	public function ShowPstdocplant()
+    {
+        try {
+            $data = Pstdocplant::select('codtipdocid as value', 'nomtipodocumento as label')->get();
 
-
-				$qry = "select codtipdocid as value, nomtipodocumento as label from pstdocplant";
-			
-				$data = DB::select($qry);				
-               return response()->json($data);
-
-
+            return response()->json($data);
         } catch (\Exception $e) {
-
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
-
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
-		
-		
-	}
+    }
 
     public function create(Request $request)
     {
