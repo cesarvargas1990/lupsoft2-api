@@ -42,52 +42,25 @@ class PsclientesController extends Controller
 
     public function showOnePsclientes($id)
     {
-
-
         try {
-
-            $qry = "SELECT 
-                        id,
-                        nomcliente,
-                        codtipdocid,
-                        numdocumento,
-                        ciudad,
-                        telefijo,
-                        celular,
-                        direcasa,
-                        diretrabajo,
-                        ubicasa,
-                        ubictrabajo,
-                        nitempresa,
-                        ref1,
-                        ref2,
-                        id_cobrador,
-                        email,
-                        fch_expdocumento fch_expdocumento, 
-                        fch_nacimiento  fch_nacimiento, 
-                        id_user,
-                        created_at,
-                        updated_at
-                    FROM psclientes
-                    WHERE nitempresa = :nitempresa";
-
-            $binds = [
-                'id' => $id
-            ];
-            
-            $data = DB::select($qry,$binds);
-
+            $data = Psclientes::find($id);
+    
+            if (!$data) {
+                return response()->json(['message' => 'Cliente no encontrado'], 404);
+            }
+    
             return response()->json($data);
-
-
+            
         } catch (\Exception $e) {
-
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
-
+            return response()->json([
+                'message' => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 500);
         }
-
-
     }
+    
 	
 	public function ShowPsclientes($nitempresa) {
         try {

@@ -8,7 +8,10 @@ use App\Psquerytabla;
 use App\Psperiodopago;
 use App\Psempresa;
 use App\Pstdocplant;
+use App\Psprestamos;
+use App\Pspagos;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 trait prestamosTrait
 {
 
@@ -250,32 +253,42 @@ trait prestamosTrait
 }
   
 
-    public function getCapitalPrestado ($nitempresa) {  
+    public function getCapitalPrestado($nitempresa)
+    {
+        try {
+            $valorpres = Psprestamos::where('nitempresa', $nitempresa)
+                                    ->where('ind_estado', 1)
+                                    ->sum('valorpres');
 
-        $iduser = Auth::user()->id;
-        //dd($iduser);
-        $qry= "select  sum(p2.valorpres) valorpres
+            return (float) $valorpres;
 
-			from psprestamos p2 where p2.nitempresa  = :nit_empresa 
-				and p2.ind_estado = 1 "; 
-       $binds = array(  
-           'nit_empresa'=>  $nitempresa
-       );
-        $data = DB::select($qry,$binds);
-        $valorpres = $data[0]->valorpres;
-      	return (float) $valorpres;
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 500);
+        }
     }
 
-    public function getCapitalInicial ($nitempresa) {
-       
-        
-        $qry =  "SELECT vlr_capinicial FROM psempresa WHERE nitempresa = :nit_empresa";
-       $binds = array(
-           'nit_empresa'=>  $nitempresa
-       );
-        $data = DB::select($qry,$binds);
-        
-        return $data[0]->vlr_capinicial; 
+
+    public function getCapitalInicial($nitempresa)
+    {
+        try {
+            $capitalInicial = Psempresa::where('nitempresa', $nitempresa)
+                                    ->value('vlr_capinicial');
+
+            return $capitalInicial;
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 500);
+        }
     }
 
     public function getTotalCapital ($nit_empresa) {
@@ -286,92 +299,91 @@ trait prestamosTrait
         
     }  
 
-    public function getTotalPrestadoHoy ($request) {
+    public function getTotalPrestadoHoy($request)
+    {
+        try {
+            $nitempresa = $request->get('nitempresa');
+            $fecha = $request->get('fecha');
+            $fecIni = Carbon::parse($fecha)->startOfDay();
+            $fecFin = Carbon::parse($fecha)->endOfDay();
 
+            $valorpres = Psprestamos::where('nitempresa', $nitempresa)
+                                    ->whereBetween('created_at', [$fecIni, $fecFin])
+                                    ->where('ind_estado', 1)
+                                    ->sum('valorpres');
 
-        $nitempresa = $request->get('nitempresa');
-        $fecha = $request->get('fecha');
-        $fecIni = strtotime($fecha.' 00:00:00'); 
-        $fecFin = strtotime($fecha.' 23:59:59'); 
-        
+            return $valorpres;
 
-         $qry =  "select sum(valorpres) valorpres from psprestamos 
-         WHERE nitempresa = :nit_empresa
-         and UNIX_TIMESTAMP(created_at) >= :fec_ini
-         and UNIX_TIMESTAMP(created_at) <= :fec_fin
-         and ind_estado = 1
-         "; 
-        $binds = array(
-            'nit_empresa'=>  $nitempresa,
-            'fec_ini' => $fecIni,
-            'fec_fin' => $fecFin
-        );
-         $data = DB::select($qry,$binds);
-         
-         return $data[0]->valorpres; 
-
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 500);
+        }
     }
-
-
 
 
     public function getTotalintereseshoy($request)
-{
-    $nitempresa = $request->get('nitempresa');
-    $fecha = $request->get('fecha'); // Se espera que sea en formato '2020-01-20'
-
-    // Definir el rango de fechas para la consulta (día completo)
-    $fecIni = $fecha . ' 00:00:00';
-    $fecFin = $fecha . ' 23:59:59';
-
-    // Consulta SQL ajustada para manejar el rango de fechas
-    $qry = "SELECT SUM(valcuota) as totalintereseshoy 
-            FROM pspagos 
-            WHERE nitempresa = :nit_empresa
-            AND fecha_realpago BETWEEN :fec_ini AND :fec_fin
-            AND ind_estado = 1";
-
-    $binds = [
-        'nit_empresa' => $nitempresa,
-        'fec_ini' => $fecIni,
-        'fec_fin' => $fecFin,
-    ];
-
-    // Ejecutar la consulta
-    $data = DB::select($qry, $binds);
-
-    // Retornar el total asegurándose de que no haya errores
-    return $data[0]->totalintereseshoy ?? 0;
-}
-
-
-    public function getValorPrestamos ($request) {
+    {
         $nitempresa = $request->get('nitempresa');
-        $qry = "select sum(valorpres) valorpres from psprestamos p where nitempresa = :nit_empresa and ind_estado =1";
-        $binds = array(
-            'nit_empresa'=>  $nitempresa
-        
-        );
-        $data = DB::select($qry,$binds);
-        return $data[0]->valorpres; 
+        $fecha = $request->get('fecha'); // Se espera que sea en formato 'YYYY-MM-DD'
+
+        // Definir el rango de fechas para la consulta (día completo)
+        $fecIni = $fecha . ' 00:00:00';
+        $fecFin = $fecha . ' 23:59:59';
+
+        // Obtener la suma de 'valcuota' usando Eloquent
+        $data = Pspagos::where('nitempresa', $nitempresa)
+            ->whereBetween('fecha_realpago', [$fecIni, $fecFin])
+            ->where('ind_estado', 1)
+            ->sum('valcuota');
+
+        return $data ?? 0;
     }
 
-    public function getTotalintereses ($request) {
 
-        $nitempresa = $request->get('nitempresa');
-        
-         
-         $qry =  "select sum(valcuota) totalintereses from pspagos 
-         WHERE nitempresa = :nit_empresa and ind_estado = 1"; 
-        $binds = array(
-            'nit_empresa'=>  $nitempresa
-        
-        );
-        
-         $data = DB::select($qry,$binds);
-         
-         return $data[0]->totalintereses; 
+    public function getValorPrestamos( $request)
+    {
+        try {
+            $nitempresa = $request->get('nitempresa');
 
+            $valorpres = Psprestamos::where('nitempresa', $nitempresa)
+                                    ->where('ind_estado', 1)
+                                    ->sum('valorpres');
+
+            return $valorpres;
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 500);
+        }
+    }
+
+   public function getTotalintereses( $request)
+    {
+        try {
+            $nitempresa = $request->get('nitempresa');
+
+            $totalintereses = Pspagos::where('nitempresa', $nitempresa)
+                                    ->where('ind_estado', 1)
+                                    ->sum('valcuota');
+
+            return $totalintereses;
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 500);
+        }
     }
 
 
