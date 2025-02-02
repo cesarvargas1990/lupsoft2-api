@@ -21,50 +21,39 @@ class PsfechaspagoController extends Controller
 	 
 	// Generic for tables, make repaces Psfechaspago  and Psfechaspago for  your tables  names 
 
-    public function showAllPsfechaspago($id_prestamo)
-    {
-
-
+    public function showAllPsfechaspago($id_prestamo) {
         try {
-
-            $qry = "select 
-            fp.id, 
-            pres.id_cliente, 
-            pres.id id_prestamo, 
-            fecha_pago , 
-            format(fp.valor_cuota,2) valcuota,
-            format(fp.valor_pagar, 2) valtotal,
-            (select p.id_fecha_pago from pspagos p where p.id_fecha_pago = fp.id and ind_abonocapital = 0 ) id_fecha_pago,
-            (select p.fecha_realpago from pspagos p where p.id_fecha_pago = fp.id  and ind_abonocapital = 0) fecha_realpago
-                      from psfechaspago fp, psprestamos  pres
-               where fp.id_prestamo = pres.id 
-               
-               and pres.id = :id_prestamo";
-            $binds = [
-                'id_prestamo' => $id_prestamo
-            ];
-            $data = DB::select($qry,$binds);
-            foreach($data as $key => $value) {
-                //dd($value->fecha_pago);
-                $data[$key]->fecha_pago = $this->SpanishDate(strtotime($value->fecha_pago) ); 
-                if ($value->fecha_realpago != "") {
-                    $data[$key]->fecha_realpago = $this->SpanishDate(strtotime($value->fecha_realpago) ); 
-                } else {
-                    $data[$key]->fecha_realpago = 'Pendiente de pago'; 
-                }
-                
-            }
-            return response()->json($data);
-
-
+            // Obtener las fechas de pago con su respectivo préstamo
+            $fechasPago = PsFechasPago::where('id_prestamo', $id_prestamo)
+                ->with(['prestamo.cliente', 'pagos' => function ($query) {
+                    $query->where('ind_abonocapital', 0);
+                }])
+                ->get()
+                ->map(function ($fp) {
+                    return [
+                        'id' => $fp->id,
+                        'id_cliente' => $fp->prestamo->id_cliente,
+                        'id_prestamo' => $fp->prestamo->id,
+                        'fecha_pago' => $this->SpanishDate(strtotime($fp->fecha_pago)),
+                        'valcuota' => number_format($fp->valor_cuota, 2),
+                        'valtotal' => number_format($fp->valor_pagar, 2),
+                        'id_fecha_pago' => optional($fp->pagos->first())->id_fecha_pago ?? null,
+                        'fecha_realpago' => optional($fp->pagos->first())->fecha_realpago 
+                            ? $this->SpanishDate(strtotime($fp->pagos->first()->fecha_realpago)) 
+                            : 'Pendiente de pago',
+                    ];
+                });
+    
+            return response()->json($fechasPago);
+            
         } catch (\Exception $e) {
-
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
-
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
-
-
     }
 
     public function showOnePsfechaspago($id)

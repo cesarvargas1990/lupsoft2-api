@@ -11,6 +11,7 @@ use App\Http\Traits\General\prestamosTrait;
 use DB;
 use App\Http\Traits\General\calculadoraCuotasPrestamosTrait;
 use App\PsEmpresa;
+use App\Psprestamos;
 class PrestamosController extends Controller
 {
 
@@ -122,80 +123,37 @@ class PrestamosController extends Controller
 
         
 
-    public function prestamosCliente (Request $request) {
-
-        
-        $nit_empresa = $request->get('nitempresa');
-        $empresa = PsEmpresa::where('nitempresa',$nit_empresa )->first();
-        
-       
-        $id_cliente = $request->get('id_cliente');
-        $qry = "SELECT 
-        pres.id AS 'Codigo Prestamo',
-        pres.numcuotas AS 'Numero Cuotas',
-        FORMAT(pres.valorpres, 2) AS 'Valor Prestamo',
-        (SELECT 
-          FORMAT(SUM(psf.valor_pagar), 2)  
-        FROM
-          psfechaspago psf  
-        WHERE psf.id_prestamo = pres.id) AS 'Valor Total Prestamo',
-
-        ( select format(sum(ifnull(psp.valcuota,0)),2) from pspagos psp  where psp.id_prestamo = pres.id and psp.ind_abonocapital = 1 ) 'Abonos capital',
-        (SELECT 
-          FORMAT(IFNULL(SUM(valcuota), 0), 2) 
-        FROM
-          pspagos pp 
-        WHERE pp.id_prestamo = pres.id 
-          AND pp.id_cliente = cli.id 
-          AND pp.ind_abonocapital = 0
-          AND pp.nitempresa = cli.nitempresa) AS 'Total Abonado',
-        FORMAT(
-          (
-            (SELECT 
-              SUM(psf.valor_pagar) 
-            FROM
-              psfechaspago psf 
-            WHERE psf.id_prestamo = pres.id) - 
-            (SELECT 
-              IFNULL(SUM(valcuota), 0) 
-            FROM
-              pspagos pp 
-            WHERE pp.id_prestamo = pres.id 
-              AND pp.id_cliente = cli.id 
-              AND pp.ind_abonocapital = 0
-              AND pp.nitempresa = cli.nitempresa) -
-
-              (SELECT 
-              IFNULL(SUM(valcuota), 0) 
-            FROM
-              pspagos pp 
-            WHERE pp.id_prestamo = pres.id 
-              AND pp.id_cliente = cli.id 
-              AND pp.ind_abonocapital = 1
-              AND pp.nitempresa = cli.nitempresa)
-
-          ),
-          2
-        ) AS 'Saldo' 
-      FROM
-        psprestamos pres,
-        psclientes cli 
-      WHERE pres.id_cliente = cli.id 
-        AND pres.id_cliente = :id_cliente
-        AND cli.nitempresa = :nit_empresa
-        AND pres.ind_estado = 1
-      ORDER BY pres.id 
-        ";
-
-        $binds = array(
-            'id_cliente' => $id_cliente,
-            'nit_empresa' => $nit_empresa
-        );
-
-        $data = DB::select($qry,$binds);
-        return $data;
-        
-    }
+    public function prestamosCliente(Request $request) {
+      $nit_empresa = $request->get('nitempresa');
+      $id_cliente = $request->get('id_cliente');
+  
+      // Obtener préstamos del cliente
+      $prestamos = Psprestamos::where('id_cliente', $id_cliente)
+          ->whereHas('cliente', function ($query) use ($nit_empresa) {
+              $query->where('nitempresa', $nit_empresa);
+          })
+          ->where('ind_estado', 1)
+          ->with(['fechasPago', 'pagos'])
+          ->get()
+          ->map(function ($prestamo) {
+              $valorTotalPrestamo = $prestamo->fechasPago->sum('valor_pagar');
+              $totalAbonado = $prestamo->pagos->where('ind_abonocapital', 0)->sum('valcuota');
+              $abonosCapital = $prestamo->pagos->where('ind_abonocapital', 1)->sum('valcuota');
+              $saldo = $valorTotalPrestamo - $totalAbonado - $abonosCapital;
+  
+              return [
+                  'Codigo Prestamo' => $prestamo->id,
+                  'Numero Cuotas' => $prestamo->numcuotas,
+                  'Valor Prestamo' => number_format($prestamo->valorpres, 2),
+                  'Valor Total Prestamo' => number_format($valorTotalPrestamo, 2),
+                  'Abonos capital' => number_format($abonosCapital, 2),
+                  'Total Abonado' => number_format($totalAbonado, 2),
+                  'Saldo' => number_format($saldo, 2),
+              ];
+          });
+  
+      return response()->json($prestamos);
+  }
    
     public function getPlantillasDocumentosPrestamo (Request $request) {
         try {

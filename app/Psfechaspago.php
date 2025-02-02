@@ -34,6 +34,14 @@ class Psfechaspago extends Model
 
     ];
 
+    public function prestamo() {
+        return $this->belongsTo(PsPrestamos::class, 'id_prestamo', 'id');
+    }
+
+    public function pagos() {
+        return $this->hasMany(PsPagos::class, 'id_fecha_pago', 'id');
+    }
+
 
 
 }

@@ -33,6 +33,20 @@ class Psprestamos extends Model
 
     ];
 
+    public function cliente() {
+        return $this->belongsTo(PsClientes::class, 'id_cliente', 'id');
+    }
+    
+    public function fechasPago() {
+        return $this->hasMany(PsFechasPago::class, 'id_prestamo', 'id');
+    }
+    
+    public function pagos() {
+        return $this->hasMany(PsPagos::class, 'id_prestamo', 'id');
+    }
+
+   
+
 
 
 }
