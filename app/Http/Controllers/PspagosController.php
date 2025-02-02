@@ -84,7 +84,16 @@ class PspagosController extends Controller
             // Obtener la fecha actual
             $now = Carbon::now();
 
-            // Registrar el pago de la cuota sin abonos a capital
+            // Verificar si ya existe un pago registrado para esta fecha y préstamo
+            $pagoExistente = Pspagos::where('id_fecha_pago', $request->get('id'))
+                ->where('id_prestamo', $request->get('id_prestamo'))
+                ->exists();
+
+            if ($pagoExistente) {
+                return response()->json(['error' => 'El pago ya ha sido registrado anteriormente'], 409);
+            }
+
+            // Registrar el pago de la cuota
             Pspagos::create([
                 'fecha_pago'      => $fechaPago->fecha_pago,
                 'id_cliente'      => $request->get('id_cliente'),
