@@ -258,7 +258,7 @@ class PrestamosController extends Controller
     {
         try {
           $request->request->add(['nitempresa'=>$nit_empresa]);
-          $datos = number_format($this->getCapitalInicial($nit_empresa) - $this->getValorPrestamos($request), 2);
+          $datos = number_format($this->getCapitalInicial($nit_empresa) - $this->getValorPrestamos($request) + $this->getTotalintereses($request) , 2);
           return response()->json($datos);
 
 
