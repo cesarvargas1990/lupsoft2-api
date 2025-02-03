@@ -303,10 +303,9 @@ trait prestamosTrait
     {
         try {
             $nitempresa = $request->get('nitempresa');
-            $fecha = $request->get('fecha');
+            $fecha = Carbon::createFromFormat('Y-m-d', $request->get('fecha'))->toDateString();
             $fecIni = Carbon::parse($fecha)->startOfDay();
             $fecFin = Carbon::parse($fecha)->endOfDay();
-
             $valorpres = Psprestamos::where('nitempresa', $nitempresa)
                                     ->whereBetween('created_at', [$fecIni, $fecFin])
                                     ->where('ind_estado', 1)
@@ -325,16 +324,12 @@ trait prestamosTrait
     }
 
 
-    public function getTotalintereseshoy($request)
+    public function getTotalintereseshoy( $request)
     {
         $nitempresa = $request->get('nitempresa');
-        $fecha = $request->get('fecha'); // Se espera que sea en formato 'YYYY-MM-DD'
-
-        // Definir el rango de fechas para la consulta (día completo)
-        $fecIni = $fecha . ' 00:00:00';
-        $fecFin = $fecha . ' 23:59:59';
-
-        // Obtener la suma de 'valcuota' usando Eloquent
+        $fecha = Carbon::createFromFormat('Y-m-d', $request->get('fecha'))->toDateString();
+        $fecIni = Carbon::parse($fecha)->startOfDay();
+        $fecFin = Carbon::parse($fecha)->endOfDay();
         $data = Pspagos::where('nitempresa', $nitempresa)
             ->whereBetween('fecha_realpago', [$fecIni, $fecFin])
             ->where('ind_estado', 1)

@@ -168,6 +168,7 @@ $router->group(['prefix' => ''], function () use ($router) {
     $router->post('totalintereshoy',['uses'=>'PrestamosController@totalintereshoy']);
     $router->post('totalinteres',['uses'=>'PrestamosController@totalinteres']);
     $router->get('totalprestado/{nit_empresa}',['uses'=>'PrestamosController@totalprestado']);
+    $router->post('totales_dashboard',['uses'=>'PrestamosController@totales_dashboard']);
 
 
 

@@ -21,6 +21,7 @@ class PsperfilaccionTableSeeder extends Seeder
         ['id_perfil' => 1, 'nom_accion' => 'dashboard.crear_prestamo'],
         ['id_perfil' => 1, 'nom_accion' => 'dashboard.imprimir_documentos'],
         ['id_perfil' => 1, 'nom_accion' => 'dashboard.listado_cuotas'],
+        ['id_perfil' => 2, 'nom_accion' => 'dashboard.listado_cuotas'],
         ['id_perfil' => 1, 'nom_accion' => 'dashboard.eliminar_prestamo'],
         ['id_perfil' => 1, 'nom_accion' => 'documento.crear'],
         ['id_perfil' => 1, 'nom_accion' => 'documento.editar'],

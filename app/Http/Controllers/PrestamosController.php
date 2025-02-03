@@ -7,7 +7,7 @@ use App\Psclientes;
 use Illuminate\Http\Request;
 use App\Http\Traits\General\prestamosTrait;
 
-
+use Carbon\Carbon;
 use DB;
 use App\Http\Traits\General\calculadoraCuotasPrestamosTrait;
 use App\PsEmpresa;
@@ -194,8 +194,7 @@ class PrestamosController extends Controller
     public function totalprestado($nit_empresa)
     {
         try {  
-          $datos = number_format($this->getCapitalPrestado($nit_empresa), 2);
-          return response()->json($datos);
+          return number_format($this->getCapitalPrestado($nit_empresa), 2);
 
 
       } catch (\Exception $e) {
@@ -210,8 +209,7 @@ class PrestamosController extends Controller
     {
         try {
 
-          $datos = number_format($this->getTotalPrestadoHoy($request), 2);
-          return response()->json($datos);
+          return number_format($this->getTotalPrestadoHoy($request), 2);
 
 
       } catch (\Exception $e) {
@@ -226,8 +224,8 @@ class PrestamosController extends Controller
     {
         try {
 
-          $datos = number_format($this->getTotalintereseshoy($request), 2);
-          return response()->json($datos);
+         return number_format($this->getTotalintereseshoy($request), 2);
+         
 
 
       } catch (\Exception $e) {
@@ -242,8 +240,7 @@ class PrestamosController extends Controller
     {
         try {
 
-          $datos = number_format($this->getTotalintereses($request), 2);
-          return response()->json($datos);
+          return number_format($this->getTotalintereses($request), 2);
 
 
       } catch (\Exception $e) {
@@ -258,8 +255,8 @@ class PrestamosController extends Controller
     {
         try {
           $request->request->add(['nitempresa'=>$nit_empresa]);
-          $datos = number_format($this->getCapitalInicial($nit_empresa) - $this->getValorPrestamos($request) + $this->getTotalintereses($request) , 2);
-          return response()->json($datos);
+          return number_format($this->getCapitalInicial($nit_empresa) - $this->getValorPrestamos($request) + $this->getTotalintereses($request) , 2);
+         
 
 
       } catch (\Exception $e) {
@@ -267,6 +264,23 @@ class PrestamosController extends Controller
           echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
               ->header('Content-Type', 'application/json');
 
+      }
+    }
+
+    public function totales_dashboard(Request $request) {
+      try {
+        $nit_empresa = $request->get('nitempresa');
+        $data = ["total_capital_prestado"=>$this->totalcapital($nit_empresa,$request),
+        "total_interes"=>$this->totalinteres($request),
+        "total_interes_hoy"=>$this->totalintereshoy($request),
+        "total_prestado_hoy"=>$this->totalprestadohoy($request),
+        "total_prestado"=>$this->totalprestado($nit_empresa),
+        "ahora"=>Carbon::now()->toDateTimeString()
+        ];
+        return response()->json($data);
+      } catch (\Exception $e) {
+        echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
+          ->header('Content-Type', 'application/json');
       }
     }
 
