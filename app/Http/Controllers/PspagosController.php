@@ -82,7 +82,8 @@ class PspagosController extends Controller
             }
 
             // Obtener la fecha actual
-            $now = Carbon::now();
+           
+            $fechaHora = Carbon::parse($request->get('fecha'));
 
             // Verificar si ya existe un pago registrado para esta fecha y préstamo
             $pagoExistente = Pspagos::where('id_fecha_pago', $request->get('id'))
@@ -99,7 +100,7 @@ class PspagosController extends Controller
                 'id_cliente'      => $request->get('id_cliente'),
                 'id_usureg'       => $request->get('id_user'),
                 'nitempresa'      => $request->get('nitempresa'),
-                'fecha_realpago'  => $now,
+                'fecha_realpago'  => $fechaHora,
                 'id_prestamo'     => $request->get('id_prestamo'),
                 'id_fecha_pago'   => $request->get('id'),
                 'valcuota'        => $valorCuota,

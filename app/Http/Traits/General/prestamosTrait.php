@@ -12,6 +12,7 @@ use App\Psprestamos;
 use App\Pspagos;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Carbon\CarbonTimeZone;
 trait prestamosTrait
 {
 
@@ -21,19 +22,12 @@ trait prestamosTrait
     {
 
         $datosCuota = $this->calcularCuota($request);
-
         $valor_cuota = $datosCuota['datosprestamo']['valor_cuota']??0;
-
-        $now = new \DateTime();
-
-        $now->getTimestamp();
-
-
+        // Crear la instancia de Carbon con el formato correcto
+        $fechaHora = Carbon::parse($request->get('fecha'));
+        //dd($request->get('fecha'), $fechaHora);
         $formaPago = Psperiodopago::find( $request->get('id_forma_pago'));
       
-
-        
-
         $id_prestamo = DB::table('psprestamos')->insertGetId(
             [
                 'nitempresa' => $request->get('nitempresa'),
@@ -48,7 +42,7 @@ trait prestamosTrait
                 'id_cobrador' => $request->get('id_cobrador'),
                 'nitempresa' => $request->get('nitempresa'),
                 'id_usureg' => $request->get('id_usureg'),
-                'created_at' => $now,
+                'created_at' => $fechaHora,
                 'ind_estado' => 1
             ]
         );
@@ -62,7 +56,7 @@ trait prestamosTrait
                     'valor_cuota' => $fechas['interes'],
                     'valor_pagar' => $fechas['t_pagomes'],
                     'ind_renovar' => $fechas['ind_renovar']??0,
-                    'created_at' => $now,
+                    'created_at' => $fechaHora,
                     'ind_estado' => 1,
                     'id_cliente' => $request->get('id_cliente'),
                     'nitempresa' => $request->get('nitempresa'),
