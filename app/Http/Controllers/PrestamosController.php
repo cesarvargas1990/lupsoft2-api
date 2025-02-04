@@ -270,7 +270,8 @@ class PrestamosController extends Controller
     public function totales_dashboard(Request $request) {
       try {
         $nit_empresa = $request->get('nitempresa');
-        $data = ["total_capital_prestado"=>$this->totalcapital($nit_empresa,$request),
+        $data = [
+        "total_capital_prestado"=>$this->totalcapital($nit_empresa,$request),
         "total_interes"=>$this->totalinteres($request),
         "total_interes_hoy"=>$this->totalintereshoy($request),
         "total_prestado_hoy"=>$this->totalprestadohoy($request),

@@ -5,29 +5,21 @@ namespace App\Http\Traits\General;
 
 use DB;
 use App\Psquerytabla;
-use App\Psperiodopago;
 use App\Psempresa;
 use App\Pstdocplant;
 use App\Psprestamos;
 use App\Pspagos;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Carbon\CarbonTimeZone;
 trait prestamosTrait
 {
-
-
 
     function guardarPrestamoFechas($request)
     {
 
         $datosCuota = $this->calcularCuota($request);
         $valor_cuota = $datosCuota['datosprestamo']['valor_cuota']??0;
-        // Crear la instancia de Carbon con el formato correcto
         $fechaHora = Carbon::parse($request->get('fecha'));
-        //dd($request->get('fecha'), $fechaHora);
-        $formaPago = Psperiodopago::find( $request->get('id_forma_pago'));
-      
         $id_prestamo = DB::table('psprestamos')->insertGetId(
             [
                 'nitempresa' => $request->get('nitempresa'),
@@ -63,9 +55,6 @@ trait prestamosTrait
                 ]
             );
         }
-
-
-
         return  $id_prestamo;
     }
 
@@ -104,12 +93,10 @@ trait prestamosTrait
     }
     function consultaListadoPrestamos($nit_empresa)
     {
-
         $qry = $this->obtenerQryListadoPrestamos($nit_empresa);
         $binds = array(
             'nit_empresa' => $nit_empresa
         );
-
         $data = DB::select($qry, $binds);
         return $data;
     }
@@ -118,17 +105,12 @@ trait prestamosTrait
     {
 
         $qry = $this->obtenerQryListadoPrestamos($nit_empresa);
-
         $qry .= ' and pre.id = :id_prestamo';
-
         $binds = array(
             'nit_empresa' => $nit_empresa,
             'id_prestamo' => $id_prestamo
         );
-
-
         $data = DB::select($qry, $binds);
-
         return $data;
     }
 
@@ -156,71 +138,40 @@ trait prestamosTrait
         $html_templates = [];
         if (count($data) > 0) {
             $renderTemplate = '';
-
             foreach ($data as $documento) {
-
                 $renderTemplate = $this->replaceVariablesInTemplate($documento->plantilla_html, $array) . '<br>';
-
-
                 $start_tag = '<!--QRT';
                 $end_tag = 'QRT-->';
-
-
                 if (preg_match_all('/' . preg_quote($start_tag) . '(.*?)' . preg_quote($end_tag) . '/s', $renderTemplate, $matches)) {
-
                     $matches = ($matches[1]);
-
                     $nitempresa = $nit_empresa;
                     $str2 = '';
                     foreach ($matches as $value) {
-
                         $qt = $value[0];
                         $str = ltrim($value, $qt);
-
                         if ((preg_match_all('/' . preg_quote('[') . '(.*?)' . preg_quote(']') . '/s', $str, $matchesv))) {
-
                             $qt = Psquerytabla::where('codigo', $qt)->where('nitempresa', $nitempresa)->first()->sql;
-
-
                             $vars = $this->consultaVariablesPrestamo($nit_empresa, $id_prestamo)[0];
-
                             $array = json_decode(json_encode($vars), true);
-
                             $qt = $this->replaceVariablesInTemplate($qt,$array);
-                            
                             $query =  DB::select($qt);
                             $variables = $matchesv[1];
-
-
-
                             foreach ($query as $val1) {
-
-
                                 $cadenaReemplazada = '';
                                 $cadenaSubstituir = $str;
                                 foreach ($variables as $key => $val2) {
-
-
                                     $valorAsubstituir = $val1->{$val2};
-
                                     $queSeVaASubstituir = '[' . $val2 . ']';
                                     $cadenaSubstituir = str_replace($queSeVaASubstituir, (string) $valorAsubstituir, $cadenaSubstituir);
                                 }
-
-
                                 $str2 .= $cadenaSubstituir;
                             }
                         }
-
-
                         $renderTemplate = str_replace($matches[0], $str2, $renderTemplate);
                         $renderTemplate = str_replace('<!--QRT', '',  $renderTemplate);
                         $renderTemplate = str_replace('QRT-->', '',  $renderTemplate);
                     }
                 }
-
-
-
                 $html_templates[] = array(
                     'id' => $documento->id,
                     'nombre' => $documento->nombre,
@@ -229,22 +180,15 @@ trait prestamosTrait
                 );
             }
         }
-
         return $html_templates;
     }
 
-
-
     public function getPlantillasDocumentos($request)
-{
-    $nit_empresa = $request->get('nitempresa');
-
-
-    $data = Pstdocplant::where('nitempresa', $nit_empresa)->get();
-
-   
-    return $data;
-}
+    {
+        $nit_empresa = $request->get('nitempresa');
+        $data = Pstdocplant::where('nitempresa', $nit_empresa)->get();
+        return $data;
+    }
   
 
     public function getCapitalPrestado($nitempresa)
@@ -266,15 +210,12 @@ trait prestamosTrait
         }
     }
 
-
     public function getCapitalInicial($nitempresa)
     {
         try {
             $capitalInicial = Psempresa::where('nitempresa', $nitempresa)
                                     ->value('vlr_capinicial');
-
             return $capitalInicial;
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -286,11 +227,9 @@ trait prestamosTrait
     }
 
     public function getTotalCapital ($nit_empresa) {
-        
         $capitalinicial = $this->getCapitalInicial($nit_empresa);
         $capitalPrestado = $this->getCapitalPrestado($nit_empresa);
         return $capitalinicial - $capitalPrestado;
-        
     }  
 
     public function getTotalPrestadoHoy($request)
@@ -320,6 +259,7 @@ trait prestamosTrait
 
     public function getTotalintereseshoy( $request)
     {
+        //dd($request->all());
         $nitempresa = $request->get('nitempresa');
         $fecha = Carbon::createFromFormat('Y-m-d', $request->get('fecha'))->toDateString();
         $fecIni = Carbon::parse($fecha)->startOfDay();
@@ -327,11 +267,11 @@ trait prestamosTrait
         $data = Pspagos::where('nitempresa', $nitempresa)
             ->whereBetween('fecha_realpago', [$fecIni, $fecFin])
             ->where('ind_estado', 1)
+            ->where('id_usureg',Auth::user()->id)
             ->sum('valcuota');
 
         return $data ?? 0;
     }
-
 
     public function getValorPrestamos( $request)
     {
@@ -375,12 +315,9 @@ trait prestamosTrait
         }
     }
 
-
     public function totalPrestadoHoy ($nit_empresa) {
-        
         $capitalinicial = $this->getCapitalInicial($nit_empresa);
         $capitalPrestado = $this->getCapitalPrestado($nit_empresa);
         return $capitalinicial + $capitalPrestado;
-        
     }
 }
