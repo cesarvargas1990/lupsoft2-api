@@ -16,37 +16,18 @@ trait calculadoraCuotasPrestamosTrait
         setlocale(LC_ALL,"es_ES@euro","es_ES","esp");
         $id_forma_pago = $request->get('id_forma_pago');
         $formaPago = Psperiodopago::find( $id_forma_pago);
-        $id_periodo_pago = $formaPago->id;
+        $id_periodo_pago = $formaPago->id; // se usa dentro del eval
         $sistemaPrestamo =$request->get('id_sistema_pago');
         $formula = Pspstiposistemaprest::where('codtipsistemap',$sistemaPrestamo)->first()->formula;
-        if ($request->has('numcuotas') ){
-            $numcuotas = $request->get('numcuotas');
-        } else {
-            $numcuotas = $formaPago->numcuotas;
-        }
-        if ($request->has('porcint') ){
-            $porcint = $request->get('porcint'); 
-        } else {
-            $porcint = $formaPago->porcint;
-        }
-        if ($request->has('valorpres')) {
-            $valorpres = $request->get('valorpres');
-        } else {
-            $valorpres = $formaPago->valorpres;
-        }
+        $numcuotas = $request->get('numcuotas');
+        $porcint = $request->get('porcint'); 
+        $valorpres = $request->get('valorpres');
         $salida =  eval($formula);
         return $salida;
     }
 
     function generarTablaAmortizacion($request) {
-
-        $nit_empresa = $request->get('nitempresa');
-        $id_forma_pago = $request->get('id_forma_pago');
-        $formaPago = Psperiodopago::find($id_forma_pago);
-        $sistemaPrestamo = $request->get('id_sistema_pago');
-        $empresa = Psempresa::where('nitempresa', $nit_empresa)->first();
         return $this->calcularCuota($request)['tabla_formato'];
-        
     }
     
 
