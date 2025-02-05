@@ -257,18 +257,29 @@ trait prestamosTrait
     }
 
 
-    public function getTotalintereseshoy( $request)
+    public function getTotalintereseshoy($request)
     {
-        //dd($request->all());
         $nitempresa = $request->get('nitempresa');
         $fecha = Carbon::createFromFormat('Y-m-d', $request->get('fecha'))->toDateString();
         $fecIni = Carbon::parse($fecha)->startOfDay();
         $fecFin = Carbon::parse($fecha)->endOfDay();
-        $data = Pspagos::where('nitempresa', $nitempresa)
-            ->whereBetween('fecha_realpago', [$fecIni, $fecFin])
-            ->where('ind_estado', 1)
-            ->where('id_usureg',Auth::user()->id)
-            ->sum('valcuota');
+
+        $perfil = Auth::user()->perfiles->firstWhere('id', 1)->id ?? null;
+        
+        if ($perfil == 1) {
+            // Sumar todos los pagos de la empresa
+            $data = Pspagos::where('nitempresa', $nitempresa)
+                ->whereBetween('fecha_realpago', [$fecIni, $fecFin])
+                ->where('ind_estado', 1)
+                ->sum('valcuota');
+        } else {
+            // Sumar solo los pagos del usuario específico
+            $data = Pspagos::where('nitempresa', $nitempresa)
+                ->whereBetween('fecha_realpago', [$fecIni, $fecFin])
+                ->where('ind_estado', 1)
+                ->where('id_usureg', Auth::user()->id)
+                ->sum('valcuota');
+        }
 
         return $data ?? 0;
     }
@@ -294,23 +305,34 @@ trait prestamosTrait
         }
     }
 
-   public function getTotalintereses( $request)
+    public function getTotalintereses($request)
     {
         try {
             $nitempresa = $request->get('nitempresa');
-
-            $totalintereses = Pspagos::where('nitempresa', $nitempresa)
-                                    ->where('ind_estado', 1)
-                                    ->sum('valcuota');
-
+    
+            // Verificar si el usuario tiene asignado el perfil con ID 1
+            $hasPerfil = Auth::user()->perfiles->contains('id', 1);
+    
+            if ($hasPerfil) {
+               
+                $totalintereses = Pspagos::where('nitempresa', $nitempresa)
+                    ->where('ind_estado', 1)
+                    ->sum('valcuota');
+            } else {
+               
+                $totalintereses = Pspagos::where('nitempresa', $nitempresa)
+                    ->where('ind_estado', 1)
+                    ->where('id_usureg', Auth::user()->id)
+                    ->sum('valcuota');
+            }
+    
             return $totalintereses;
-
         } catch (\Exception $e) {
             return response()->json([
-                'message' => $e->getMessage(),
+                'message'   => $e->getMessage(),
                 'errorCode' => $e->getCode(),
                 'lineError' => $e->getLine(),
-                'file' => $e->getFile()
+                'file'      => $e->getFile()
             ], 500);
         }
     }
