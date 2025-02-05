@@ -6,7 +6,7 @@ use App\Psclientes;
 
 use Illuminate\Http\Request;
 use App\Http\Traits\General\prestamosTrait;
-
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use DB;
 use App\Http\Traits\General\calculadoraCuotasPrestamosTrait;
@@ -194,8 +194,11 @@ class PrestamosController extends Controller
     public function totalprestado($nit_empresa)
     {
         try {  
-          return number_format($this->getCapitalPrestado($nit_empresa), 2);
-
+        $hasPerfil = Auth::user()->perfiles->contains('id', 1);
+        if (!$hasPerfil) {
+            return "NA";
+        }
+        return number_format($this->getCapitalPrestado($nit_empresa), 2);
 
       } catch (\Exception $e) {
 
@@ -209,6 +212,11 @@ class PrestamosController extends Controller
     {
         try {
 
+        $hasPerfil = Auth::user()->perfiles->contains('id', 1);
+
+        if (!$hasPerfil) {
+            return "NA";
+        }
           return number_format($this->getTotalPrestadoHoy($request), 2);
 
 
@@ -254,10 +262,13 @@ class PrestamosController extends Controller
     public function totalcapital($nit_empresa,Request $request)
     {
         try {
-          $request->request->add(['nitempresa'=>$nit_empresa]);
-          return number_format($this->getCapitalInicial($nit_empresa) - $this->getValorPrestamos($request) + $this->getTotalintereses($request) , 2);
-         
-
+        $hasPerfil = Auth::user()->perfiles->contains('id', 1);
+        if (!$hasPerfil) {
+            return "NA";
+        }
+        $request->request->add(['nitempresa'=>$nit_empresa]);
+        return number_format($this->getCapitalInicial($nit_empresa) - $this->getValorPrestamos($request) + $this->getTotalintereses($request) , 2);
+        
 
       } catch (\Exception $e) {
 
