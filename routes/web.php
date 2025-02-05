@@ -26,10 +26,7 @@ $router->get('/upload/documentosAdjuntos/{filepath:.*}', function (Request $requ
     return response()->json(['error' => 'File not found'], 404);
 });
 
-$router->group(['prefix' => 'prueba'], function () use ($router) {
-    
-    $router->get('/prueba',  ['uses' => 'PruebaController@prueba']);
-
+$router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
