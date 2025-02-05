@@ -37,6 +37,10 @@ class Psusuperfil extends Model
     protected $table = 'psusperfil';
 
 
+    public function usuarios()
+    {
+        return $this->hasMany(User::class, 'id_perfil','id');  // Asumiendo que 'perfil_id' es la clave foránea en la tabla de usuarios
+    }
 
 
 }
