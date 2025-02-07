@@ -20,3 +20,7 @@
 ## Test curl
 
 - ``` curl --location 'localhost:8000/auth/login' --header 'Content-Type: application/json' --data-raw '{"email":"admin@admin.com", "password":"password"}' ```
+
+## Run Test Unit
+
+- ``` docker-compose exec app sh -c "./vendor/bin/phpunit" ```
