@@ -155,7 +155,7 @@ class PrestamosController extends Controller
       return response()->json($prestamos);
   }
    
-    public function getPlantillasDocumentosPrestamo (Request $request) {
+   function getPlantillasDocumentosPrestamo (Request $request) {
         try {
  
             $datos = $this->renderTemplate ($request);
@@ -170,7 +170,7 @@ class PrestamosController extends Controller
         }
     }
   
-    public function prueba (Request $request) {
+     function prueba (Request $request) {
         $request->request->add(['nit_empresa' => 1]);
         $request->request->add(['id_prestamo' => 1]);
         //$obj = new prestamosTrait();
@@ -178,7 +178,7 @@ class PrestamosController extends Controller
         dd($value);
     }
 
-    public function eliminarPrestamo ($id_prestamo) {
+     function eliminarPrestamo ($id_prestamo) {
 
         if ($id_prestamo != "") {
             

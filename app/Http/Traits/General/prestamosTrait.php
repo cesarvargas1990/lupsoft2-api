@@ -113,7 +113,7 @@ trait prestamosTrait
         return DB::select($qry, $binds);
     }
 
-    public function replaceVariablesInTemplate($template, array $variables)
+    function replaceVariablesInTemplate($template, array $variables)
     {
 
         return preg_replace_callback(
@@ -126,7 +126,7 @@ trait prestamosTrait
         );
     }
 
-    public function renderTemplate($request)
+    function renderTemplate($request)
     {
         $id_prestamo = $request->get('id_prestamo');
         $nit_empresa = $request->get('nitempresa');

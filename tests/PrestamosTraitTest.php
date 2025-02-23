@@ -256,10 +256,28 @@ class PrestamosTraitTest extends TestCase
         );
     }
 
-    
+    public function tesGetPlantillasDocumentos() {
+        $dummy = new PrestamosTraitTestDummy();
+        $mockPlantillaDocuments = [ 'nombre',
+        'plantilla_html',
+        'nitempresa'];
+        $mock= Mockery::mock('Eloquent', 'alias:\App\Pstdocplant');
+        $mock->shouldReceive('where')
+         ->once()
+        ->andReturn($mockPlantillaDocuments);
 
-    /**
-     * Cierra Mockery después de cada test.
-     */
+        $request = Request::create('/dummy', 'POST', [
+            'nitempresa'    => '123456789'
+        ]);
+
+        $result = $dummy->getPlantillasDocumentos($request);
+
+        $this->assertEquals(
+            $result,
+            'any'
+        );
+       
+    }
+
   
 }
