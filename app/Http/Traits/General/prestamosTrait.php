@@ -101,17 +101,16 @@ trait prestamosTrait
         return $data;
     }
 
-    function consultaVariablesPrestamo($nit_empresa, $id_prestamo)
+    function consultaVariablesPrestamo($nitempresa, $idprestamo)
     {
 
-        $qry = $this->obtenerQryListadoPrestamos($nit_empresa);
+        $qry = $this->obtenerQryListadoPrestamos($nitempresa);
         $qry .= ' and pre.id = :id_prestamo';
         $binds = array(
-            'nit_empresa' => $nit_empresa,
-            'id_prestamo' => $id_prestamo
+            'nit_empresa' => $nitempresa,
+            'id_prestamo' => $idprestamo
         );
-        $data = DB::select($qry, $binds);
-        return $data;
+        return DB::select($qry, $binds);
     }
 
     public function replaceVariablesInTemplate($template, array $variables)
@@ -342,4 +341,8 @@ trait prestamosTrait
         $capitalPrestado = $this->getCapitalPrestado($nit_empresa);
         return $capitalinicial + $capitalPrestado;
     }
+
+    
+
+    
 }

@@ -24,3 +24,22 @@
 ## Run Test Unit
 
 - ``` docker-compose exec app sh -c "./vendor/bin/phpunit" ```
+
+
+## Run Coverage
+
+- ``` docker-compose exec app sh -c "./vendor/bin/phpunit --coverage-clover coverage.xml" ```
+
+## Run Coverage html
+
+``` docker-compose exec app sh -c "./vendor/bin/phpunit --coverage-html coverage-report" ```
+
+
+
+## Sonar
+
+``` sonar-scanner \
+  -Dsonar.projectKey=psoft2 \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.login=sqp_2e8c1844cc6de892496c03f25cc7a525f127d80d ```

@@ -1,0 +1,8 @@
+<phpunit bootstrap="vendor/autoload.php" colors="true">
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">app</directory>
+        </include>
+    </coverage>
+</phpunit>
+pecl install xdebug
