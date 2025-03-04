@@ -126,60 +126,72 @@ trait prestamosTrait
         );
     }
 
-    function renderTemplate($request)
+    public function renderTemplate($id_prestamo, $nit_empresa, $documentos, $psQueryTabla, $psPrestamos)
     {
-        $id_prestamo = $request->get('id_prestamo');
-        $nit_empresa = $request->get('nitempresa');
-        $variables = $this->consultaVariablesPrestamo($nit_empresa, $id_prestamo)[0];
+        // Consultar variables del préstamo
+        $variables = $psPrestamos->consultaVariablesPrestamo($nit_empresa, $id_prestamo)[0];
+        $variablesArray = json_decode(json_encode($variables), true);
 
-        $array = json_decode(json_encode($variables), true);
-        $data = $this->getPlantillasDocumentos($request);
         $html_templates = [];
-        if (count($data) > 0) {
-            $renderTemplate = '';
-            foreach ($data as $documento) {
-                $renderTemplate = $this->replaceVariablesInTemplate($documento->plantilla_html, $array) . '<br>';
-                $start_tag = '<!--QRT';
-                $end_tag = 'QRT-->';
-                if (preg_match_all('/' . preg_quote($start_tag) . '(.*?)' . preg_quote($end_tag) . '/s', $renderTemplate, $matches)) {
-                    $matches = ($matches[1]);
-                    $nitempresa = $nit_empresa;
-                    $str2 = '';
-                    foreach ($matches as $value) {
-                        $qt = $value[0];
-                        $str = ltrim($value, $qt);
-                        if ((preg_match_all('/' . preg_quote('[') . '(.*?)' . preg_quote(']') . '/s', $str, $matchesv))) {
-                            $qt = Psquerytabla::where('codigo', $qt)->where('nitempresa', $nitempresa)->first()->sql;
-                            $vars = $this->consultaVariablesPrestamo($nit_empresa, $id_prestamo)[0];
-                            $array = json_decode(json_encode($vars), true);
-                            $qt = $this->replaceVariablesInTemplate($qt,$array);
-                            $query =  DB::select($qt);
-                            $variables = $matchesv[1];
-                            foreach ($query as $val1) {
-                                $cadenaReemplazada = '';
-                                $cadenaSubstituir = $str;
-                                foreach ($variables as $key => $val2) {
-                                    $valorAsubstituir = $val1->{$val2};
-                                    $queSeVaASubstituir = '[' . $val2 . ']';
-                                    $cadenaSubstituir = str_replace($queSeVaASubstituir, (string) $valorAsubstituir, $cadenaSubstituir);
-                                }
-                                $str2 .= $cadenaSubstituir;
-                            }
-                        }
-                        $renderTemplate = str_replace($matches[0], $str2, $renderTemplate);
-                        $renderTemplate = str_replace('<!--QRT', '',  $renderTemplate);
-                        $renderTemplate = str_replace('QRT-->', '',  $renderTemplate);
-                    }
-                }
-                $html_templates[] = array(
-                    'id' => $documento->id,
-                    'nombre' => $documento->nombre,
-                    'plantilla_html' => $renderTemplate,
-                    'nit_empresa' => $nit_empresa
-                );
-            }
+
+        foreach ($documentos as $documento) {
+            $renderTemplate = $this->replaceVariablesInTemplate($documento->plantilla_html, $variablesArray) . '<br>';
+            $renderTemplate = $this->procesarQRT($renderTemplate, $nit_empresa, $id_prestamo, $psQueryTabla, $psPrestamos);
+
+            $html_templates[] = [
+                'id' => $documento->id,
+                'nombre' => $documento->nombre,
+                'plantilla_html' => $renderTemplate,
+                'nit_empresa' => $nit_empresa
+            ];
         }
+
         return $html_templates;
+    }
+
+/**
+ * Procesa las etiquetas QRT en la plantilla HTML.
+ */
+    private function procesarQRT($template, $nit_empresa, $id_prestamo, $psQueryTabla, $psPrestamos)
+    {
+        $start_tag = '<!--QRT';
+        $end_tag = 'QRT-->';
+        
+        if (preg_match_all('/' . preg_quote($start_tag) . '(.*?)' . preg_quote($end_tag) . '/s', $template, $matches)) {
+            $matches = $matches[1];
+            $processedTemplate = $template;
+
+            foreach ($matches as $value) {
+                $qt = $value[0];
+                $str = ltrim($value, $qt);
+
+                if (preg_match_all('/' . preg_quote('[') . '(.*?)' . preg_quote(']') . '/s', $str, $matchesv)) {
+                    // Obtener SQL desde Psquerytabla
+                    $queryData = $psQueryTabla->where('codigo', $qt)->where('nitempresa', $nit_empresa)->first();
+                    if (!$queryData) {
+                        continue;
+                    }
+
+                    $qt = $queryData->sql;
+
+                    // Consultar variables del préstamo
+                    $vars = $psPrestamos->consultaVariablesPrestamo($nit_empresa, $id_prestamo)[0];
+                    $varsArray = json_decode(json_encode($vars), true);
+
+                    // Reemplazar variables dentro de la consulta
+                    foreach ($matchesv[1] as $var) {
+                        if (isset($varsArray[$var])) {
+                            $qt = str_replace("[$var]", $varsArray[$var], $qt);
+                        }
+                    }
+
+                    // Reemplazar en la plantilla
+                    $processedTemplate = str_replace($start_tag . $value . $end_tag, $qt, $processedTemplate);
+                }
+            }
+            return $processedTemplate;
+        }
+        return $template;
     }
 
     public function getPlantillasDocumentos($request)
@@ -190,14 +202,14 @@ trait prestamosTrait
     }
   
 
-    public function getCapitalPrestado($nitempresa)
+    public function getCapitalPrestado($nitempresa, Psprestamos $psPrestamos)
     {
         try {
-            $valorpres = Psprestamos::where('nitempresa', $nitempresa)
+            $valorpres = $psPrestamos->where('nitempresa', $nitempresa)
                                     ->where('ind_estado', 1)
                                     ->sum('valorpres');
 
-            return (float) $valorpres;
+            return (float) $valorpres; // Retorna un número en caso de éxito
 
         } catch (\Exception $e) {
             return response()->json([
@@ -205,9 +217,10 @@ trait prestamosTrait
                 'errorCode' => $e->getCode(),
                 'lineError' => $e->getLine(),
                 'file' => $e->getFile()
-            ], 500);
+            ], 500); // Devuelve una respuesta JSON en caso de error
         }
     }
+
 
     public function getCapitalInicial($nitempresa)
     {
