@@ -2,20 +2,15 @@
 
 namespace Tests\Unit;
 
-use App\Http\Controllers\PrestamosController;
+
 use App\Http\Traits\General\prestamosTrait;
 use App\PsEmpresa;
 use App\Psprestamos;
-use App\Psquerytabla;
-use App\Pstdocplant;
 use Illuminate\Http\JsonResponse;
 use Mockery;
 use TestCase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
-
-
 
 class PrestamosTraitTestDummy
 {
@@ -417,7 +412,40 @@ class PrestamosTraitTest extends TestCase
         $this->assertEquals(25000.00, $resultado);
     }
 
-    
+    public function test_get_total_prestado_hoy_returns_correct_value()
+    {
+        // Crear un mock de Psprestamos
+        $mockPsprestamos = Mockery::mock(Psprestamos::class);
+
+        // Configurar el mock para simular la consulta
+        $mockPsprestamos->shouldReceive('where')
+                         ->withAnyArgs()
+                         ->andReturnSelf();
+        $mockPsprestamos->shouldReceive('whereBetween')
+                         ->withAnyArgs()
+                         ->andReturnSelf();
+        $mockPsprestamos->shouldReceive('sum')
+                         ->with('valorpres')
+                         ->andReturn(15000.00);
+
+        // Crear una instancia de una clase que use el trait
+        $traitInstance = new class {
+            use PrestamosTrait;
+        };
+
+        // Simular el request
+        $request = new Request([
+            'nitempresa' => 123456,
+            'fecha' => '2025-03-04'
+        ]);
+
+        // Llamar a la función con el mock
+        $resultado = $traitInstance->getTotalPrestadoHoy($request, $mockPsprestamos);
+
+        // Verificaciones
+        $this->assertIsFloat($resultado);
+        $this->assertEquals(15000.00, $resultado);
+    }
    
 
     public function test_get_total_prestado_hoy_handles_exception()
@@ -427,11 +455,14 @@ class PrestamosTraitTest extends TestCase
         
         $mockPsprestamos->shouldReceive('where')
                          ->withAnyArgs()
+                         ->andReturnSelf();
+        $mockPsprestamos->shouldReceive('whereBetween')
+                         ->withAnyArgs()
                          ->andThrow(new \Exception('Error en la base de datos', 500));
 
         // Crear una instancia de una clase que use el trait
         $traitInstance = new class {
-            use prestamosTrait;
+            use PrestamosTrait;
         };
 
         // Simular el request
@@ -456,7 +487,13 @@ class PrestamosTraitTest extends TestCase
         $this->assertArrayHasKey('file', $responseData);
     }
 
+    
 
+
+    
+
+
+    
     
    
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Psclientes;
 
+use App\Pspagos;
 use App\Psquerytabla;
 use Illuminate\Http\Request;
 use App\Http\Traits\General\prestamosTrait;
@@ -206,7 +207,7 @@ class PrestamosController extends Controller
       }
     }
 
-    public function totalprestadohoy(Request $request)
+    public function totalprestadohoy(Request $request, Psprestamos $psprestamos)
     {
         try {
 
@@ -215,7 +216,7 @@ class PrestamosController extends Controller
         if (!$hasPerfil) {
             return "NA";
         }
-          return number_format($this->getTotalPrestadoHoy($request), 2);
+          return number_format($this->getTotalPrestadoHoy($request,$psprestamos), 2);
 
 
       } catch (\Exception $e) {
@@ -226,11 +227,11 @@ class PrestamosController extends Controller
       }
     }
 
-    public function totalintereshoy( Request $request )
+    public function totalintereshoy( Request $request, Pspagos $pspagos, Auth $auth )
     {
         try {
 
-         return number_format($this->getTotalintereseshoy($request), 2);
+         return number_format($this->getTotalintereseshoy($request,$pspagos,$auth), 2);
          
 
 
@@ -276,14 +277,14 @@ class PrestamosController extends Controller
       }
     }
 
-    public function totales_dashboard(Request $request, PsEmpresa $psEmpresa) {
+    public function totales_dashboard(Request $request, PsEmpresa $psEmpresa, Psprestamos $psprestamos) {
       try {
         $nit_empresa = $request->get('nitempresa');
         $data = [
         "total_capital_prestado"=>$this->totalcapital($nit_empresa,$request,$psEmpresa),
         "total_interes"=>$this->totalinteres($request),
         "total_interes_hoy"=>$this->totalintereshoy($request),
-        "total_prestado_hoy"=>$this->totalprestadohoy($request),
+        "total_prestado_hoy"=>$this->totalprestadohoy($request,$psprestamos),
         "total_prestado"=>$this->totalprestado($nit_empresa),
         "ahora"=>Carbon::now()->toDateTimeString()
         ];

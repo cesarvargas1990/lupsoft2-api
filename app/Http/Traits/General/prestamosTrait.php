@@ -257,24 +257,24 @@ trait prestamosTrait
     }
 
 
-    public function getTotalintereseshoy($request)
+    public function getTotalintereseshoy($request,Pspagos $pspagos, Auth $auth)
     {
         $nitempresa = $request->get('nitempresa');
         $fecha = Carbon::createFromFormat('Y-m-d', $request->get('fecha'))->toDateString();
         $fecIni = Carbon::parse($fecha)->startOfDay();
         $fecFin = Carbon::parse($fecha)->endOfDay();
 
-        $perfil = Auth::user()->perfiles->firstWhere('id', 1)->id ?? null;
+        $perfil = $auth::user()->perfiles->firstWhere('id', 1)->id ?? null;
         
         if ($perfil == 1) {
             // Sumar todos los pagos de la empresa
-            $data = Pspagos::where('nitempresa', $nitempresa)
+            $data = $pspagos::where('nitempresa', $nitempresa)
                 ->whereBetween('fecha_realpago', [$fecIni, $fecFin])
                 ->where('ind_estado', 1)
                 ->sum('valcuota');
         } else {
             // Sumar solo los pagos del usuario específico
-            $data = Pspagos::where('nitempresa', $nitempresa)
+            $data = $pspagos::where('nitempresa', $nitempresa)
                 ->whereBetween('fecha_realpago', [$fecIni, $fecFin])
                 ->where('ind_estado', 1)
                 ->where('id_usureg', Auth::user()->id)
