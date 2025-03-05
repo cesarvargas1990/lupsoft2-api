@@ -258,7 +258,7 @@ class PrestamosController extends Controller
       }
     }
 
-    public function totalcapital($nit_empresa,Request $request, PsEmpresa $ps_empresa)
+    public function totalcapital($nit_empresa,Request $request, PsEmpresa $ps_empresa, Psprestamos $psprestamos)
     {
         try {
         $hasPerfil = Auth::user()->perfiles->contains('id', 1);
@@ -266,7 +266,7 @@ class PrestamosController extends Controller
             return "NA";
         }
         $request->request->add(['nitempresa'=>$nit_empresa]);
-        return number_format($this->getCapitalInicial($nit_empresa,$ps_empresa) - $this->getValorPrestamos($request) + $this->getTotalintereses($request) , 2);
+        return number_format($this->getCapitalInicial($nit_empresa,$ps_empresa) - $this->getValorPrestamos($request,$psprestamos) + $this->getTotalintereses($request) , 2);
         
 
       } catch (\Exception $e) {
@@ -277,13 +277,13 @@ class PrestamosController extends Controller
       }
     }
 
-    public function totales_dashboard(Request $request, PsEmpresa $psEmpresa, Psprestamos $psprestamos) {
+    public function totales_dashboard(Request $request, PsEmpresa $psEmpresa, Psprestamos $psprestamos,Pspagos $pspagos, Auth $auth) {
       try {
         $nit_empresa = $request->get('nitempresa');
         $data = [
-        "total_capital_prestado"=>$this->totalcapital($nit_empresa,$request,$psEmpresa),
+        "total_capital_prestado"=>$this->totalcapital($nit_empresa,$request,$psEmpresa, $psprestamos),
         "total_interes"=>$this->totalinteres($request),
-        "total_interes_hoy"=>$this->totalintereshoy($request),
+        "total_interes_hoy"=>$this->totalintereshoy($request,$pspagos,$auth),
         "total_prestado_hoy"=>$this->totalprestadohoy($request,$psprestamos),
         "total_prestado"=>$this->totalprestado($nit_empresa),
         "ahora"=>Carbon::now()->toDateTimeString()

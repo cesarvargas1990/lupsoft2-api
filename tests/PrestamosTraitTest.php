@@ -487,7 +487,74 @@ class PrestamosTraitTest extends TestCase
         $this->assertArrayHasKey('file', $responseData);
     }
 
-    
+    public function test_get_valor_prestamos_returns_correct_value()
+    {
+        // Crear mock de Psprestamos
+        $mockPsprestamos = Mockery::mock(Psprestamos::class);
+
+        // Configurar el mock para simular la consulta
+        $mockPsprestamos->shouldReceive('where')
+                         ->withAnyArgs()
+                         ->andReturnSelf();
+        $mockPsprestamos->shouldReceive('sum')
+                         ->with('valorpres')
+                         ->andReturn(50000.00);
+
+        // Crear una instancia de una clase que use el trait
+        $traitInstance = new class {
+            use PrestamosTrait;
+        };
+
+        // Simular el request
+        $request = new Request([
+            'nitempresa' => 123456
+        ]);
+
+        // Llamar a la función con el mock
+        $resultado = $traitInstance->getValorPrestamos($request, $mockPsprestamos);
+
+        // Verificaciones
+        $this->assertIsFloat($resultado);
+        $this->assertEquals(50000.00, $resultado);
+    }
+
+    public function test_get_valor_prestamos_handles_exception()
+    {
+        // Crear mock de Psprestamos que lance una excepción
+        $mockPsprestamos = Mockery::mock(Psprestamos::class);
+        
+        $mockPsprestamos->shouldReceive('where')
+                         ->withAnyArgs()
+                         ->andReturnSelf();
+        $mockPsprestamos->shouldReceive('sum')
+                         ->with('valorpres')
+                         ->andThrow(new \Exception('Error en la base de datos', 500));
+
+        // Crear una instancia de una clase que use el trait
+        $traitInstance = new class {
+            use PrestamosTrait;
+        };
+
+        // Simular el request
+        $request = new Request([
+            'nitempresa' => 123456
+        ]);
+
+        // Llamar a la función con el mock
+        $resultado = $traitInstance->getValorPrestamos($request, $mockPsprestamos);
+
+        // Verificar que la respuesta es un JsonResponse
+        $this->assertInstanceOf(JsonResponse::class, $resultado);
+
+        // Decodificar el contenido de la respuesta JSON
+        $responseData = $resultado->getData(true);
+
+        // Verificar que el mensaje de error y el código sean los esperados
+        $this->assertEquals('Error en la base de datos', $responseData['message']);
+        $this->assertEquals(500, $responseData['errorCode']);
+        $this->assertArrayHasKey('lineError', $responseData);
+        $this->assertArrayHasKey('file', $responseData);
+    }
 
 
     

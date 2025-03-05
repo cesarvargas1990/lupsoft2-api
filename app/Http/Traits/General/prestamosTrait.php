@@ -284,12 +284,12 @@ trait prestamosTrait
         return $data ?? 0;
     }
 
-    public function getValorPrestamos( $request)
+    public function getValorPrestamos( $request, Psprestamos $psprestamos)
     {
         try {
             $nitempresa = $request->get('nitempresa');
 
-            $valorpres = Psprestamos::where('nitempresa', $nitempresa)
+            $valorpres = $psprestamos::where('nitempresa', $nitempresa)
                                     ->where('ind_estado', 1)
                                     ->sum('valorpres');
 
