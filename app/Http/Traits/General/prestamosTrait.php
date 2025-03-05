@@ -210,10 +210,10 @@ trait prestamosTrait
     }
 
 
-    public function getCapitalInicial($nitempresa)
+    public function getCapitalInicial($nitempresa, Psempresa $psempresa)
     {
         try {
-            $capitalInicial = Psempresa::where('nitempresa', $nitempresa)
+            $capitalInicial = $psempresa::where('nitempresa', $nitempresa)
                                     ->value('vlr_capinicial');
             return $capitalInicial;
         } catch (\Exception $e) {
@@ -226,9 +226,9 @@ trait prestamosTrait
         }
     }
 
-    public function getTotalCapital ($nit_empresa) {
-        $capitalinicial = $this->getCapitalInicial($nit_empresa);
-        $capitalPrestado = $this->getCapitalPrestado($nit_empresa);
+    public function getTotalCapital ($nit_empresa, Psempresa $psempresa, Psprestamos $psprestamos) {
+        $capitalinicial = $this->getCapitalInicial($nit_empresa,$psempresa);
+        $capitalPrestado = $this->getCapitalPrestado($nit_empresa,$psprestamos);
         return $capitalinicial - $capitalPrestado;
     }  
 
@@ -337,9 +337,9 @@ trait prestamosTrait
         }
     }
 
-    public function totalPrestadoHoy ($nit_empresa) {
-        $capitalinicial = $this->getCapitalInicial($nit_empresa);
-        $capitalPrestado = $this->getCapitalPrestado($nit_empresa);
+    public function totalPrestadoHoy ($nit_empresa, Psempresa $psempresa, Psprestamos $psprestamos) {
+        $capitalinicial = $this->getCapitalInicial($nit_empresa,$psempresa);
+        $capitalPrestado = $this->getCapitalPrestado($nit_empresa,$psprestamos);
         return $capitalinicial + $capitalPrestado;
     }
 

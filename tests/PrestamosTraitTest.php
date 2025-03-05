@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Http\Controllers\PrestamosController;
 use App\Http\Traits\General\prestamosTrait;
+use App\PsEmpresa;
 use App\Psprestamos;
 use App\Psquerytabla;
 use App\Pstdocplant;
@@ -324,6 +325,65 @@ class PrestamosTraitTest extends TestCase
         $this->assertArrayHasKey('file', $responseData);
     }
 
+    public function test_get_capital_inicial_returns_correct_value()
+    {
+        // Crear un mock de Psempresa
+        $mockPsempresa = Mockery::mock(Psempresa::class);
+        
+        // Configurar el mock para que permita llamadas encadenadas
+        $mockPsempresa->shouldReceive('where')
+                      ->withAnyArgs()
+                      ->andReturnSelf();
+
+        $mockPsempresa->shouldReceive('value')
+                      ->with('vlr_capinicial')
+                      ->andReturn(75000.00); // Simula que devuelve 75000
+
+        // Crear una instancia de una clase que use el trait
+        $traitInstance = new class {
+            use prestamosTrait;
+        };
+
+        // Llamar a la función con el mock de Psempresa
+        $resultado = $traitInstance->getCapitalInicial(123456, $mockPsempresa);
+
+        // Verificaciones
+        $this->assertIsFloat($resultado);
+        $this->assertEquals(75000.00, $resultado);
+    }
+
+    public function test_get_capital_inicial_handles_exception()
+    {
+        // Crear un mock de Psempresa que lance una excepción
+        $mockPsempresa = Mockery::mock(PsEmpresa::class);
+        
+        $mockPsempresa->shouldReceive('where')
+                      ->withAnyArgs()
+                      ->andThrow(new \Exception('Error en la base de datos', 500));
+
+        // Crear una instancia de una clase que use el trait
+        $traitInstance = new class {
+            use prestamosTrait;
+        };
+
+        // Llamar a la función con el mock de Psempresa
+        $resultado = $traitInstance->getCapitalInicial(123456, $mockPsempresa);
+
+        // Verificar que la respuesta es un JsonResponse
+        $this->assertInstanceOf(JsonResponse::class, $resultado);
+
+        // Decodificar el contenido de la respuesta JSON
+        $responseData = $resultado->getData(true);
+
+        // Verificar que el mensaje de error y el código sean los esperados
+        $this->assertEquals('Error en la base de datos', $responseData['message']);
+        $this->assertEquals(500, $responseData['errorCode']);
+        $this->assertArrayHasKey('lineError', $responseData);
+        $this->assertArrayHasKey('file', $responseData);
+    }
+
+
+    
    
 
    

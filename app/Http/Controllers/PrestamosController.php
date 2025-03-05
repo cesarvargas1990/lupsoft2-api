@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Psclientes;
 
+use App\Psquerytabla;
 use Illuminate\Http\Request;
 use App\Http\Traits\General\prestamosTrait;
 use Illuminate\Support\Facades\Auth;
@@ -154,21 +155,17 @@ class PrestamosController extends Controller
   
       return response()->json($prestamos);
   }
-   
-   function getPlantillasDocumentosPrestamo (Request $request) {
-        try {
- 
-            $datos = $this->renderTemplate ($request);
-            return response()->json($datos);
-
-
-        } catch (\Exception $e) {
-
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
-
-        }
-    }
+    
+    public function getPlantillasDocumentosPrestamo(Request $request,Psquerytabla $psQueryTabla  ) {
+    try {
+	        
+	        $datos = $this->renderTemplate($request, $psQueryTabla );
+	        return response()->json($datos);
+	    } catch (\Exception $e) {
+	        echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
+	            ->header('Content-Type', 'application/json');
+	    }
+	}
   
      function prueba (Request $request) {
         $request->request->add(['nit_empresa' => 1]);
@@ -198,7 +195,8 @@ class PrestamosController extends Controller
         if (!$hasPerfil) {
             return "NA";
         }
-        return number_format($this->getCapitalPrestado($nit_empresa), 2);
+        $psPrestamosInstance = new Psprestamos();
+        return number_format($this->getCapitalPrestado($nit_empresa,$psPrestamosInstance), 2);
 
       } catch (\Exception $e) {
 
@@ -259,7 +257,7 @@ class PrestamosController extends Controller
       }
     }
 
-    public function totalcapital($nit_empresa,Request $request)
+    public function totalcapital($nit_empresa,Request $request, PsEmpresa $ps_empresa)
     {
         try {
         $hasPerfil = Auth::user()->perfiles->contains('id', 1);
@@ -267,7 +265,7 @@ class PrestamosController extends Controller
             return "NA";
         }
         $request->request->add(['nitempresa'=>$nit_empresa]);
-        return number_format($this->getCapitalInicial($nit_empresa) - $this->getValorPrestamos($request) + $this->getTotalintereses($request) , 2);
+        return number_format($this->getCapitalInicial($nit_empresa,$ps_empresa) - $this->getValorPrestamos($request) + $this->getTotalintereses($request) , 2);
         
 
       } catch (\Exception $e) {
@@ -278,11 +276,11 @@ class PrestamosController extends Controller
       }
     }
 
-    public function totales_dashboard(Request $request) {
+    public function totales_dashboard(Request $request, PsEmpresa $psEmpresa) {
       try {
         $nit_empresa = $request->get('nitempresa');
         $data = [
-        "total_capital_prestado"=>$this->totalcapital($nit_empresa,$request),
+        "total_capital_prestado"=>$this->totalcapital($nit_empresa,$request,$psEmpresa),
         "total_interes"=>$this->totalinteres($request),
         "total_interes_hoy"=>$this->totalintereshoy($request),
         "total_prestado_hoy"=>$this->totalprestadohoy($request),
