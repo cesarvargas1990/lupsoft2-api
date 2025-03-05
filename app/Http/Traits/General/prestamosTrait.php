@@ -232,14 +232,14 @@ trait prestamosTrait
         return $capitalinicial - $capitalPrestado;
     }  
 
-    public function getTotalPrestadoHoy($request)
+    public function getTotalPrestadoHoy($request, Psprestamos $psprestamos)
     {
         try {
             $nitempresa = $request->get('nitempresa');
             $fecha = Carbon::createFromFormat('Y-m-d', $request->get('fecha'))->toDateString();
             $fecIni = Carbon::parse($fecha)->startOfDay();
             $fecFin = Carbon::parse($fecha)->endOfDay();
-            $valorpres = Psprestamos::where('nitempresa', $nitempresa)
+            $valorpres = $psprestamos::where('nitempresa', $nitempresa)
                                     ->whereBetween('created_at', [$fecIni, $fecFin])
                                     ->where('ind_estado', 1)
                                     ->sum('valorpres');

@@ -418,6 +418,43 @@ class PrestamosTraitTest extends TestCase
     }
 
     
+   
+
+    public function test_get_total_prestado_hoy_handles_exception()
+    {
+        // Crear un mock de Psprestamos que lance una excepción
+        $mockPsprestamos = Mockery::mock(Psprestamos::class);
+        
+        $mockPsprestamos->shouldReceive('where')
+                         ->withAnyArgs()
+                         ->andThrow(new \Exception('Error en la base de datos', 500));
+
+        // Crear una instancia de una clase que use el trait
+        $traitInstance = new class {
+            use prestamosTrait;
+        };
+
+        // Simular el request
+        $request = new Request([
+            'nitempresa' => 123456,
+            'fecha' => '2025-03-04'
+        ]);
+
+        // Llamar a la función con el mock
+        $resultado = $traitInstance->getTotalPrestadoHoy($request, $mockPsprestamos);
+
+        // Verificar que la respuesta es un JsonResponse
+        $this->assertInstanceOf(JsonResponse::class, $resultado);
+
+        // Decodificar el contenido de la respuesta JSON
+        $responseData = $resultado->getData(true);
+
+        // Verificar que el mensaje de error y el código sean los esperados
+        $this->assertEquals('Error en la base de datos', $responseData['message']);
+        $this->assertEquals(500, $responseData['errorCode']);
+        $this->assertArrayHasKey('lineError', $responseData);
+        $this->assertArrayHasKey('file', $responseData);
+    }
 
 
     
