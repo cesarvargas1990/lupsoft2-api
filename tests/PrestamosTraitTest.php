@@ -5,6 +5,7 @@ namespace Tests\Unit;
 
 use App\Http\Traits\General\prestamosTrait;
 use App\PsEmpresa;
+use App\Pspagos;
 use App\Psprestamos;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -556,6 +557,9 @@ class PrestamosTraitTest extends TestCase
         $this->assertArrayHasKey('lineError', $responseData);
         $this->assertArrayHasKey('file', $responseData);
     }
+
+
+    
 
 
 }
