@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Laravel\Lumen\Testing\DatabaseMigrations;
+
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use App\Psprestamos;
 use Carbon\Carbon;
@@ -14,7 +14,7 @@ use Mockery;
 
 class PrestamosTraitTest extends BaseTestCase
 {
-    use DatabaseMigrations;
+    use DatabaseTransactions;
     use prestamosTrait; // Usar el trait para pruebas
 
     /** @test */

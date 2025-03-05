@@ -382,6 +382,43 @@ class PrestamosTraitTest extends TestCase
         $this->assertArrayHasKey('file', $responseData);
     }
 
+    public function test_get_total_capital_returns_correct_value()
+    {
+        // Crear mocks de Psempresa y Psprestamos
+        $mockPsempresa = Mockery::mock(Psempresa::class);
+        $mockPsprestamos = Mockery::mock(Psprestamos::class);
+
+        // Configurar el mock de Psempresa
+        $mockPsempresa->shouldReceive('where')
+                      ->withAnyArgs()
+                      ->andReturnSelf();
+        $mockPsempresa->shouldReceive('value')
+                      ->with('vlr_capinicial')
+                      ->andReturn(75000.00);
+
+        // Configurar el mock de Psprestamos
+        $mockPsprestamos->shouldReceive('where')
+                         ->withAnyArgs()
+                         ->andReturnSelf();
+        $mockPsprestamos->shouldReceive('sum')
+                         ->with('valorpres')
+                         ->andReturn(50000.00);
+
+        // Crear una instancia de una clase que use el trait
+        $traitInstance = new class {
+            use prestamosTrait;
+        };
+
+        // Llamar a la función con los mocks
+        $resultado = $traitInstance->getTotalCapital(123456, $mockPsempresa, $mockPsprestamos);
+
+        // Verificaciones
+        $this->assertIsFloat($resultado);
+        $this->assertEquals(25000.00, $resultado);
+    }
+
+    
+
 
     
    
