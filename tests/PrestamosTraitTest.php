@@ -2,10 +2,19 @@
 
 namespace Tests\Unit;
 
+use App\Http\Controllers\PrestamosController;
+use App\Http\Traits\General\prestamosTrait;
+use App\Psprestamos;
+use App\Psquerytabla;
+use App\Pstdocplant;
+use Illuminate\Http\JsonResponse;
 use Mockery;
 use TestCase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
+
+
 
 class PrestamosTraitTestDummy
 {
@@ -256,28 +265,70 @@ class PrestamosTraitTest extends TestCase
         );
     }
 
-    public function tesGetPlantillasDocumentos() {
-        $dummy = new PrestamosTraitTestDummy();
-        $mockPlantillaDocuments = [ 'nombre',
-        'plantilla_html',
-        'nitempresa'];
-        $mock= Mockery::mock('Eloquent', 'alias:\App\Pstdocplant');
-        $mock->shouldReceive('where')
-         ->once()
-        ->andReturn($mockPlantillaDocuments);
+    
 
-        $request = Request::create('/dummy', 'POST', [
-            'nitempresa'    => '123456789'
-        ]);
+    public function test_get_capital_prestado_returns_correct_value()
+    {
+        // Crear un mock de Psprestamos
+        $mockPsprestamos = Mockery::mock(Psprestamos::class);
+        
+        // Configurar el mock para que permita llamadas encadenadas
+        $mockPsprestamos->shouldReceive('where')
+                        ->withAnyArgs()
+                        ->andReturnSelf(); // Retorna el mismo mock para permitir encadenamiento
 
-        $result = $dummy->getPlantillasDocumentos($request);
+        $mockPsprestamos->shouldReceive('sum')
+                        ->with('valorpres')
+                        ->andReturn(50000.00); // Simula que devuelve 50000
 
-        $this->assertEquals(
-            $result,
-            'any'
-        );
-       
+        // Crear una instancia de una clase que use el trait
+        $traitInstance = new class {
+            use PrestamosTrait;
+        };
+
+        // Llamar a la función con el mock de Psprestamos
+        $resultado = $traitInstance->getCapitalPrestado(123456, $mockPsprestamos);
+
+        // Verificaciones
+        $this->assertIsFloat($resultado);
+        $this->assertEquals(50000.00, $resultado);
     }
+
+    public function test_get_capital_prestado_handles_exception()
+    {
+        // Crear un mock de Psprestamos que lance una excepción
+        $mockPsprestamos = Mockery::mock(Psprestamos::class);
+        
+        $mockPsprestamos->shouldReceive('where')
+                        ->withAnyArgs()
+                        ->andThrow(new \Exception('Error en la base de datos', 123));
+
+        // Crear una instancia de una clase que use el trait
+        $traitInstance = new class {
+            use PrestamosTrait;
+        };
+
+        // Llamar a la función con el mock de Psprestamos
+        $resultado = $traitInstance->getCapitalPrestado(123456, $mockPsprestamos);
+
+        // Verificar que la respuesta es un JsonResponse
+        $this->assertInstanceOf(JsonResponse::class, $resultado);
+
+        // Decodificar el contenido de la respuesta JSON
+        $responseData = $resultado->getData(true);
+
+        // Verificar que el mensaje de error y el código sean los esperados
+        $this->assertEquals('Error en la base de datos', $responseData['message']);
+        $this->assertEquals(123, $responseData['errorCode']);
+        $this->assertArrayHasKey('lineError', $responseData);
+        $this->assertArrayHasKey('file', $responseData);
+    }
+
+   
+
+   
+
+    
 
   
 }
