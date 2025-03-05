@@ -7,6 +7,7 @@ use App\Http\Traits\General\prestamosTrait;
 use App\PsEmpresa;
 use App\Psprestamos;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 use Mockery;
 use TestCase;
 use Illuminate\Http\Request;
@@ -557,16 +558,4 @@ class PrestamosTraitTest extends TestCase
     }
 
 
-    
-
-
-    
-    
-   
-
-   
-
-    
-
-  
 }

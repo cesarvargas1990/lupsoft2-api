@@ -168,13 +168,7 @@ class PrestamosController extends Controller
 	    }
 	}
   
-     function prueba (Request $request) {
-        $request->request->add(['nit_empresa' => 1]);
-        $request->request->add(['id_prestamo' => 1]);
-        //$obj = new prestamosTrait();
-        $value = $this->renderTemplate( $request);
-        dd($value);
-    }
+
 
      function eliminarPrestamo ($id_prestamo) {
 

@@ -159,7 +159,6 @@ $router->group(['prefix' => ''], function () use ($router) {
     $router->get('generarVariablesPlantillas/{nit_empresa}' , ['uses' => 'PrestamosController@generarVariablesPlantillas']);
     $router->post('guardarArchivoAdjunto' , ['uses' => 'GuardarArchivoController@guardarArchivoAdjunto']);
     $router->put('editarArchivoAdjunto' , ['uses' => 'GuardarArchivoController@editarArchivoAdjunto']);
-    $router->get('prueba',  ['uses' => 'PruebaController@prueba']);
     $router->delete('eliminarPrestamo/{id_prestamo}' , ['uses' => 'PrestamosController@eliminarPrestamo']);
     $router->get('capitalprestado/{nit_empresa}',['uses'=>'PrestamosController@totalcapital']);
     $router->post('totalprestadohoy',['uses'=>'PrestamosController@totalprestadohoy']);
