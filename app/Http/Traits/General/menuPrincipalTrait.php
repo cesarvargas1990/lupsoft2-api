@@ -34,11 +34,11 @@ trait menuPrincipalTrait
 
     }
 
-    public function perfilAccion($idUser)
+    public function perfilAccion($idUser, Psusuperfil $psusuperfil)
     {
         try {
         
-            $acciones = Psusuperfil::where('id_user', $idUser)
+            $acciones = $psusuperfil::where('id_user', $idUser)
                                 ->join('psperfilaccion as p', 'psusperfil.id_perfil', '=', 'p.id_perfil')
                                 ->select('p.nom_accion')
                                 ->get()

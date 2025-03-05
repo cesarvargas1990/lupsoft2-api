@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
- 
+
+use App\PsEmpresa;
+use App\Psusuperfil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use  App\User;
@@ -50,7 +52,7 @@ class AuthController extends Controller
      * @param  Request  $request
      * @return Response
      */
-    public function login(Request $request)
+    public function login(Request $request, PsEmpresa $psempresa, Auth $auth, Psusuperfil $psusuperfil)
     {
           //validate incoming request 
         $this->validate($request, [
@@ -64,7 +66,7 @@ class AuthController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        return $this->respondWithToken($token);
+        return $this->respondWithToken($token,$psempresa,$auth,$psusuperfil);
     }
 
     public function logout(Request $request)

@@ -5,29 +5,30 @@ use App\Http\Traits\General\menuPrincipalTrait;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use App\PsEmpresa;
+use App\Psusuperfil;
 
 class Controller extends BaseController
 {
 
     use menuPrincipalTrait;
-    protected function respondWithToken($token)
+    protected function respondWithToken($token, Psempresa $psempresa, Auth $auth, Psusuperfil $psusuperfil)
     {
 
-		$empresa = Psempresa::where('nitempresa',Auth::user()->nitempresa);
+		$empresa = $psempresa::where('nitempresa',$auth::user()->nitempresa);
         return response()->json([
-            'id' => Auth::user()->id,
-            'name' => Auth::user()->name,
-            'email' => Auth::user()->email,
+            'id' => $auth::user()->id,
+            'name' => $auth::user()->name,
+            'email' => $auth::user()->email,
             'access_token' => $token,
             'token_type' => 'bearer',
-            'user' => Auth::user(),
+            'user' => $auth::user(),
             'status' => 'success',
             'menu_usuario' => $this->hacerMenuUsuario( $this->getDatosMenu(Auth::user()->id)),
-            'permisos'=> $this->perfilAccion(Auth::user()->id),
-            'expires_in' => Auth::factory()->getTTL() * 60,
+            'permisos'=> $this->perfilAccion($auth::user()->id, $psusuperfil),
+            'expires_in' => $auth::factory()->getTTL() * 60,
             'time'=> time(),
-            'is_admin' => Auth::user()->is_admin,
-            'nit_empresa' => Auth::user()->nitempresa,
+            'is_admin' => $auth::user()->is_admin,
+            'nit_empresa' => $auth::user()->nitempresa,
             'id_empresa' => $empresa->first()->id
         ], 200);
     }
