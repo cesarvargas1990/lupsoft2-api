@@ -26,6 +26,19 @@ class CalculadoraCuotasPrestamosTraitTest extends TestCase
         $this->assertEquals(null, $classInstance->adicionarFechas($date, 6)); // 1 año
     }
 
+    public function test_SpanishDate_returns_correct_format()
+    {
+        // Crear una instancia de la clase que contiene la función con el trait
+        $classInstance = new class {
+            use \App\Http\Traits\General\calculadoraCuotasPrestamosTrait;
+        };
+
+        $fecha = strtotime('2023-12-25');
+        $resultado = $classInstance->SpanishDate($fecha);
+
+        $this->assertEquals('Lunes, 25 de Diciembre de 2023', $resultado);
+    }
+
     protected function tearDown(): void
     {
         Mockery::close();
