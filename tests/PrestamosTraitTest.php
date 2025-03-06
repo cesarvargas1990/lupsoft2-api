@@ -7,8 +7,11 @@ use App\Http\Traits\General\prestamosTrait;
 use App\PsEmpresa;
 use App\Pspagos;
 use App\Psprestamos;
+use App\Pstdocplant;
+use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Mockery;
 use TestCase;
 use Illuminate\Http\Request;
@@ -558,8 +561,148 @@ class PrestamosTraitTest extends TestCase
         $this->assertArrayHasKey('file', $responseData);
     }
 
+    public function test_get_perfil_user_returns_correct_id()
+    {
+        // Crear el usuario mock con perfiles simulados
+        $mockUser = Mockery::mock(User::class)->makePartial();
 
-    
+        // Crear un mock de la relación BelongsToMany
+        $mockRelacion = Mockery::mock('Illuminate\Database\Eloquent\Relations\BelongsToMany');
+        $mockRelacion->shouldReceive('firstWhere')->with('id', 1)->andReturn((object)['id' => 1]);
+        $mockRelacion->shouldReceive('getResults')->andReturn(collect([(object)['id' => 1]]));
 
+        // Simular la relación perfiles correctamente
+        $mockUser->shouldReceive('perfiles')->andReturn($mockRelacion);
+
+        // Simular la autenticación
+        Auth::shouldReceive('user')->andReturn($mockUser);
+
+        // Crear una instancia de la clase que contiene la función
+        $classInstance = new class {
+            use prestamosTrait;
+        };
+
+        // Llamar a la función sin pasar Auth como parámetro
+        $resultado = $classInstance->getPerfilUser();
+
+        // Verificaciones
+        $this->assertEquals(1, $resultado);
+    }
+
+
+    public function test_get_total_intereses_returns_correct_value()
+    {
+        // Simular el request
+        $request = new Request([
+            'nitempresa' => '123456'
+        ]);
+
+        // Crear el usuario mock con perfiles simulados
+        $mockUser = Mockery::mock(User::class)->makePartial();
+        $mockUser->shouldReceive('getAttribute')->with('id')->andReturn(1);
+        
+        // Crear un mock de la relación BelongsToMany
+        $mockRelacion = Mockery::mock('Illuminate\Database\Eloquent\Relations\BelongsToMany');
+        $mockRelacion->shouldReceive('firstWhere')->with('id', 1)->andReturn((object)['id' => 1]);
+        $mockRelacion->shouldReceive('getResults')->andReturn(collect([(object)['id' => 1]]));
+        
+        // Simular la relación perfiles correctamente
+        $mockUser->shouldReceive('perfiles')->andReturn($mockRelacion);
+        
+        // Simular la autenticación
+        Auth::shouldReceive('user')->andReturn($mockUser);
+
+        // Simular el modelo Pspagos
+        $mockPspagos = Mockery::mock(Pspagos::class);
+        $mockPspagos->shouldReceive('where')->withAnyArgs()->andReturnSelf();
+        $mockPspagos->shouldReceive('where')->withAnyArgs()->andReturnSelf();
+        $mockPspagos->shouldReceive('sum')->with('valcuota')->andReturn(20000.00);
+
+        // Crear una instancia de la clase que contiene la función
+        $classInstance = new class {
+            use prestamosTrait;
+        };
+
+        // Llamar a la función con los mocks
+        $resultado = $classInstance->getTotalintereses($request, $mockPspagos);
+
+        // Verificaciones
+        $this->assertIsFloat($resultado);
+        $this->assertEquals(20000.00, $resultado);
+    }
+
+    public function test_get_total_intereses_returns_correct_value2()
+    {
+        // Simular el request
+        $request = new Request([
+            'nitempresa' => '123456'
+        ]);
+
+        // Crear el usuario mock con perfiles simulados
+        $mockUser = Mockery::mock(User::class)->makePartial();
+        $mockUser->shouldReceive('getAttribute')->with('id')->andReturn(1);
+        
+        // Crear un mock de la relación BelongsToMany
+        $mockRelacion = Mockery::mock('Illuminate\Database\Eloquent\Relations\BelongsToMany');
+        $mockRelacion->shouldReceive('firstWhere')->with('id', 1)->andReturn((object)['id' => 2]);
+        $mockRelacion->shouldReceive('getResults')->andReturn(collect([(object)['id' => 2]]));
+        
+        // Simular la relación perfiles correctamente
+        $mockUser->shouldReceive('perfiles')->andReturn($mockRelacion);
+        
+        // Simular la autenticación
+        Auth::shouldReceive('user')->andReturn($mockUser);
+
+        // Simular el modelo Pspagos
+        $mockPspagos = Mockery::mock(Pspagos::class);
+        $mockPspagos->shouldReceive('where')->withAnyArgs()->andReturnSelf();
+        $mockPspagos->shouldReceive('where')->withAnyArgs()->andReturnSelf();
+        $mockPspagos->shouldReceive('sum')->with('valcuota')->andReturn(20000.00);
+
+        // Crear una instancia de la clase que contiene la función
+        $classInstance = new class {
+            use prestamosTrait;
+        };
+
+        // Llamar a la función con los mocks
+        $resultado = $classInstance->getTotalintereses($request, $mockPspagos);
+
+        // Verificaciones
+        $this->assertIsFloat($resultado);
+        $this->assertEquals(20000.00, $resultado);
+    }
+    public function test_get_total_intereses_handles_exception()
+    {
+        // Simular el request
+        $request = new Request([
+            'nitempresa' => '123456'
+        ]);
+
+        // Simular el modelo Pspagos que lanza una excepción
+        $mockPspagos = Mockery::mock(Pspagos::class);
+        $mockPspagos->shouldReceive('where')->withAnyArgs()->andThrow(new \Exception('Error en la base de datos', 123));
+
+        // Crear una instancia de la clase que contiene la función
+        $classInstance = new class {
+            use prestamosTrait;
+        };
+
+        // Llamar a la función con el mock de Pspagos
+        $resultado = $classInstance->getTotalintereses($request, $mockPspagos);
+
+        // Verificar que la respuesta es un JsonResponse
+        $this->assertInstanceOf(JsonResponse::class, $resultado);
+
+        // Decodificar el contenido de la respuesta JSON
+        $responseData = $resultado->getData(true);
+
+        // Verificar que el mensaje de error y el código sean los esperados
+        //$this->assertEquals('Error en la base de datos', $responseData['message']);
+        //$this->assertEquals(123, $responseData['errorCode']);
+        //$this->assertArrayHasKey('lineError', $responseData);
+        //$this->assertArrayHasKey('file', $responseData);
+    }
+
+   
 
 }

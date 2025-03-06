@@ -14,6 +14,8 @@ use DB;
 use App\Http\Traits\General\calculadoraCuotasPrestamosTrait;
 use App\PsEmpresa;
 use App\Psprestamos;
+use App\Pstdocplant;
+
 class PrestamosController extends Controller
 {
 
@@ -157,10 +159,10 @@ class PrestamosController extends Controller
       return response()->json($prestamos);
   }
     
-    public function getPlantillasDocumentosPrestamo(Request $request,Psquerytabla $psQueryTabla  ) {
+    public function getPlantillasDocumentosPrestamo(Request $request,Psquerytabla $psQueryTabla ,Pstdocplant $pstdocplant ) {
     try {
 	        
-	        $datos = $this->renderTemplate($request, $psQueryTabla );
+	        $datos = $this->renderTemplate($request, $psQueryTabla ,$pstdocplant);
 	        return response()->json($datos);
 	    } catch (\Exception $e) {
 	        echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
@@ -221,11 +223,11 @@ class PrestamosController extends Controller
       }
     }
 
-    public function totalintereshoy( Request $request, Pspagos $pspagos, Auth $auth )
+    public function totalintereshoy( Request $request, Pspagos $pspagos )
     {
         try {
 
-         return number_format($this->getTotalintereseshoy($request,$pspagos,$auth), 2);
+         return number_format($this->getTotalintereseshoy($request,$pspagos), 2);
          
 
 
@@ -237,11 +239,11 @@ class PrestamosController extends Controller
       }
     }
 
-    public function totalinteres( Request $request )
+    public function totalinteres( Request $request, Pspagos $pspagos)
     {
         try {
 
-          return number_format($this->getTotalintereses($request), 2);
+          return number_format($this->getTotalintereses($request,$pspagos), 2);
 
 
       } catch (\Exception $e) {
@@ -252,7 +254,7 @@ class PrestamosController extends Controller
       }
     }
 
-    public function totalcapital($nit_empresa,Request $request, PsEmpresa $ps_empresa, Psprestamos $psprestamos)
+    public function totalcapital($nit_empresa,Request $request, PsEmpresa $ps_empresa, Psprestamos $psprestamos, Pspagos $pspagos, Auth $auth)
     {
         try {
         $hasPerfil = Auth::user()->perfiles->contains('id', 1);
@@ -260,7 +262,7 @@ class PrestamosController extends Controller
             return "NA";
         }
         $request->request->add(['nitempresa'=>$nit_empresa]);
-        return number_format($this->getCapitalInicial($nit_empresa,$ps_empresa) - $this->getValorPrestamos($request,$psprestamos) + $this->getTotalintereses($request) , 2);
+        return number_format($this->getCapitalInicial($nit_empresa,$ps_empresa) - $this->getValorPrestamos($request,$psprestamos) + $this->getTotalintereses($request,$pspagos,$auth) , 2);
         
 
       } catch (\Exception $e) {
@@ -275,8 +277,8 @@ class PrestamosController extends Controller
       try {
         $nit_empresa = $request->get('nitempresa');
         $data = [
-        "total_capital_prestado"=>$this->totalcapital($nit_empresa,$request,$psEmpresa, $psprestamos),
-        "total_interes"=>$this->totalinteres($request),
+        "total_capital_prestado"=>$this->totalcapital($nit_empresa,$request,$psEmpresa, $psprestamos, $pspagos, $auth),
+        "total_interes"=>$this->totalinteres($request, $pspagos, $auth),
         "total_interes_hoy"=>$this->totalintereshoy($request,$pspagos,$auth),
         "total_prestado_hoy"=>$this->totalprestadohoy($request,$psprestamos),
         "total_prestado"=>$this->totalprestado($nit_empresa),

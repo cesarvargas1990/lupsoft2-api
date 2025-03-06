@@ -126,14 +126,14 @@ trait prestamosTrait
         );
     }
 
-    function renderTemplate($request, Psquerytabla $psQueryTabla)
+    function renderTemplate($request, Psquerytabla $psQueryTabla,Pstdocplant $pstdocplant)
     {
         $id_prestamo = $request->get('id_prestamo');
         $nit_empresa = $request->get('nitempresa');
         $variables = $this->consultaVariablesPrestamo($nit_empresa, $id_prestamo)[0];
 
         $array = json_decode(json_encode($variables), true);
-        $data = $this->getPlantillasDocumentos($request);
+        $data = $this->getPlantillasDocumentos($request,$pstdocplant);
         $html_templates = [];
         if (count($data) > 0) {
             $renderTemplate = '';
@@ -182,10 +182,10 @@ trait prestamosTrait
         return $html_templates;
     }
 
-    public function getPlantillasDocumentos($request)
+    public function getPlantillasDocumentos($request, Pstdocplant $pstdocplant)
     {
         $nit_empresa = $request->get('nitempresa');
-        $data = Pstdocplant::where('nitempresa', $nit_empresa)->get();
+        $data = $pstdocplant::where('nitempresa', $nit_empresa)->get();
         return $data;
     }
   
@@ -257,16 +257,15 @@ trait prestamosTrait
     }
 
 
-    public function getTotalintereseshoy($request,Pspagos $pspagos, Auth $auth)
+    public function getTotalintereseshoy($request,Pspagos $pspagos)
     {
         $nitempresa = $request->get('nitempresa');
         $fecha = Carbon::createFromFormat('Y-m-d', $request->get('fecha'))->toDateString();
         $fecIni = Carbon::parse($fecha)->startOfDay();
         $fecFin = Carbon::parse($fecha)->endOfDay();
 
-        $perfil = $auth::user()->perfiles->firstWhere('id', 1)->id ?? null;
-        
-        if ($perfil == 1) {
+    
+        if ($this->getPerfilUser() == 1) {
             // Sumar todos los pagos de la empresa
             $data = $pspagos::where('nitempresa', $nitempresa)
                 ->whereBetween('fecha_realpago', [$fecIni, $fecFin])
@@ -282,6 +281,11 @@ trait prestamosTrait
         }
 
         return $data ?? 0;
+    }
+
+    public function getPerfilUser()
+    {
+        return Auth::user()->perfiles->firstWhere('id', 1)->id ?? null;
     }
 
     public function getValorPrestamos( $request, Psprestamos $psprestamos)
@@ -305,22 +309,20 @@ trait prestamosTrait
         }
     }
 
-    public function getTotalintereses($request)
+    public function getTotalintereses($request, Pspagos $pspagos)
     {
         try {
             $nitempresa = $request->get('nitempresa');
     
-            // Verificar si el usuario tiene asignado el perfil con ID 1
-            $hasPerfil = Auth::user()->perfiles->contains('id', 1);
     
-            if ($hasPerfil) {
+            if ($this->getPerfilUser() == 1) {
                
-                $totalintereses = Pspagos::where('nitempresa', $nitempresa)
+                $totalintereses = $pspagos::where('nitempresa', $nitempresa)
                     ->where('ind_estado', 1)
                     ->sum('valcuota');
             } else {
                
-                $totalintereses = Pspagos::where('nitempresa', $nitempresa)
+                $totalintereses = $pspagos::where('nitempresa', $nitempresa)
                     ->where('ind_estado', 1)
                     ->where('id_usureg', Auth::user()->id)
                     ->sum('valcuota');

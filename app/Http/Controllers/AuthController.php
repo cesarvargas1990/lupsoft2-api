@@ -52,7 +52,7 @@ class AuthController extends Controller
      * @param  Request  $request
      * @return Response
      */
-    public function login(Request $request, PsEmpresa $psempresa, Auth $auth, Psusuperfil $psusuperfil)
+    public function login(Request $request, PsEmpresa $psempresa, Psusuperfil $psusuperfil)
     {
           //validate incoming request 
         $this->validate($request, [
@@ -66,7 +66,7 @@ class AuthController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        return $this->respondWithToken($token,$psempresa,$auth,$psusuperfil);
+        return $this->respondWithToken($token,$psempresa,$psusuperfil);
     }
 
     public function logout(Request $request)
