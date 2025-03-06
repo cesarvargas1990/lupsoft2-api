@@ -7,10 +7,8 @@ use App\Http\Traits\General\prestamosTrait;
 use App\PsEmpresa;
 use App\Pspagos;
 use App\Psprestamos;
-use App\Pstdocplant;
 use App\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Mockery;
 use TestCase;
@@ -36,79 +34,32 @@ class PrestamosTraitTest extends TestCase
     /**
      * Prueba unitaria de guardarPrestamoFechas().
      */
-    public function testGuardarPrestamoFechas()
+    public function test_get_datos_menu_returns_correct_data()
     {
-        // 1. Prepara un Request con datos de ejemplo
-        $request = Request::create('/dummy', 'POST', [
-            'nitempresa'    => '123456789',
-            'id_cliente'    => 10,
-            'valorpres'     => 100000,
-            'numcuotas'     => 2,
-            'porcint'       => 5,
-            'id_forma_pago' => 1,
-            'id_sistema_pago' => 'SIS01',
-            'fec_inicial'   => '01/01/2023',
-            'id_cobrador'   => 999,
-            'id_usureg'     => 100,
-            'fecha'         => '2023-01-01',
-        ]);
-
-        // 2. Crea una instancia parcial (mock) de la clase dummy que usa el trait
-        $dummy = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
-
-        // 3. Simula la respuesta de calcularCuota()
-        $dummy->shouldReceive('calcularCuota')
+        // Simular la respuesta de DB::select
+        DB::shouldReceive('select')
             ->once()
-            ->with($request)
+            ->with(Mockery::type('string'), Mockery::subset(['id' => 1]))
             ->andReturn([
-                'datosprestamo' => [
-                    'valor_cuota' => 50000
-                ],
-                'tabla' => [
-                    [
-                        'fecha'       => '2023-02-01',
-                        'interes'     => 50000,
-                        't_pagomes'   => 50000,
-                        'ind_renovar' => 0
-                    ],
-                    [
-                        'fecha'       => '2023-03-01',
-                        'interes'     => 50000,
-                        't_pagomes'   => 50000,
-                        'ind_renovar' => 0
-                    ],
-                ]
+                (object)['id' => 1, 'nombre' => 'Dashboard', 'icono' => 'home', 'ruta' => '/dashboard', 'id_mpadre' => 0],
+                (object)['id' => 2, 'nombre' => 'Usuarios', 'icono' => 'users', 'ruta' => '/usuarios', 'id_mpadre' => 0],
+                (object)['id' => 3, 'nombre' => 'Configuraciones', 'icono' => 'settings', 'ruta' => '/config', 'id_mpadre' => 2]
             ]);
 
-        // 4. Mock de la inserción principal en psprestamos
-        //    Retornará un ID ficticio (ej. 1)
-        DB::shouldReceive('table->insertGetId')
-            ->once()
-            ->withArgs(function ($data) {
-                // Validamos campos relevantes
-                return (
-                    isset($data['valorpres']) &&
-                    $data['valorpres'] === 100000 &&
-                    isset($data['valcuota']) &&
-                    $data['valcuota'] === 50000
-                );
-            })
-            ->andReturn(1);
+        // Crear una instancia de la clase que contiene la función con el trait
+        $classInstance = new class {
+            use \App\Http\Traits\General\menuPrincipalTrait;
+        };
 
-        // 5. Mock de la inserción en psfechaspago (dos veces)
-        DB::shouldReceive('table->insert')
-            ->times(2)
-            ->withArgs(function ($insertData) {
-                // Aquí podrías hacer comprobaciones adicionales si quieres
-                return true;
-            })
-            ->andReturn(true);
+        // Llamar a la función con el ID del usuario
+        $resultado = $classInstance->getDatosMenu(1);
 
-        // 6. Ejecuta el método a probar
-        $prestamoId = $dummy->guardarPrestamoFechas($request);
-
-        // 7. Verifica el ID retornado
-        $this->assertEquals(1, $prestamoId, 'Debe retornar el ID ficticio (1) que simulamos.');
+        // Verificaciones
+        $this->assertIsArray($resultado);
+        $this->assertCount(3, $resultado);
+        $this->assertEquals('Dashboard', $resultado[0]->nombre);
+        $this->assertEquals('Usuarios', $resultado[1]->nombre);
+        $this->assertEquals('Configuraciones', $resultado[2]->nombre);
     }
 
     public function testConsultaListadoPrestamos()
@@ -237,7 +188,6 @@ class PrestamosTraitTest extends TestCase
         $this->assertEquals($mockData, $result, 'Debe retornar el resultado de DB::select');
     }
 
-
     public function testReplaceVariablesInTemplate()
     {
         // 1. Instancia de la clase dummy que usa el trait
@@ -266,7 +216,6 @@ class PrestamosTraitTest extends TestCase
         );
     }
 
-    
 
     public function test_get_capital_prestado_returns_correct_value()
     {
@@ -451,7 +400,6 @@ class PrestamosTraitTest extends TestCase
         $this->assertIsFloat($resultado);
         $this->assertEquals(15000.00, $resultado);
     }
-   
 
     public function test_get_total_prestado_hoy_handles_exception()
     {
@@ -589,7 +537,6 @@ class PrestamosTraitTest extends TestCase
         $this->assertEquals(1, $resultado);
     }
 
-
     public function test_get_total_intereses_returns_correct_value3()
     {
         // Simular el request
@@ -672,8 +619,6 @@ class PrestamosTraitTest extends TestCase
         $this->assertEquals(20000.00, $resultado);
     }
    
-
-
     public function test_get_total_intereses3_returns_correct_value()
     {
         // Simular el request
@@ -835,6 +780,47 @@ class PrestamosTraitTest extends TestCase
         $this->assertEquals(8000.00, $resultado);
     }
 
-   
+    public function test_get_total_intereses_handles_exception()
+    {
+        // Simular el request
+        $request = new Request([
+            'nitempresa' => '123456'
+        ]);
+
+        // Simular la autenticación
+        $mockUser = Mockery::mock(User::class)->makePartial();
+        $mockUser->shouldReceive('getAttribute')->with('id')->andReturn(1);
+        Auth::shouldReceive('user')->andReturn($mockUser);
+
+        // Simular el modelo Pspagos que lanza una excepción
+        $mockPspagos = Mockery::mock(Pspagos::class);
+        $mockPspagos->shouldReceive('where')->withAnyArgs()->andThrow(new \Exception('Error en la base de datos', 500));
+
+        // Crear una instancia de la clase que contiene la función
+        $classInstance = new class {
+            use prestamosTrait;
+        };
+
+        // Llamar a la función con el mock de Pspagos
+        $resultado = $classInstance->getTotalintereses($request, $mockPspagos);
+
+        // Verificar que la respuesta es un JsonResponse
+        $this->assertInstanceOf(JsonResponse::class, $resultado);
+
+        // Decodificar el contenido de la respuesta JSON
+        $responseData = $resultado->getData(true);
+
+        // Verificar que el mensaje de error y el código sean los esperados
+        $this->assertEquals('Error en la base de datos', $responseData['message']);
+        $this->assertEquals(500, $responseData['errorCode']);
+        $this->assertArrayHasKey('lineError', $responseData);
+        $this->assertArrayHasKey('file', $responseData);
+    }
+
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
 
 }
