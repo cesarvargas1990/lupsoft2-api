@@ -795,6 +795,46 @@ class PrestamosTraitTest extends TestCase
         $this->assertEquals(20000.00, $resultado);
     }
 
+    public function test_get_total_intereses_hoy_returns_correct_value_for_specific_user()
+    {
+        // Simular el request
+        $request = new Request([
+            'nitempresa' => '123456',
+            'fecha' => '2025-03-06'
+        ]);
+
+        // Simular el usuario autenticado sin perfil de admin
+        $mockUser = Mockery::mock(User::class)->makePartial();
+        $mockUser->shouldReceive('getAttribute')->with('id')->andReturn(2); // Usuario sin perfil admin
+
+        // Simular la relación perfiles
+        $mockRelacion = Mockery::mock('Illuminate\Database\Eloquent\Relations\BelongsToMany');
+        $mockRelacion->shouldReceive('firstWhere')->with('id', 1)->andReturn(null); // No tiene perfil admin
+        $mockRelacion->shouldReceive('getResults')->andReturn(collect([]));
+        $mockUser->shouldReceive('perfiles')->andReturn($mockRelacion);
+
+        Auth::shouldReceive('user')->andReturn($mockUser);
+
+        // Simular el modelo Pspagos
+        $mockPspagos = Mockery::mock(Pspagos::class);
+        $mockPspagos->shouldReceive('where')->withAnyArgs()->andReturnSelf();
+        $mockPspagos->shouldReceive('whereBetween')->withAnyArgs()->andReturnSelf();
+        $mockPspagos->shouldReceive('where')->with('id_usureg', 2)->andReturnSelf();
+        $mockPspagos->shouldReceive('sum')->with('valcuota')->andReturn(8000.00);
+
+        // Crear una instancia de la clase que contiene la función
+        $classInstance = new class {
+            use prestamosTrait;
+        };
+
+        // Llamar a la función con los mocks
+        $resultado = $classInstance->getTotalintereseshoy($request, $mockPspagos);
+
+        // Verificaciones
+        $this->assertIsFloat($resultado);
+        $this->assertEquals(8000.00, $resultado);
+    }
+
    
 
 }
