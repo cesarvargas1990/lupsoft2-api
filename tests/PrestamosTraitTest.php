@@ -6,7 +6,9 @@ namespace Tests\Unit;
 use App\Http\Traits\General\prestamosTrait;
 use App\PsEmpresa;
 use App\Pspagos;
+use App\Psperiodopago;
 use App\Psprestamos;
+use App\Pspstiposistemaprest;
 use App\Psquerytabla;
 use App\Pstdocplant;
 use App\User;
@@ -928,6 +930,76 @@ class PrestamosTraitTest extends TestCase
         $this->assertEquals(120000.00, $resultado);
     }
    
+
+
+    public function test_guardar_prestamo_fechas()
+    {
+        // Simular Request
+        $request = new Request([
+            'nitempresa' => '123456',
+            'id_cliente' => 10,
+            'valorpres' => 100000,
+            'numcuotas' => 2,
+            'porcint' => 5,
+            'id_forma_pago' => 1,
+            'id_sistema_pago' => 'SIS01',
+            'fec_inicial' => '01/01/2023',
+            'id_cobrador' => 999,
+            'id_usureg' => 100,
+            'fecha' => '2023-01-01'
+        ]);
+
+        // Simular la clase que usa el trait
+        $mockInstance = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
+
+        // Simular calcularCuota()
+        $mockInstance->shouldReceive('calcularCuota')
+            ->once()
+            ->with($request, Mockery::type(Psperiodopago::class), Mockery::type(Pspstiposistemaprest::class))
+            ->andReturn([
+                'datosprestamo' => ['valor_cuota' => 50000],
+                'tabla' => [
+                    [
+                        'fecha' => '2023-02-01',
+                        'interes' => 50000,
+                        't_pagomes' => 50000,
+                        'ind_renovar' => 0
+                    ],
+                    [
+                        'fecha' => '2023-03-01',
+                        'interes' => 50000,
+                        't_pagomes' => 50000,
+                        'ind_renovar' => 0
+                    ],
+                ]
+            ]);
+
+        // Simular la inserción en psprestamos y devolver un ID ficticio
+        DB::shouldReceive('table->insertGetId')
+            ->once()
+            ->withArgs(function ($data) {
+                return isset($data['valorpres']) && $data['valorpres'] === 100000;
+            })
+            ->andReturn(1);
+
+        // Simular la inserción en psfechaspago (dos veces)
+        DB::shouldReceive('table->insert')
+            ->times(2)
+            ->withArgs(function ($insertData) {
+                return isset($insertData['id_prestamo']) && $insertData['id_prestamo'] === 1;
+            })
+            ->andReturn(true);
+
+        // Simular modelos
+        $mockPsperiodopago = Mockery::mock(Psperiodopago::class);
+        $mockPspstiposistemaprest = Mockery::mock(Pspstiposistemaprest::class);
+
+        // Ejecutar la función
+        $prestamoId = $mockInstance->guardarPrestamoFechas($request, $mockPsperiodopago, $mockPspstiposistemaprest);
+
+        // Verificaciones
+        $this->assertEquals(1, $prestamoId, 'Debe retornar el ID ficticio (1) que simulamos.');
+    }
 
     protected function tearDown(): void
     {
