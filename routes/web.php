@@ -154,7 +154,7 @@ $router->group(['prefix' => ''], function () use ($router) {
  
     // COMPLEX PROCESS (procedures, multiples insert into table, bussiness logic etc.)
 
-    $router->post('test' , ['uses' => 'PrestamosController@guardarPrestamo']);
+    
     $router->post('guardarPrestamo' , ['uses' => 'PrestamosController@guardarPrestamo']);
     $router->get('generarVariablesPlantillas/{nit_empresa}' , ['uses' => 'PrestamosController@generarVariablesPlantillas']);
     $router->post('guardarArchivoAdjunto' , ['uses' => 'GuardarArchivoController@guardarArchivoAdjunto']);
