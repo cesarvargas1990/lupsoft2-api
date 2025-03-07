@@ -13,7 +13,9 @@ use Carbon\Carbon;
 use DB;
 use App\Http\Traits\General\calculadoraCuotasPrestamosTrait;
 use App\PsEmpresa;
+use App\Psperiodopago;
 use App\Psprestamos;
+use App\Pspstiposistemaprest;
 use App\Pstdocplant;
 
 class PrestamosController extends Controller
@@ -31,15 +33,13 @@ class PrestamosController extends Controller
 
 
 
-    public function guardarPrestamo(Request $request)
+    public function guardarPrestamo(Request $request,Psperiodopago $psperiodopago, Pspstiposistemaprest $pspstiposistemaprest)
     {
 
 
         try {
 
-
-
-            $salida = $this->guardarPrestamoFechas($request);
+            $salida = $this->guardarPrestamoFechas($request,$psperiodopago,$pspstiposistemaprest);
             return response()->json($salida);
 
 
