@@ -7,6 +7,8 @@ use App\Http\Traits\General\prestamosTrait;
 use App\PsEmpresa;
 use App\Pspagos;
 use App\Psprestamos;
+use App\Psquerytabla;
+use App\Pstdocplant;
 use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -816,6 +818,53 @@ class PrestamosTraitTest extends TestCase
         $this->assertArrayHasKey('lineError', $responseData);
         $this->assertArrayHasKey('file', $responseData);
     }
+
+
+    public function test_render_template_returns_correct_html()
+    {
+        // Simular request
+        $request = new Request([
+            'id_prestamo' => 1,
+            'nitempresa' => '123456'
+        ]);
+
+        // Simular consultaVariablesPrestamo
+        $mockInstance = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
+
+        $mockInstance->shouldReceive('consultaVariablesPrestamo')
+            ->with('123456', 1)
+            ->andReturn([
+                (object)['cliente' => 'Juan Pérez', 'monto' => 100000]
+            ]);
+
+        // Simular getPlantillasDocumentos
+        $mockInstance->shouldReceive('getPlantillasDocumentos')
+            ->with($request, Mockery::type(Pstdocplant::class))
+            ->andReturn([
+                (object)['id' => 1, 'nombre' => 'Contrato', 'plantilla_html' => 'Cliente: {cliente}, Monto: {monto}']
+            ]);
+
+        // Simular replaceVariablesInTemplate
+        $mockInstance->shouldReceive('replaceVariablesInTemplate')
+            ->andReturnUsing(function ($template, $variables) {
+                return str_replace(['{cliente}', '{monto}'], [$variables['cliente'], $variables['monto']], $template);
+            });
+
+        // Simular el modelo Psquerytabla
+        $mockPsquerytabla = Mockery::mock(Psquerytabla::class);
+        $mockPstdocplant = Mockery::mock(Pstdocplant::class);
+
+        // Ejecutar la función
+        $resultado = $mockInstance->renderTemplate($request, $mockPsquerytabla, $mockPstdocplant);
+
+        // Verificaciones
+        $this->assertIsArray($resultado);
+        $this->assertCount(1, $resultado);
+        $this->assertEquals('Contrato', $resultado[0]['nombre']);
+        $this->assertEquals('Cliente: Juan Pérez, Monto: 100000<br>', $resultado[0]['plantilla_html']);
+    }
+
+    
 
    
 
