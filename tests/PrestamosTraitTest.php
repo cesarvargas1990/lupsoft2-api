@@ -897,6 +897,36 @@ class PrestamosTraitTest extends TestCase
         $this->assertEquals('Plantilla 1', $resultado[0]->nombre);
         $this->assertEquals('Plantilla 2', $resultado[1]->nombre);
     }
+
+    public function test_total_prestado_hoy_returns_correct_value()
+    {
+        // Simular nit_empresa
+        $nit_empresa = '123456';
+
+        // Crear instancia simulada del trait
+        $mockInstance = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
+
+        // Simular getCapitalInicial
+        $mockInstance->shouldReceive('getCapitalInicial')
+            ->with($nit_empresa, Mockery::type(Psempresa::class))
+            ->andReturn(50000.00);
+
+        // Simular getCapitalPrestado
+        $mockInstance->shouldReceive('getCapitalPrestado')
+            ->with($nit_empresa, Mockery::type(Psprestamos::class))
+            ->andReturn(70000.00);
+
+        // Simular los modelos Psempresa y Psprestamos
+        $mockPsempresa = Mockery::mock(Psempresa::class);
+        $mockPsprestamos = Mockery::mock(Psprestamos::class);
+
+        // Ejecutar la función
+        $resultado = $mockInstance->totalPrestadoHoy($nit_empresa, $mockPsempresa, $mockPsprestamos);
+
+        // Verificaciones
+        $this->assertIsFloat($resultado);
+        $this->assertEquals(120000.00, $resultado);
+    }
    
 
     protected function tearDown(): void
