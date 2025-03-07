@@ -9,15 +9,17 @@ use App\Psempresa;
 use App\Pstdocplant;
 use App\Psprestamos;
 use App\Pspagos;
+use App\Psperiodopago;
+use App\Pspstiposistemaprest;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 trait prestamosTrait
 {
 
-    function guardarPrestamoFechas($request)
+    function guardarPrestamoFechas($request,Psperiodopago $psperiodopago,Pspstiposistemaprest $pspstiposistemaprest)
     {
 
-        $datosCuota = $this->calcularCuota($request);
+        $datosCuota = $this->calcularCuota($request,$psperiodopago,$pspstiposistemaprest);
         $valor_cuota = $datosCuota['datosprestamo']['valor_cuota']??0;
         $fechaHora = Carbon::parse($request->get('fecha'));
         $id_prestamo = DB::table('psprestamos')->insertGetId(
