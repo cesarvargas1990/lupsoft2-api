@@ -841,7 +841,7 @@ class PrestamosTraitTest extends TestCase
         $mockInstance->shouldReceive('getPlantillasDocumentos')
             ->with($request, Mockery::type(Pstdocplant::class))
             ->andReturn([
-                (object)['id' => 1, 'nombre' => 'Contrato', 'plantilla_html' => 'Cliente: {cliente}, Monto: {monto}']
+                (object)['id' => 1, 'nombre' => 'Contrato', 'plantilla_html' => 'Cliente: {cliente}, Monto: {monto} <!--QRTquery1QRT-->']
             ]);
 
         // Simular replaceVariablesInTemplate
@@ -850,8 +850,18 @@ class PrestamosTraitTest extends TestCase
                 return str_replace(['{cliente}', '{monto}'], [$variables['cliente'], $variables['monto']], $template);
             });
 
-        // Simular el modelo Psquerytabla
+        // Simular Psquerytabla
         $mockPsquerytabla = Mockery::mock(Psquerytabla::class);
+        $mockPsquerytabla->shouldReceive('where')->with('codigo', 'query1')->andReturnSelf();
+        $mockPsquerytabla->shouldReceive('where')->with('nitempresa', '123456')->andReturnSelf();
+        $mockPsquerytabla->shouldReceive('first')->andReturn((object)['sql' => 'SELECT "ResultadoQuery" AS campo1']);
+        
+        // Simular DB::select
+        DB::shouldReceive('select')->with('SELECT "ResultadoQuery" AS campo1')->andReturn([
+            (object)['campo1' => 'Valor Query']
+        ]);
+
+        // Simular el modelo Pstdocplant
         $mockPstdocplant = Mockery::mock(Pstdocplant::class);
 
         // Ejecutar la función
@@ -861,11 +871,32 @@ class PrestamosTraitTest extends TestCase
         $this->assertIsArray($resultado);
         $this->assertCount(1, $resultado);
         $this->assertEquals('Contrato', $resultado[0]['nombre']);
-        $this->assertEquals('Cliente: Juan Pérez, Monto: 100000<br>', $resultado[0]['plantilla_html']);
+        $this->assertStringContainsString('Cliente: Juan Pérez, Monto: 100000', $resultado[0]['plantilla_html']);
+        $this->assertStringContainsString('Monto: 100000 <br>', $resultado[0]['plantilla_html']);
+
+        // Validar la correcta sustitución de variables en los bloques <!--QRT ... QRT-->
+        $this->assertStringContainsString('Monto: 100000 <br>', $resultado[0]['plantilla_html']);
     }
 
     
 
+    public function test_get_plantillas_documentos(){
+        $mockInstance = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
+        $request = new Request([
+            'id_prestamo' => 1,
+            'nitempresa' => '123456'
+        ]);
+        $mockPstdocplant = Mockery::mock(Pstdocplant::class);
+        $mockPstdocplant->shouldReceive('where')->with('nitempresa', '123456')->andReturnSelf();
+        $mockPstdocplant->shouldReceive('get')->andReturn(collect([
+            (object)['id' => 1, 'nombre' => 'Plantilla 1'],
+            (object)['id' => 2, 'nombre' => 'Plantilla 2']
+        ]));
+        $resultado = $mockInstance->getPlantillasDocumentos($request, $mockPstdocplant);
+        $this->assertCount(2, $resultado);
+        $this->assertEquals('Plantilla 1', $resultado[0]->nombre);
+        $this->assertEquals('Plantilla 2', $resultado[1]->nombre);
+    }
    
 
     protected function tearDown(): void
