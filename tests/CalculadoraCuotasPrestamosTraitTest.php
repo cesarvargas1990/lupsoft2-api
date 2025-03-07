@@ -39,6 +39,41 @@ class CalculadoraCuotasPrestamosTraitTest extends TestCase
         $this->assertEquals('Lunes, 25 de Diciembre de 2023', $resultado);
     }
 
+    public function test_calcular_cuota_returns_correct_value()
+    {
+        // Simular request
+        $request = new Request([
+            'id_forma_pago' => 1,
+            'id_sistema_pago' => 'SIS01',
+            'numcuotas' => 12,
+            'porcint' => 5,
+            'valorpres' => 100000
+        ]);
+
+        // Simular modelo Psperiodopago
+        $mockPsperiodopago = Mockery::mock(Psperiodopago::class);
+        $mockPsperiodopago->shouldReceive('find')->with(1)->andReturn((object)['id' => 1]);
+
+        // Simular modelo Pspstiposistemaprest
+        $mockPspstiposistemaprest = Mockery::mock(Pspstiposistemaprest::class);
+        $mockPspstiposistemaprest->shouldReceive('where')->with('codtipsistemap', 'SIS01')->andReturnSelf();
+        $mockPspstiposistemaprest->shouldReceive('first')->andReturn((object)['formula' => 'return ($valorpres * ($porcint / 100)) / $numcuotas;']);
+
+        // Crear una instancia de la clase que contiene la función con el trait
+        $classInstance = new class {
+            use \App\Http\Traits\General\calculadoraCuotasPrestamosTrait;
+        };
+
+        // Llamar a la función con los mocks
+        $resultado = $classInstance->calcularCuota($request, $mockPsperiodopago, $mockPspstiposistemaprest);
+
+        // Verificaciones
+        $this->assertIsFloat($resultado);
+        $this->assertEquals(416.67, round($resultado, 2));
+    }
+
+    
+
     protected function tearDown(): void
     {
         Mockery::close();
