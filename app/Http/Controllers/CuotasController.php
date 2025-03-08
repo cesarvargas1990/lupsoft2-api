@@ -35,10 +35,12 @@ class CuotasController extends Controller
 
 
         } catch (\Exception $e) {
-
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
-
+            return response()->json([
+                "message" => $e->getMessage(),
+                "errorCode" => $e->getCode(),
+                "lineError" => $e->getLine(),
+                "file" => $e->getFile()
+            ], 404);
         }
 
 
@@ -55,10 +57,12 @@ class CuotasController extends Controller
 
 
         } catch (\Exception $e) {
-
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
-
+            return response()->json([
+                "message" => $e->getMessage(),
+                "errorCode" => $e->getCode(),
+                "lineError" => $e->getLine(),
+                "file" => $e->getFile()
+            ], 404);
         }
 
 
