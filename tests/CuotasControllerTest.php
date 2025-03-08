@@ -1,0 +1,93 @@
+<?php
+
+namespace Tests\Unit;
+
+use App\Http\Controllers\CuotasController;
+use App\Psperiodopago;
+use App\Pspstiposistemaprest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Mockery;
+use Laravel\Lumen\Testing\TestCase;
+use Illuminate\Http\JsonResponse;
+
+class CuotasControllerTest extends TestCase
+{
+    public function createApplication()
+    {
+        return require __DIR__ . '/../bootstrap/app.php';
+    }
+
+    public function test_calcular_cuotas_returns_correct_response()
+    {
+        // Simular el request
+        $request = new Request([
+            'id_forma_pago' => 1,
+            'id_sistema_pago' => 'SIS01',
+            'numcuotas' => 12,
+            'porcint' => 5,
+            'valorpres' => 100000
+        ]);
+
+        // Simular el modelo Psperiodopago
+        $mockPsperiodopago = Mockery::mock(Psperiodopago::class);
+
+        // Simular el modelo Pspstiposistemaprest
+        $mockPspstiposistemaprest = Mockery::mock(Pspstiposistemaprest::class);
+
+        // Simular el comportamiento de generarTablaAmortizacion
+        $mockController = Mockery::mock(CuotasController::class)->makePartial();
+        $mockController->shouldReceive('generarTablaAmortizacion')
+            ->with($request, $mockPsperiodopago, $mockPspstiposistemaprest)
+            ->andReturn([
+                'tabla_formato' => [
+                    ['cuota' => 1, 'valor' => 10000],
+                    ['cuota' => 2, 'valor' => 10000]
+                ]
+            ]);
+
+        // Ejecutar la función
+        $response = $mockController->calcularCuotas($request, $mockPsperiodopago, $mockPspstiposistemaprest);
+
+        // Verificar que la respuesta sea un JsonResponse
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        
+        // Decodificar la respuesta JSON
+        $responseData = json_decode($response->getContent(), true);
+
+        // Verificar que la respuesta sea correcta
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertCount(2, $responseData['tabla_formato']);
+        $this->assertEquals(10000, $responseData['tabla_formato'][0]['valor']);
+    }
+
+    public function test_calcular_cuotas_handles_exception()
+    {
+        $request = new Request([
+            'id_forma_pago' => 1,
+            'id_sistema_pago' => 'SIS01'
+        ]);
+
+        $mockPsperiodopago = Mockery::mock(Psperiodopago::class);
+        $mockPspstiposistemaprest = Mockery::mock(Pspstiposistemaprest::class);
+
+        $mockController = Mockery::mock(CuotasController::class)->makePartial();
+        $mockController->shouldReceive('generarTablaAmortizacion')
+            ->withAnyArgs()
+            ->andThrow(new \Exception('Error en la base de datos', 500));
+
+        $response = $mockController->calcularCuotas($request, $mockPsperiodopago, $mockPspstiposistemaprest);
+        
+        // Asegurar que la respuesta es un JsonResponse
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        
+        // Decodificar la respuesta JSON
+        $responseData = json_decode($response->getContent(), true);
+        
+        // Verificar los datos de error
+        $this->assertEquals('Error en la base de datos', $responseData['message']);
+        $this->assertEquals(500, $responseData['errorCode']);
+        $this->assertArrayHasKey('lineError', $responseData);
+        $this->assertArrayHasKey('file', $responseData);
+    }
+}
