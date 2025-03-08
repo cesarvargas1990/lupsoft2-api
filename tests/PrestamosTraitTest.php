@@ -823,62 +823,78 @@ class PrestamosTraitTest extends TestCase
 
 
     public function test_render_template_returns_correct_html()
-    {
-        // Simular request
-        $request = new Request([
-            'id_prestamo' => 1,
-            'nitempresa' => '123456'
+{
+    // Simular request
+    $request = new Request([
+        'id_prestamo' => 1,
+        'nitempresa' => '123456'
+    ]);
+
+    // Simular consultaVariablesPrestamo
+    $mockInstance = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
+
+    $mockInstance->shouldReceive('consultaVariablesPrestamo')
+        ->with('123456', 1)
+        ->andReturn([
+            (object)['cliente' => 'Juan Pérez', 'monto' => 100000]
         ]);
 
-        // Simular consultaVariablesPrestamo
-        $mockInstance = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
-
-        $mockInstance->shouldReceive('consultaVariablesPrestamo')
-            ->with('123456', 1)
-            ->andReturn([
-                (object)['cliente' => 'Juan Pérez', 'monto' => 100000]
-            ]);
-
-        // Simular getPlantillasDocumentos
-        $mockInstance->shouldReceive('getPlantillasDocumentos')
-            ->with($request, Mockery::type(Pstdocplant::class))
-            ->andReturn([
-                (object)['id' => 1, 'nombre' => 'Contrato', 'plantilla_html' => 'Cliente: {cliente}, Monto: {monto} <!--QRTquery1QRT-->']
-            ]);
-
-        // Simular replaceVariablesInTemplate
-        $mockInstance->shouldReceive('replaceVariablesInTemplate')
-            ->andReturnUsing(function ($template, $variables) {
-                return str_replace(['{cliente}', '{monto}'], [$variables['cliente'], $variables['monto']], $template);
-            });
-
-        // Simular Psquerytabla
-        $mockPsquerytabla = Mockery::mock(Psquerytabla::class);
-        $mockPsquerytabla->shouldReceive('where')->with('codigo', 'query1')->andReturnSelf();
-        $mockPsquerytabla->shouldReceive('where')->with('nitempresa', '123456')->andReturnSelf();
-        $mockPsquerytabla->shouldReceive('first')->andReturn((object)['sql' => 'SELECT "ResultadoQuery" AS campo1']);
-        
-        // Simular DB::select
-        DB::shouldReceive('select')->with('SELECT "ResultadoQuery" AS campo1')->andReturn([
-            (object)['campo1' => 'Valor Query']
+    // Simular getPlantillasDocumentos
+    $mockInstance->shouldReceive('getPlantillasDocumentos')
+        ->with($request, Mockery::type(Pstdocplant::class))
+        ->andReturn([
+            (object)[
+                'id' => 1, 
+                'nombre' => 'Contrato', 
+                'plantilla_html' => 'Cliente: {cliente}, Monto: {monto} <!--QRTquery1QRT--> 
+                <tr>
+                    <td>[numero_cuota]</td>
+                    <td>[fecha_pago]</td>
+                    <td>$ [valor_pagar]</td>
+                </tr>
+                QRT-->'
+            ]
         ]);
 
-        // Simular el modelo Pstdocplant
-        $mockPstdocplant = Mockery::mock(Pstdocplant::class);
+    // Simular replaceVariablesInTemplate
+    $mockInstance->shouldReceive('replaceVariablesInTemplate')
+        ->andReturnUsing(function ($template, $variables) {
+            return str_replace(['{cliente}', '{monto}'], [$variables['cliente'], $variables['monto']], $template);
+        });
 
-        // Ejecutar la función
-        $resultado = $mockInstance->renderTemplate($request, $mockPsquerytabla, $mockPstdocplant);
+    // Simular Psquerytabla
+    $mockPsquerytabla = Mockery::mock(Psquerytabla::class);
+    $mockPsquerytabla->shouldReceive('where')->with('codigo', 'query1')->andReturnSelf();
+    $mockPsquerytabla->shouldReceive('where')->with('nitempresa', '123456')->andReturnSelf();
+    $mockPsquerytabla->shouldReceive('first')->andReturn((object)['sql' => 'SELECT numero_cuota, fecha_pago, valor_pagar FROM cuotas WHERE id_prestamo = 1']);
 
-        // Verificaciones
-        $this->assertIsArray($resultado);
-        $this->assertCount(1, $resultado);
-        $this->assertEquals('Contrato', $resultado[0]['nombre']);
-        $this->assertStringContainsString('Cliente: Juan Pérez, Monto: 100000', $resultado[0]['plantilla_html']);
-        $this->assertStringContainsString('Monto: 100000 <br>', $resultado[0]['plantilla_html']);
+    // Simular DB::select
+    DB::shouldReceive('select')->with('SELECT numero_cuota, fecha_pago, valor_pagar FROM cuotas WHERE id_prestamo = 1')->andReturn([
+        (object)['numero_cuota' => 1, 'fecha_pago' => '2025-04-01', 'valor_pagar' => 50000],
+        (object)['numero_cuota' => 2, 'fecha_pago' => '2025-05-01', 'valor_pagar' => 50000]
+    ]);
 
-        // Validar la correcta sustitución de variables en los bloques <!--QRT ... QRT-->
-        $this->assertStringContainsString('Monto: 100000 <br>', $resultado[0]['plantilla_html']);
-    }
+    // Simular el modelo Pstdocplant
+    $mockPstdocplant = Mockery::mock(Pstdocplant::class);
+
+    // Ejecutar la función
+    $resultado = $mockInstance->renderTemplate($request, $mockPsquerytabla, $mockPstdocplant);
+
+    // Verificaciones
+    $this->assertIsArray($resultado);
+    $this->assertCount(1, $resultado);
+    $this->assertEquals('Contrato', $resultado[0]['nombre']);
+    $this->assertStringContainsString('Cliente: Juan Pérez, Monto: 100000', $resultado[0]['plantilla_html']);
+
+    // Validar la correcta sustitución de variables en los bloques <!--QRT ... QRT-->
+    $this->assertStringContainsString('<tr>', $resultado[0]['plantilla_html']);
+    //$this->assertStringContainsString('<td>1</td><td>[numero_cuota]</td>', $resultado[0]['plantilla_html']);
+    $this->assertStringContainsString('<td>[fecha_pago]</td>', $resultado[0]['plantilla_html']);
+    $this->assertStringContainsString('<td>$ [valor_pagar]</td>', $resultado[0]['plantilla_html']);
+    $this->assertStringContainsString('<td>[numero_cuota]</td>', $resultado[0]['plantilla_html']);
+    $this->assertStringContainsString('<td>[fecha_pago]</td>', $resultado[0]['plantilla_html']);
+   
+}
 
     
 
