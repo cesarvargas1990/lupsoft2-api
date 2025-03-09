@@ -15,6 +15,14 @@
 
 use Illuminate\Http\Request;
 
+// Definir constantes para rutas repetitivas
+define('PSCLIENTES_ROUTE', 'psclientes/{id}');
+define('PSDOCADJUNTOS_ROUTE', 'psdocadjuntos/{id}');
+define('PSFORMAPAGO_ROUTE', 'psformapago/{id}');
+define('PSTIPOSISTEMAPREST_ROUTE', 'pstiposistemaprest/{id}');
+define('PSEMPRESA_ROUTE', 'psempresa/{id}');
+define('PSPERIODO_PAGO_ROUTE', 'psperiodopago/{id}');
+
 $router->get('/upload/documentosAdjuntos/{filepath:.*}', function (Request $request, $filepath) use ($router) {
     dd("Ruta alcanzada: $filepath");
     $file = storage_path("app/$filepath");
@@ -50,35 +58,34 @@ $router->group(['prefix' => ''], function () use ($router) {
 
   
     // REST FULL SERVICES FOR TABLE => psclientes
-    $router->post('psclientes/{nitempresa}',  ['uses' => 'PsclientesController@showAllPsclientes']);
-    $router->get('psclientes/{id}', ['uses' => 'PsclientesController@showOnePsclientes']);
+    $router->post('psclientes/{nitempresa}', ['uses' => 'PsclientesController@showAllPsclientes']);
+    $router->get(PSCLIENTES_ROUTE, ['uses' => 'PsclientesController@showOnePsclientes']);
     $router->post('psclientes', ['uses' => 'PsclientesController@create']);
-    $router->put('psclientes/{id}', ['uses' => 'PsclientesController@update']);
-    $router->delete('psclientes/{id}', ['uses' => 'PsclientesController@delete']);
-    $router->get('listadoclientes/{id}',  ['uses' => 'PsclientesController@ShowPsclientes']); // combo listas
+    $router->put(PSCLIENTES_ROUTE, ['uses' => 'PsclientesController@update']);
+    $router->delete(PSCLIENTES_ROUTE, ['uses' => 'PsclientesController@delete']);
+    $router->get('listadoclientes/{id}', ['uses' => 'PsclientesController@ShowPsclientes']);
 
     // REST FULL SERVICES FOR TABLE => pstipodocidenti
-    $router->get('pstipodocidenti',  ['uses' => 'PstipodocidentiController@ShowPstipodocidenti']);
+    $router->get('pstipodocidenti', ['uses' => 'PstipodocidentiController@ShowPstipodocidenti']);
     $router->post('pstipodocidenti', ['uses' => 'PstipodocidentiController@create']);
     $router->put('pstipodocidenti/{id}', ['uses' => 'PstipodocidentiController@update']);
     $router->delete('pstipodocidenti/{id}', ['uses' => 'PstipodocidentiController@delete']);
 
 
     // REST FULL SERVICES FOR TABLE => psformapago
-    $router->get('psformapago',  ['uses' => 'PsformapagoController@showAllpsformapago']);
-    $router->get('psformapago/{id}', ['uses' => 'PsformapagoController@ShowPsformapago']);
+    $router->get('psformapago', ['uses' => 'PsformapagoController@showAllpsformapago']);
+    $router->get(PSFORMAPAGO_ROUTE, ['uses' => 'PsformapagoController@ShowPsformapago']);
     $router->post('psformapago', ['uses' => 'PsformapagoController@create']);
-    $router->put('psformapago/{id}', ['uses' => 'PsformapagoController@update']);
-    $router->delete('psformapago/{id}', ['uses' => 'PsformapagoController@delete']);
-    $router->get('listaformaspago/{nit_empresa}', ['uses' => 'PsformapagoController@ShowPsformapago']); // combo listas
-
+    $router->put(PSFORMAPAGO_ROUTE, ['uses' => 'PsformapagoController@update']);
+    $router->delete(PSFORMAPAGO_ROUTE, ['uses' => 'PsformapagoController@delete']);
+    $router->get('listaformaspago/{nit_empresa}', ['uses' => 'PsformapagoController@ShowPsformapago']);
 
     // REST FULL SERVICES FOR TABLE => psperiodospago
-    $router->get('psperiodopago',  ['uses' => 'PsperiodopagoController@showAllpsperiodospago']);
-    $router->get('psperiodopago/{id}', ['uses' => 'PsperiodopagoController@showOnePsperiodopago']);
+    $router->get('psperiodopago', ['uses' => 'PsperiodopagoController@showAllpsperiodospago']);
+    $router->get(PSPERIODO_PAGO_ROUTE, ['uses' => 'PsperiodopagoController@showOnePsperiodopago']);
     $router->post('psperiodopago', ['uses' => 'PsperiodopagoController@create']);
-    $router->put('psperiodopago/{id}', ['uses' => 'PsperiodopagoController@update']);
-    $router->delete('psperiodopago/{id}', ['uses' => 'PsperiodopagoController@delete']);
+    $router->put(PSPERIODO_PAGO_ROUTE, ['uses' => 'PsperiodopagoController@update']);
+    $router->delete(PSPERIODO_PAGO_ROUTE, ['uses' => 'PsperiodopagoController@delete']);
     $router->get('listaperiodopago', ['uses' => 'PsperiodopagoController@ShowPsperiodopago']);
 
 
