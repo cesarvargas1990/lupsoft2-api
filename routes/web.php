@@ -22,6 +22,9 @@ define('PSFORMAPAGO_ROUTE', 'psformapago/{id}');
 define('PSTIPOSISTEMAPREST_ROUTE', 'pstiposistemaprest/{id}');
 define('PSEMPRESA_ROUTE', 'psempresa/{id}');
 define('PSPERIODO_PAGO_ROUTE', 'psperiodopago/{id}');
+define('PSPAGOS_ROUTE', 'pspagos/{id}');
+define('PSFECHASPAGO_ROUTE', 'psfechaspago/{id}');
+
 
 $router->get('/upload/documentosAdjuntos/{filepath:.*}', function (Request $request, $filepath) use ($router) {
     dd("Ruta alcanzada: $filepath");
@@ -109,9 +112,8 @@ $router->group(['prefix' => ''], function () use ($router) {
     // REST FULL SERVICES FOR TABLE => pspagos
     $router->get('pspagos',  ['uses' => 'PspagosController@showAllPspagos']);
     $router->post('pspagos', ['uses' => 'PspagosController@create']);
-    $router->put('pspagos/{id}', ['uses' => 'PspagosController@update']);
-    $router->delete('pspagos/{id}', ['uses' => 'PspagosController@delete']);
-
+    $router->put(PSPAGOS_ROUTE, ['uses' => 'PspagosController@update']);
+    $router->delete(PSPAGOS_ROUTE, ['uses' => 'PspagosController@delete']);
 
     // REST FULL SERVICES FOR TABLE => psfechaspago
     $router->get('psfechaspago/{id_prestamo}',  ['uses' => 'PsfechaspagoController@showAllPsfechaspago']);
