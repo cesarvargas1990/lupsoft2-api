@@ -2,4 +2,7 @@
 /.idea
 Homestead.json
 Homestead.yaml
+/coverage-report
+/public
+/upload
 .env

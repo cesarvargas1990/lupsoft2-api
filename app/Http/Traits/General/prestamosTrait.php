@@ -130,58 +130,54 @@ trait prestamosTrait
 
     function renderTemplate($request, Psquerytabla $psQueryTabla,Pstdocplant $pstdocplant)
     {
-        $id_prestamo = $request->get('id_prestamo');
-        $nit_empresa = $request->get('nitempresa');
-        $variables = $this->consultaVariablesPrestamo($nit_empresa, $id_prestamo)[0];
-
+        $idprestamo = $request->get('id_prestamo');
+        $nitempresa = $request->get('nitempresa');
+        $variables = $this->consultaVariablesPrestamo($nitempresa, $idprestamo)[0];
         $array = json_decode(json_encode($variables), true);
         $data = $this->getPlantillasDocumentos($request,$pstdocplant);
-        $html_templates = [];
-        if (count($data) > 0) {
-            $renderTemplate = '';
-            foreach ($data as $documento) {
-                $renderTemplate = $this->replaceVariablesInTemplate($documento->plantilla_html, $array) . '<br>';
-                $start_tag = '<!--QRT';
-                $end_tag = 'QRT-->';
-                if (preg_match_all('/' . preg_quote($start_tag) . '(.*?)' . preg_quote($end_tag) . '/s', $renderTemplate, $matches)) {
-                    $matches = ($matches[1]);
-                    $nitempresa = $nit_empresa;
-                    $str2 = '';
-                    foreach ($matches as $value) {
-                        $qt = $value[0];
-                        $str = ltrim($value, $qt);
-                        if ((preg_match_all('/' . preg_quote('[') . '(.*?)' . preg_quote(']') . '/s', $str, $matchesv))) {
-                            $qt = $psQueryTabla::where('codigo', $qt)->where('nitempresa', $nitempresa)->first()->sql;
-                            $vars = $this->consultaVariablesPrestamo($nit_empresa, $id_prestamo)[0];
-                            $array = json_decode(json_encode($vars), true);
-                            $qt = $this->replaceVariablesInTemplate($qt,$array);
-                            $query =  DB::select($qt);
-                            $variables = $matchesv[1];
-                            foreach ($query as $val1) {
-                                $cadenaReemplazada = '';
-                                $cadenaSubstituir = $str;
-                                foreach ($variables as $key => $val2) {
-                                    $valorAsubstituir = $val1->{$val2};
-                                    $queSeVaASubstituir = '[' . $val2 . ']';
-                                    $cadenaSubstituir = str_replace($queSeVaASubstituir, (string) $valorAsubstituir, $cadenaSubstituir);
-                                }
-                                $str2 .= $cadenaSubstituir;
-                            }
-                        }
-                        $renderTemplate = str_replace($matches[0], $str2, $renderTemplate);
-                        $renderTemplate = str_replace('<!--QRT', '',  $renderTemplate);
-                        $renderTemplate = str_replace('QRT-->', '',  $renderTemplate);
-                    }
-                }
-                $html_templates[] = array(
-                    'id' => $documento->id,
-                    'nombre' => $documento->nombre,
-                    'plantilla_html' => $renderTemplate,
-                    'nit_empresa' => $nit_empresa
-                );
+        return $this->replaceVariables($data,$array,$nitempresa,$idprestamo,$psQueryTabla);
+    }
+
+    public function replaceVariables($data,$array,$nitempresa,$idprestamo,$psQueryTabla) {
+        foreach ($data as $documento) {
+            $renderTemplate = $this->replaceVariablesInTemplate($documento->plantilla_html, $array) . '<br>';
+            $start_tag = '<!--QRT';
+            $end_tag = 'QRT-->';
+            if (preg_match_all('/' . preg_quote($start_tag) . '(.*?)' . preg_quote($end_tag) . '/s', $renderTemplate, $matches)) {
+                $matches = ($matches[1]);
+                $nitempresa = $nitempresa;
+                $renderTemplate = $this->renderTemplate2($matches,$psQueryTabla,$nitempresa,$idprestamo,$renderTemplate);
             }
+            $html_templates[] = array(
+                'id' => $documento->id,
+                'nombre' => $documento->nombre,
+                'plantilla_html' => $renderTemplate,
+                'nit_empresa' => $nitempresa
+            );
         }
         return $html_templates;
+    }
+
+    public function renderTemplate2($matches,$psQueryTabla,$nitempresa,$idprestamo,$renderTemplate){
+        $str2 = '';
+        foreach ($matches as $value) {
+            $qt = $value[0];
+            $str = ltrim($value, $qt);
+            if ((preg_match_all('/' . preg_quote('[') . '(.*?)' . preg_quote(']') . '/s', $str, $matchesv))) {
+                $qt = $psQueryTabla::where('codigo', $qt)->where('nitempresa', $nitempresa)->first()->sql;
+                $vars = $this->consultaVariablesPrestamo($nitempresa, $idprestamo)[0];
+                $array = json_decode(json_encode($vars), true);
+                $qt = $this->replaceVariablesInTemplate($qt,$array);
+                $query =  DB::select($qt);
+                $variables = $matchesv[1];
+                $str2 = $this->setVars($query,$variables,$str,$str2);
+                
+            }
+            $renderTemplate = str_replace($matches[0], $str2, $renderTemplate);
+            $renderTemplate = str_replace('<!--QRT', '',  $renderTemplate);
+            $renderTemplate = str_replace('QRT-->', '',  $renderTemplate);
+        }
+        return $renderTemplate;
     }
 
     public function getPlantillasDocumentos($request, Pstdocplant $pstdocplant)
@@ -191,7 +187,19 @@ trait prestamosTrait
         return $data;
     }
   
-
+    public function setVars($query,$variables,$str,$str2){
+        foreach ($query as $val1) {
+            $cadenaReemplazada = '';
+            $cadenaSubstituir = $str;
+            foreach ($variables as $key => $val2) {
+                $valorAsubstituir = $val1->{$val2};
+                $queSeVaASubstituir = '[' . $val2 . ']';
+                $cadenaSubstituir = str_replace($queSeVaASubstituir, (string) $valorAsubstituir, $cadenaSubstituir);
+            }
+            $str2 .= $cadenaSubstituir;
+        }
+        return $str2;
+    }
     public function getCapitalPrestado($nitempresa, Psprestamos $psPrestamos)
     {
         try {

@@ -18,6 +18,7 @@ use App\Psprestamos;
 use App\Pspstiposistemaprest;
 use App\Pstdocplant;
 
+define('APPLICATION_JSON', 'application/json');
 class PrestamosController extends Controller
 {
 
@@ -46,7 +47,7 @@ class PrestamosController extends Controller
         } catch (\Exception $e) {
 
             echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
+                ->header('Content-Type', APPLICATION_JSON);
 
         }
 
@@ -72,7 +73,7 @@ class PrestamosController extends Controller
         } catch (\Exception $e) {
 
             echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
+                ->header('Content-Type', APPLICATION_JSON);
 
         }
 
@@ -93,7 +94,7 @@ class PrestamosController extends Controller
         } catch (\Exception $e) {
 
             echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
+                ->header('Content-Type', APPLICATION_JSON);
 
         }
 
@@ -166,13 +167,13 @@ class PrestamosController extends Controller
 	        return response()->json($datos);
 	    } catch (\Exception $e) {
 	        echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-	            ->header('Content-Type', 'application/json');
+	            ->header('Content-Type', APPLICATION_JSON);
 	    }
 	}
   
 
 
-     function eliminarPrestamo ($id_prestamo) {
+    public function eliminarPrestamo ($id_prestamo) {
 
         if ($id_prestamo != "") {
             
@@ -198,7 +199,7 @@ class PrestamosController extends Controller
       } catch (\Exception $e) {
 
           echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-              ->header('Content-Type', 'application/json');
+              ->header('Content-Type', APPLICATION_JSON);
 
       }
     }
@@ -218,7 +219,7 @@ class PrestamosController extends Controller
       } catch (\Exception $e) {
 
           echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-              ->header('Content-Type', 'application/json');
+              ->header('Content-Type', APPLICATION_JSON);
 
       }
     }
@@ -234,7 +235,7 @@ class PrestamosController extends Controller
       } catch (\Exception $e) {
 
           echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-              ->header('Content-Type', 'application/json');
+              ->header('Content-Type', APPLICATION_JSON);
 
       }
     }
@@ -249,7 +250,7 @@ class PrestamosController extends Controller
       } catch (\Exception $e) {
 
           echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-              ->header('Content-Type', 'application/json');
+              ->header('Content-Type', APPLICATION_JSON);
 
       }
     }
@@ -268,7 +269,7 @@ class PrestamosController extends Controller
       } catch (\Exception $e) {
 
           echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-              ->header('Content-Type', 'application/json');
+              ->header('Content-Type', APPLICATION_JSON);
 
       }
     }
@@ -287,7 +288,7 @@ class PrestamosController extends Controller
         return response()->json($data);
       } catch (\Exception $e) {
         echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-          ->header('Content-Type', 'application/json');
+          ->header('Content-Type', APPLICATION_JSON);
       }
     }
 

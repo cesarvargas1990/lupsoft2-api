@@ -24,8 +24,8 @@ define('PSEMPRESA_ROUTE', 'psempresa/{id}');
 define('PSPERIODO_PAGO_ROUTE', 'psperiodopago/{id}');
 define('PSPAGOS_ROUTE', 'pspagos/{id}');
 define('PSFECHASPAGO_ROUTE', 'psfechaspago/{id}');
-
-
+define('PSTDOCPLANT_ID', 'pstdocplant/{id}');
+define('PSTDOCADJUNTOS_ID', 'pstdocadjuntos/{id}');
 $router->get('/upload/documentosAdjuntos/{filepath:.*}', function (Request $request, $filepath) use ($router) {
     dd("Ruta alcanzada: $filepath");
     $file = storage_path("app/$filepath");
@@ -94,19 +94,19 @@ $router->group(['prefix' => ''], function () use ($router) {
 
     // REST FULL SERVICES FOR TABLE => pstdocadjuntos
     $router->get('pstdocadjuntos',  ['uses' => 'PstdocadjuntosController@showAllPstdocadjuntos']);
-    $router->get('pstdocadjuntos/{id}', ['uses' => 'PstdocadjuntosController@showOnePstdocadjuntos']);
+    $router->get(PSTDOCADJUNTOS_ID, ['uses' => 'PstdocadjuntosController@showOnePstdocadjuntos']);
     $router->post('pstdocadjuntos', ['uses' => 'PstdocadjuntosController@create']);
-    $router->put('pstdocadjuntos/{id}', ['uses' => 'PstdocadjuntosController@update']);
-    $router->delete('pstdocadjuntos/{id}', ['uses' => 'PstdocadjuntosController@delete']);
+    $router->put(PSTDOCADJUNTOS_ID, ['uses' => 'PstdocadjuntosController@update']);
+    $router->delete(PSTDOCADJUNTOS_ID, ['uses' => 'PstdocadjuntosController@delete']);
     $router->get('listatdocadjuntos/{nitempresa}', ['uses' => 'PstdocadjuntosController@ShowPstdocadjuntos']);
 
 
     // REST FULL SERVICES FOR TABLE => pstdocplant
     $router->get('pstdocplant',  ['uses' => 'PstdocplantController@showAllpstdocplant']);
-    $router->get('pstdocplant/{id}', ['uses' => 'PstdocplantController@ShowPstdocplant']);
+    $router->get(PSTDOCPLANT_ID, ['uses' => 'PstdocplantController@ShowPstdocplant']);
     $router->post('pstdocplant', ['uses' => 'PstdocplantController@create']);
-    $router->put('pstdocplant/{id}', ['uses' => 'PstdocplantController@update']);
-    $router->delete('pstdocplant/{id}', ['uses' => 'PstdocplantController@delete']);
+    $router->put(PSTDOCPLANT_ID, ['uses' => 'PstdocplantController@update']);
+    $router->delete(PSTDOCPLANT_ID, ['uses' => 'PstdocplantController@delete']);
 
  
     // REST FULL SERVICES FOR TABLE => pspagos
@@ -118,27 +118,27 @@ $router->group(['prefix' => ''], function () use ($router) {
     // REST FULL SERVICES FOR TABLE => psfechaspago
     $router->get('psfechaspago/{id_prestamo}',  ['uses' => 'PsfechaspagoController@showAllPsfechaspago']);
     $router->post('psfechaspago', ['uses' => 'PsfechaspagoController@create']);
-    $router->put('psfechaspago/{id}', ['uses' => 'PsfechaspagoController@update']);
-    $router->delete('psfechaspago/{id}', ['uses' => 'PsfechaspagoController@delete']);
+    $router->put(PSFECHASPAGO_ROUTE, ['uses' => 'PsfechaspagoController@update']);
+    $router->delete(PSFECHASPAGO_ROUTE, ['uses' => 'PsfechaspagoController@delete']);
 
 
     // REST FULL SERVICES FOR TABLE => psdocadjuntos
 
 
     $router->get('psdocadjuntos',  ['uses' => 'PsdocadjuntosController@showAllPstdocadjuntos']);
-    $router->get('psdocadjuntos/{id}', ['uses' => 'PsdocadjuntosController@showOnePsdocadjuntos']);
+    $router->get(PSDOCADJUNTOS_ROUTE, ['uses' => 'PsdocadjuntosController@showOnePsdocadjuntos']);
     $router->post('psdocadjuntos', ['uses' => 'PsdocadjuntosController@create']);
-    $router->put('psdocadjuntos/{id}', ['uses' => 'PsdocadjuntosController@update']);
-    $router->delete('psdocadjuntos/{id}', ['uses' => 'PsdocadjuntosController@delete']);
+    $router->put(PSDOCADJUNTOS_ROUTE, ['uses' => 'PsdocadjuntosController@update']);
+    $router->delete(PSDOCADJUNTOS_ROUTE, ['uses' => 'PsdocadjuntosController@delete']);
 
 
 
      // REST FULL SERVICES FOR TABLE => PspstiposistemaprestController
      $router->get('pstiposistemaprest',  ['uses' => 'PspstiposistemaprestController@showAll']);
-     $router->get('pstiposistemaprest/{id}', ['uses' => 'PspstiposistemaprestController@Show']);
+     $router->get(PSTIPOSISTEMAPREST_ROUTE, ['uses' => 'PspstiposistemaprestController@Show']);
      $router->post('pstiposistemaprest', ['uses' => 'PspstiposistemaprestController@create']);
-     $router->put('pstiposistemaprest/{id}', ['uses' => 'PspstiposistemaprestController@update']);
-     $router->delete('pstiposistemaprest/{id}', ['uses' => 'PspstiposistemaprestController@delete']);
+     $router->put(PSTIPOSISTEMAPREST_ROUTE, ['uses' => 'PspstiposistemaprestController@update']);
+     $router->delete(PSTIPOSISTEMAPREST_ROUTE, ['uses' => 'PspstiposistemaprestController@delete']);
      $router->get('listatiposistemaprest/', ['uses' => 'PspstiposistemaprestController@list']); // combo listas
 
 
@@ -146,8 +146,8 @@ $router->group(['prefix' => ''], function () use ($router) {
 	  
 	 // REST FULL SERVICES FOR TABLE => psempresa
     
-    $router->get('psempresa/{id}', ['uses' => 'PsempresaController@showOnePsempresa']);
-    $router->put('psempresa/{id}', ['uses' => 'PsempresaController@update']);
+    $router->get(PSEMPRESA_ROUTE, ['uses' => 'PsempresaController@showOnePsempresa']);
+    $router->put(PSEMPRESA_ROUTE, ['uses' => 'PsempresaController@update']);
 	
 
     // COMPLEX QUERYS (selects of multiple tables, inner custom querys)

@@ -77,7 +77,3 @@ result=Math.round(result*100) /100;
 document.getElementById("monthlypayment").innerHTML=result;
 
 }
-
-</script>
-
-</script>

@@ -19,178 +19,145 @@ class GuardarArchivoController extends Controller
     }
 
     public function guardarArchivoAdjunto(Request $request)
-    {
+{
+    $tdoc = $request->get('id_tdocadjunto');
+    $nitempresa = $request->get('nitempresa');
+    $id_cliente = $request->get('id_cliente');
+    $id_usuario = $request->get('id_usuario');
+    $customFilename = $request->get('filename');
+    $path = $request->get('path');
 
-
-        $tdoc = $request->get('id_tdocadjunto');
-        $nitempresa = $request->get('nitempresa');
-        $id_cliente = $request->get('id_cliente');
-        $id_usuario = $request->get('id_usuario');
-        $customFilename = $request->get('filename');
-        $extension = '';
-        
-        $path = $request->get('path');
-
-        if ($request->has('image')) {
-
-            try {
-                if (!mime_content_type($request->get('image'))) {
-                    $extension = 'jpeg';
-                } else {
-                    $extension = explode('/', mime_content_type($request->get('image')))[1];
-                }
-            } catch (\Exception $e) {
-                    $extension = 'jpeg';
-            }
-
-            $destination_path = $path;
-
-            if ($tdoc) {
-                $archivoAdjunto = $tdoc . '-' . time() . '.' . $extension;
-            } else {
-                $archivoAdjunto = $customFilename;
-            }
-
-
-        
-            if ($extension == "pdf") {
-                
-                $data = base64_decode(preg_replace('#^data:application/\w+;base64,#i', '', $request->get('image')));
-
-              
-            } else {
-                $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->get('image')));
-            }
-
-            $file = $destination_path . $archivoAdjunto;
-            
-            if (file_put_contents($file, $data)) {
-
-                if (!$tdoc == "") {
-
-
-                    DB::table('psdocadjuntos')->insertGetId([
-                        'rutaadjunto' => $file,
-                        'id_tdocadjunto' => $tdoc,
-                        'nombrearchivo' => $archivoAdjunto,
-                        'id_usu_cargarch' => $id_usuario,
-                        'id_cliente' => $id_cliente,
-                        'nitempresa' => $nitempresa
-                    ]);
-                }
-
-
-                return $this->responseRequestSuccess($file);
-            } else {
-                return $this->responseRequestError('Cannot upload file');
-            }
-        } else {
-            return $this->responseRequestError('File not found');
-        }
+    if (!$request->has('image')) {
+        return $this->responseRequestError('File not found');
     }
 
-    public function editarArchivoAdjunto(Request $request)
-    {
+    $imageData = $request->get('image');
 
+    // Determinar la extensión del archivo
+    $extension = $this->obtenerExtensionArchivo($imageData);
 
-        $id = $request->get('id');
-        $tdoc = $request->get('id_tdocadjunto');
-        $nitempresa = $request->get('nitempresa');
-        $id_cliente = $request->get('id_cliente');
-        $id_usuario = $request->get('id_usuario');
-        $customFilename = $request->get('filename');
-        $extension = '';
-         
-        $path = $request->get('path');
+    // Definir el nombre del archivo
+    $archivoAdjunto = $tdoc ? "{$tdoc}-" . time() . ".{$extension}" : $customFilename;
+    $filePath = $path . $archivoAdjunto;
 
-        foreach ($tdoc as $key => $i) {
-            if ($request->has('image')) {
+    // Decodificar el archivo
+    $data = $this->decodificarArchivoBase64($imageData, $extension);
 
-
-                $destination_path = $path;
-
-                try {
-                    if (!mime_content_type($request->get('image')[$i])) {
-                        $extension = 'jpeg';
-                    } else {
-                        $extension = explode('/', mime_content_type($request->get('image')[$i]))[1];
-                    }
-                } catch (\Exception $e) {
-                        $extension = 'jpeg';
-                }
-                
-                
-                if ($tdoc[$i]) {
-                    $archivoAdjunto = $tdoc[$i] . '-' . time() . '.' . $extension;
-                } else {
-                    $archivoAdjunto = $customFilename;
-                }
-
-                if (array_key_exists($i, $request->get('image'))) {
-                    
-
-                
-
-                    if ($extension == "pdf") { 
-                        $data = base64_decode(preg_replace('#^data:application/\w+;base64,#i', '', $request->get('image')[$i]));
-                    } else {
-                        $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->get('image')[$i]));
-                    }
-                    
-                   
-                    if (!$this->validate_url($request->get('image')[$i])) { 
-                        $file = $destination_path . $archivoAdjunto;
-                    if (file_put_contents($file, $data)) {
-
-                        $salida = DB::select('select count(1) cantidad from psdocadjuntos where id_cliente =:cliente and id_tdocadjunto=:tdocadjunto', [
-                            'cliente' => $id_cliente,
-                            'tdocadjunto' => $tdoc[$i]
-                        ]);
-
-
-
-                        if ($salida[0]->cantidad == 0) {
-
-
-
-
-                            DB::table('psdocadjuntos')
-                                ->insert([
-                                    'id_cliente' => $id_cliente,
-                                    'id_tdocadjunto' => $tdoc[$i],
-                                    'rutaadjunto' => $file,
-                                    'nombrearchivo' => $archivoAdjunto,
-                                    'id_usu_cargarch' => $id_usuario,
-                                    'nitempresa' => $nitempresa
-                                ]);
-                        } else {
-                            if (!$tdoc[$i] == "") {
-
-
-                                DB::table('psdocadjuntos')
-                                    ->where('id_cliente', $id_cliente)
-                                    ->where('id_tdocadjunto', $tdoc[$i])
-                                    ->update([
-                                        'rutaadjunto' => $file,
-                                        'nombrearchivo' => $archivoAdjunto,
-                                        'id_usu_cargarch' => $id_usuario,
-                                        'nitempresa' => $nitempresa
-                                    ]);
-                            }
-                        }
-
-
-
-                        //$error[$i] = $this->responseRequestSuccess($file);
-                    }
-
-                    }
-                    
-                }
-            }
-        }
+    // Guardar el archivo
+    if (!file_put_contents($filePath, $data)) {
+        return $this->responseRequestError('Cannot upload file');
     }
-    function validate_url($url) {
+
+    // Si hay un tipo de documento, guardar en la base de datos
+    if (!empty($tdoc)) {
+        DB::table('psdocadjuntos')->insertGetId([
+            'rutaadjunto' => $filePath,
+            'id_tdocadjunto' => $tdoc,
+            'nombrearchivo' => $archivoAdjunto,
+            'id_usu_cargarch' => $id_usuario,
+            'id_cliente' => $id_cliente,
+            'nitempresa' => $nitempresa
+        ]);
+    }
+
+    return $this->responseRequestSuccess($filePath);
+}
+
+	/**
+	 * Obtiene la extensión del archivo a partir del contenido en base64.
+	 */
+	private function obtenerExtensionArchivo($imageData)
+	{
+	    try {
+	        $mimeType = mime_content_type($imageData);
+	        return $mimeType ? explode('/', $mimeType)[1] : 'jpeg';
+	    } catch (\Exception $e) {
+	        return 'jpeg';
+	    }
+	}
+
+	/**
+	 * Decodifica el archivo base64 dependiendo de su tipo.
+	 */
+
+
+	public function editarArchivoAdjunto(Request $request)
+	{
+	    $id_cliente = $request->get('id_cliente');
+	    $id_usuario = $request->get('id_usuario');
+	    $nitempresa = $request->get('nitempresa');
+	    $path = $request->get('path');
+	    $customFilename = $request->get('filename');
+	    $tdocs = $request->get('id_tdocadjunto');
+	    $images = $request->get('image');
+
+	    foreach ($tdocs as $i => $tdoc) {
+	        if (!$request->has('image') || !isset($images[$i])) {
+	            continue;
+	        }
+
+	        // Obtener la extensión del archivo
+	        $extension = $this->obtenerExtensionArchivo($images[$i]);
+
+	        // Definir el nombre del archivo
+	        $archivoAdjunto = !empty($tdoc) ? "{$tdoc}-" . time() . ".{$extension}" : $customFilename;
+	        $filePath = $path . $archivoAdjunto;
+
+	        // Decodificar el archivo base64
+	        $data = $this->decodificarArchivoBase64($images[$i], $extension);
+
+	        // Validar si la imagen ya existe en la URL
+	        if ($this->validateUrl($images[$i])) {
+	            continue;
+	        }
+
+	        // Guardar el archivo
+	        if (!file_put_contents($filePath, $data)) {
+	            continue;
+	        }
+
+	        // Verificar si ya existe un archivo adjunto para el cliente y tipo de documento
+	        $existeAdjunto = DB::table('psdocadjuntos')
+	            ->where('id_cliente', $id_cliente)
+	            ->where('id_tdocadjunto', $tdoc)
+	            ->exists();
+
+	        if (!$existeAdjunto) {
+	            // Insertar nuevo archivo adjunto
+	            DB::table('psdocadjuntos')->insert([
+	                'id_cliente' => $id_cliente,
+	                'id_tdocadjunto' => $tdoc,
+	                'rutaadjunto' => $filePath,
+	                'nombrearchivo' => $archivoAdjunto,
+	                'id_usu_cargarch' => $id_usuario,
+	                'nitempresa' => $nitempresa
+	            ]);
+	        } else {
+	            // Actualizar archivo adjunto existente
+	            DB::table('psdocadjuntos')
+	                ->where('id_cliente', $id_cliente)
+	                ->where('id_tdocadjunto', $tdoc)
+	                ->update([
+	                    'rutaadjunto' => $filePath,
+	                    'nombrearchivo' => $archivoAdjunto,
+	                    'id_usu_cargarch' => $id_usuario,
+	                    'nitempresa' => $nitempresa
+	                ]);
+	        }
+	    }
+	}
+
+
+
+	/**
+	 * Decodifica el archivo base64 dependiendo de su tipo.
+	 */
+	private function decodificarArchivoBase64($imageData, $extension)
+	{
+	    $pattern = ($extension === "pdf") ? '#^data:application/\w+;base64,#i' : '#^data:image/\w+;base64,#i';
+	    return base64_decode(preg_replace($pattern, '', $imageData));
+	}
+   public  function validateUrl($url) {
         $path = parse_url($url, PHP_URL_PATH);
         $encoded_path = array_map('urlencode', explode('/', $path));
         $url = str_replace($path, implode('/', $encoded_path), $url);
