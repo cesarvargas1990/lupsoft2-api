@@ -11,7 +11,7 @@
 
 
 ## Usage Docker
-
+-   `cp .env.example .env`
 -   `docker-compose build`
 -   `docker-compose up -d`
 -   `docker-compose exec app sh -c "composer install && php artisan migrate --force && true && php artisan db:seed"`
