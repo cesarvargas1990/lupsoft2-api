@@ -58,8 +58,7 @@ class PsformapagoController extends Controller
 	public function ShowPsformapago($nitempresa)
     {
         try {
-            $data = Psperiodopago::where('nitempresa', $nitempresa)
-                ->get(['id as value', 'nomperiodopago as label']);
+            $data = Psperiodopago::get(['id as value', 'nomperiodopago as label']);
 
             return response()->json($data);
         } catch (\Exception $e) {
