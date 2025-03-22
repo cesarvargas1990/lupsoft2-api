@@ -43,6 +43,7 @@ class PsempresaController extends Controller
         try {
 
             $data = PsEmpresa::findOrFail($id);
+            $request->request->add(['nitempresa' => $request->get('nit')]);
             $data->update($request->all());
 
             return response()->json($data, 200);
