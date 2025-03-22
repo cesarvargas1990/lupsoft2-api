@@ -15,7 +15,8 @@ class CreatePsfechaspagoTable extends Migration
     {
         Schema::create('psfechaspago', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_prestamo');
+            $table->unsignedInteger('id_prestamo');
+            $table->foreign('id_prestamo')->references('id')->on('psprestamos');
 			$table->double('valor_cuota',13,2);
 			$table->double('valor_pagar',13,2);
             $table->date('fecha_pago');

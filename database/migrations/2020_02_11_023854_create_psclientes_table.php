@@ -31,7 +31,8 @@ class CreatePsclientesTable extends Migration
             $table->foreign('id_empresa')->references('id')->on('psempresa');
 			$table->string('ref1',255)->nullable();
 			$table->string('ref2',255)->nullable();
-            $table->integer('id_cobrador')->nullable();
+            $table->unsignedInteger('id_cobrador');
+            $table->foreign('id_cobrador')->references('id')->on('users');
             $table->string('email',255)->nullable();
             $table->date('fch_expdocumento')->nullable();
             $table->date('fch_nacimiento')->nullable();

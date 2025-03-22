@@ -21,7 +21,8 @@ class CreateUsersTable extends Migration
 			$table->unsignedInteger('id_empresa')->nullable();
             $table->foreign('id_empresa')->references('id')->on('psempresa');
 			$table->integer('is_admin');
-			$table->integer('id_user')->nullable();
+			$table->unsignedInteger('id_user')->nullable();
+            $table->foreign('id_user')->references('id')->on('users');
 			$table->integer('ind_activo');
 		
             $table->timestamps();

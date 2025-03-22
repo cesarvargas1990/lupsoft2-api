@@ -19,7 +19,8 @@ class CreatePsdocadjuntosTable extends Migration
             $table->increments('id');
             $table->string('rutaadjunto',100);
             $table->integer('id_tdocadjunto')->nullable();
-            $table->integer('id_usu_cargarch')->nullable();
+            $table->unsignedInteger('id_usu_cargarch');
+            $table->foreign('id_usu_cargarch')->references('id')->on('users');
             $table->unsignedInteger('id_cliente')->nullable();
             $table->foreign('id_cliente')->references('id')->on('psclientes');
             $table->string('nombrearchivo',1000);
