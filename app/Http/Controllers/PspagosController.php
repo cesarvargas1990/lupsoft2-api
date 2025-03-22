@@ -99,7 +99,7 @@ class PspagosController extends Controller
                 'fecha_pago'      => $fechaPago->fecha_pago,
                 'id_cliente'      => $request->get('id_cliente'),
                 'id_usureg'       => $request->get('id_user'),
-                'nitempresa'      => $request->get('nitempresa'),
+                'id_empresa'      => $request->get('id_empresa'),
                 'fecha_realpago'  => $fechaHora,
                 'id_prestamo'     => $request->get('id_prestamo'),
                 'id_fecha_pago'   => $request->get('id'),

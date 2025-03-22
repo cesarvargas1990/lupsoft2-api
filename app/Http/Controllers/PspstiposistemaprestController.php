@@ -52,10 +52,10 @@ class PspstiposistemaprestController extends Controller
 
     }
 	
-	public function Show($nitempresa)
+	public function Show($id_empresa)
     {
         try {
-            $data = Psperiodopago::where('nitempresa', $nitempresa)
+            $data = Psperiodopago::where('id_empresa', $id_empresa)
                 ->get(['id as value', 'nomperiodopago as label']);
 
             return response()->json($data);

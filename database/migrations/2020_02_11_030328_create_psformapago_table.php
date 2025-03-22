@@ -25,7 +25,7 @@ class CreatePsformapagoTable extends Migration
             $table->double('valorpres',13,2)->nullable();
             $table->integer('numcuotas')->nullable();
             $table->string('nomfpago');
-            $table->string('nitempresa',30);
+            $table->string('id_empresa',30);
             $table->timestamps();
         });
     }

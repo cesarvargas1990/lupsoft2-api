@@ -27,7 +27,7 @@ class CreatePsclientesTable extends Migration
 			$table->string('diretrabajo',200)->nullable();
 			$table->string('ubicasa',255)->nullable();
 			$table->string('ubictrabajo',255)->nullable();
-			$table->string('nitempresa',30);
+			$table->string('id_empresa',30);
 			$table->string('ref1',255)->nullable();
 			$table->string('ref2',255)->nullable();
             $table->integer('id_cobrador')->nullable();

@@ -62,9 +62,9 @@ class PrestamosController extends Controller
         try {
 
 
-            $nit_empresa = $request->get('nitempresa'); 
+            $id_empresa = $request->get('id_empresa'); 
 
-            $data = $this->consultaListadoPrestamos($nit_empresa);
+            $data = $this->consultaListadoPrestamos($id_empresa);
 
         
             return response()->json($data);
@@ -101,12 +101,12 @@ class PrestamosController extends Controller
 
     }
 
-    public function generarVariablesPlantillas($nit_empresa) {
+    public function generarVariablesPlantillas($id_empresa) {
  
-        $qry = $this->obtenerQryListadoPrestamos($nit_empresa);
+        $qry = $this->obtenerQryListadoPrestamos($id_empresa);
         $qry .= ' limit 1';
         $binds = [
-            'nit_empresa' => $nit_empresa
+            'id_empresa' => $id_empresa
         ];
         $data = DB::select($qry,$binds);
         if (count($data)> 0) {
@@ -129,13 +129,13 @@ class PrestamosController extends Controller
         
 
     public function prestamosCliente(Request $request) {
-      $nit_empresa = $request->get('nitempresa');
+      $id_empresa = $request->get('id_empresa');
       $id_cliente = $request->get('id_cliente');
   
       // Obtener préstamos del cliente
       $prestamos = Psprestamos::where('id_cliente', $id_cliente)
-          ->whereHas('cliente', function ($query) use ($nit_empresa) {
-              $query->where('nitempresa', $nit_empresa);
+          ->whereHas('cliente', function ($query) use ($id_empresa) {
+              $query->where('id_empresa', $id_empresa);
           })
           ->where('ind_estado', 1)
           ->with(['fechasPago', 'pagos'])
@@ -186,7 +186,7 @@ class PrestamosController extends Controller
         
     }
   
-    public function totalprestado($nit_empresa)
+    public function totalprestado($id_empresa)
     {
         try {  
         $hasPerfil = Auth::user()->perfiles->contains('id', 1);
@@ -194,7 +194,7 @@ class PrestamosController extends Controller
             return "NA";
         }
         $psPrestamosInstance = new Psprestamos();
-        return number_format($this->getCapitalPrestado($nit_empresa,$psPrestamosInstance), 2);
+        return number_format($this->getCapitalPrestado($id_empresa,$psPrestamosInstance), 2);
 
       } catch (\Exception $e) {
 
@@ -255,15 +255,15 @@ class PrestamosController extends Controller
       }
     }
 
-    public function totalcapital($nit_empresa,Request $request, PsEmpresa $ps_empresa, Psprestamos $psprestamos, Pspagos $pspagos, Auth $auth)
+    public function totalcapital($id_empresa,Request $request, PsEmpresa $ps_empresa, Psprestamos $psprestamos, Pspagos $pspagos, Auth $auth)
     {
         try {
         $hasPerfil = Auth::user()->perfiles->contains('id', 1);
         if (!$hasPerfil) {
             return "NA";
         }
-        $request->request->add(['nitempresa'=>$nit_empresa]);
-        return number_format($this->getCapitalInicial($nit_empresa,$ps_empresa) - $this->getValorPrestamos($request,$psprestamos) + $this->getTotalintereses($request,$pspagos,$auth) , 2);
+        $request->request->add(['id_empresa'=>$id_empresa]);
+        return number_format($this->getCapitalInicial($id_empresa,$ps_empresa) - $this->getValorPrestamos($request,$psprestamos) + $this->getTotalintereses($request,$pspagos,$auth) , 2);
         
 
       } catch (\Exception $e) {
@@ -276,13 +276,13 @@ class PrestamosController extends Controller
 
     public function totales_dashboard(Request $request, PsEmpresa $psEmpresa, Psprestamos $psprestamos,Pspagos $pspagos, Auth $auth) {
       try {
-        $nit_empresa = $request->get('nitempresa');
+        $id_empresa = $request->get('id_empresa');
         $data = [
-        "total_capital_prestado"=>$this->totalcapital($nit_empresa,$request,$psEmpresa, $psprestamos, $pspagos, $auth),
+        "total_capital_prestado"=>$this->totalcapital($id_empresa,$request,$psEmpresa, $psprestamos, $pspagos, $auth),
         "total_interes"=>$this->totalinteres($request, $pspagos, $auth),
         "total_interes_hoy"=>$this->totalintereshoy($request,$pspagos,$auth),
         "total_prestado_hoy"=>$this->totalprestadohoy($request,$psprestamos),
-        "total_prestado"=>$this->totalprestado($nit_empresa),
+        "total_prestado"=>$this->totalprestado($id_empresa),
         "ahora"=>Carbon::now()->toDateTimeString()
         ];
         return response()->json($data);

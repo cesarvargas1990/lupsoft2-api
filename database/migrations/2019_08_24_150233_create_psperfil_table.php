@@ -17,7 +17,7 @@ class CreatePsperfilTable extends Migration
             $table->increments('id');
             $table->string('nombre');
             $table->string('ind_activo')->notNullable();
-			$table->string('nitempresa',30)->nullable();
+			$table->string('id_empresa',30)->nullable();
             $table->timestamps();
         });
     }

@@ -52,10 +52,10 @@ class PstdocadjuntosController extends Controller
 
     }
 	
-	public function ShowPstdocadjuntos($nitempresa)
+	public function ShowPstdocadjuntos($id_empresa)
     {
         try {
-            $data = Pstdocadjuntos::where('nitempresa', $nitempresa)
+            $data = Pstdocadjuntos::where('id_empresa', $id_empresa)
                 ->select('id as value', 'nombre as label')
                 ->get();
 

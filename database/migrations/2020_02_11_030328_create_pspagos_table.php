@@ -24,7 +24,7 @@ class CreatePspagosTable extends Migration
             $table->date('fecha_pago')->nullable(); // fecha que corresponde al pago (la fecha en la que debio haberse pagado)
             $table->integer('id_usureg')->nullable();
             $table->integer('id_fecha_pago')->nullable();
-            $table->string('nitempresa',30)->nullable();
+            $table->string('id_empresa',30)->nullable();
             $table->integer('ind_estado')->nullable();
 			$table->integer('ind_abonocapital')->nullable();
             $table->timestamps();

@@ -28,7 +28,7 @@ class CreatePsprestamosTable extends Migration
 			$table->integer('id_cobrador')->nullable();
             $table->integer('id_usureg')->nullable();
             $table->integer('ind_estado')->nullable();
-            $table->string('nitempresa',30)->nullable();
+            $table->string('id_empresa',30)->nullable();
             $table->timestamps();
         });
     }

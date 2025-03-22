@@ -22,7 +22,7 @@ class CreatePsmenuTable extends Migration
 			$table->integer('id_mpadre')->nullable();
 			$table->integer('id_perfil')->nullable();
 			$table->integer('ind_activo')->nullable();
-			$table->string('nitempresa',30);
+			$table->string('id_empresa',30);
             $table->timestamps();
         });
     }

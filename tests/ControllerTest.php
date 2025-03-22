@@ -26,7 +26,7 @@ class ControllerTest extends TestCase
         $mockUser->id = 1;
         $mockUser->name = 'John Doe';
         $mockUser->email = 'johndoe@example.com';
-        $mockUser->nitempresa = '123456';
+        $mockUser->id_empresa = '1';
         $mockUser->is_admin = true;
 
         // Simular Auth::user()
@@ -36,8 +36,8 @@ class ControllerTest extends TestCase
 
         // Simular el modelo PsEmpresa
         $mockPsempresa = Mockery::mock(PsEmpresa::class);
-        $mockPsempresa->shouldReceive('where')->with('nitempresa', '123456')->andReturnSelf();
-        $mockPsempresa->shouldReceive('first')->andReturn((object)['id' => 999]);
+        $mockPsempresa->shouldReceive('where')->with('id_empresa', '1')->andReturnSelf();
+        $mockPsempresa->shouldReceive('first')->andReturn((object)['id' => 1]);
 
         // Simular el modelo Psusuperfil
         $mockPsusuperfil = Mockery::mock(Psusuperfil::class);
@@ -82,8 +82,8 @@ class ControllerTest extends TestCase
         $this->assertEquals(3600, $responseData['expires_in']);
         $this->assertIsInt($responseData['time']);
         $this->assertTrue($responseData['is_admin']);
-        $this->assertEquals('123456', $responseData['nit_empresa']);
-        $this->assertEquals(999, $responseData['id_empresa']);
+        $this->assertEquals('1', $responseData['id_empresa']);
+        $this->assertEquals(1, $responseData['id_empresa']);
     }
 
     protected function tearDown(): void

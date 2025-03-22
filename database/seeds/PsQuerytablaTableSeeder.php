@@ -26,7 +26,7 @@ class PsQuerytablaTableSeeder extends Seeder
                 id_prestamo = {id_prestamo}
             ORDER BY 
                 numero_cuota ASC",
-            'nitempresa' => '12345'
+            'id_empresa' => '1'
           
         ]);
     }

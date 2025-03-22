@@ -15,7 +15,7 @@ class Controller extends BaseController
     protected function respondWithToken($token, Psempresa $psempresa, Psusuperfil $psusuperfil)
     {
 
-		$empresa = $psempresa::where('nitempresa',Auth::user()->nitempresa);
+		$empresa = $psempresa::where('id',Auth::user()->id_empresa);
         return response()->json([
             'id' => Auth::user()->id,
             'name' => Auth::user()->name,
@@ -29,7 +29,7 @@ class Controller extends BaseController
             'expires_in' => Auth::factory()->getTTL() * 60,
             'time'=> time(),
             'is_admin' => Auth::user()->is_admin,
-            'nit_empresa' => Auth::user()->nitempresa,
+            'id_empresa' => Auth::user()->id_empresa,
             'id_empresa' => $empresa->first()->id
         ], 200);
     }

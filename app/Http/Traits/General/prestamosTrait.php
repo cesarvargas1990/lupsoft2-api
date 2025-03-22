@@ -24,7 +24,7 @@ trait prestamosTrait
         $fechaHora = Carbon::parse($request->get('fecha'));
         $id_prestamo = DB::table('psprestamos')->insertGetId(
             [
-                'nitempresa' => $request->get('nitempresa'),
+                'id_empresa' => $request->get('id_empresa'),
                 'id_cliente' => $request->get('id_cliente'),
                 'valorpres' => $request->get('valorpres'),
                 'numcuotas' => $request->get('numcuotas'),
@@ -34,7 +34,7 @@ trait prestamosTrait
                 'codtipsistemap' => $request->get('id_sistema_pago'),
                 'fec_inicial' => date("Y-m-d", strtotime(str_replace('/', '-', $request->get('fec_inicial')))),
                 'id_cobrador' => $request->get('id_cobrador'),
-                'nitempresa' => $request->get('nitempresa'),
+                'id_empresa' => $request->get('id_empresa'),
                 'id_usureg' => $request->get('id_usureg'),
                 'created_at' => $fechaHora,
                 'ind_estado' => 1
@@ -53,7 +53,7 @@ trait prestamosTrait
                     'created_at' => $fechaHora,
                     'ind_estado' => 1,
                     'id_cliente' => $request->get('id_cliente'),
-                    'nitempresa' => $request->get('nitempresa'),
+                    'id_empresa' => $request->get('id_empresa'),
                 ]
             );
         }
@@ -61,7 +61,7 @@ trait prestamosTrait
     }
 
 
-    function obtenerQryListadoPrestamos($nit_empresa)
+    function obtenerQryListadoPrestamos($id_empresa)
     {
         $qry = "
         SELECT 
@@ -83,33 +83,33 @@ trait prestamosTrait
         pstipodocidenti ide, 
         pstiposistemaprest tsip,
         psperiodopago pp
-        WHERE pre.nitempresa = :nit_empresa
+        WHERE pre.id_empresa = :id_empresa
         AND pre.id_cliente = cli.id
         and pre.codtipsistemap  = tsip.codtipsistemap 
         and pp.id = pre.id_forma_pago
-        AND em.nitempresa = pre.nitempresa
+        AND em.id = pre.id_empresa
         AND  cli.codtipdocid = ide.id
         AND pre.ind_estado = 1";
 
         return $qry;
     }
-    function consultaListadoPrestamos($nit_empresa)
+    function consultaListadoPrestamos($id_empresa)
     {
-        $qry = $this->obtenerQryListadoPrestamos($nit_empresa);
+        $qry = $this->obtenerQryListadoPrestamos($id_empresa);
         $binds = array(
-            'nit_empresa' => $nit_empresa
+            'id_empresa' => $id_empresa
         );
         $data = DB::select($qry, $binds);
         return $data;
     }
 
-    function consultaVariablesPrestamo($nitempresa, $idprestamo)
+    function consultaVariablesPrestamo($id_empresa, $idprestamo)
     {
 
-        $qry = $this->obtenerQryListadoPrestamos($nitempresa);
+        $qry = $this->obtenerQryListadoPrestamos($id_empresa);
         $qry .= ' and pre.id = :id_prestamo';
         $binds = array(
-            'nit_empresa' => $nitempresa,
+            'id_empresa' => $id_empresa,
             'id_prestamo' => $idprestamo
         );
         return DB::select($qry, $binds);
@@ -131,41 +131,41 @@ trait prestamosTrait
     function renderTemplate($request, Psquerytabla $psQueryTabla,Pstdocplant $pstdocplant)
     {
         $idprestamo = $request->get('id_prestamo');
-        $nitempresa = $request->get('nitempresa');
-        $variables = $this->consultaVariablesPrestamo($nitempresa, $idprestamo)[0];
+        $id_empresa = $request->get('id_empresa');
+        $variables = $this->consultaVariablesPrestamo($id_empresa, $idprestamo)[0];
         $array = json_decode(json_encode($variables), true);
         $data = $this->getPlantillasDocumentos($request,$pstdocplant);
-        return $this->replaceVariables($data,$array,$nitempresa,$idprestamo,$psQueryTabla);
+        return $this->replaceVariables($data,$array,$id_empresa,$idprestamo,$psQueryTabla);
     }
 
-    public function replaceVariables($data,$array,$nitempresa,$idprestamo,$psQueryTabla) {
+    public function replaceVariables($data,$array,$id_empresa,$idprestamo,$psQueryTabla) {
         foreach ($data as $documento) {
             $renderTemplate = $this->replaceVariablesInTemplate($documento->plantilla_html, $array) . '<br>';
             $start_tag = '<!--QRT';
             $end_tag = 'QRT-->';
             if (preg_match_all('/' . preg_quote($start_tag) . '(.*?)' . preg_quote($end_tag) . '/s', $renderTemplate, $matches)) {
                 $matches = ($matches[1]);
-                $nitempresa = $nitempresa;
-                $renderTemplate = $this->renderTemplate2($matches,$psQueryTabla,$nitempresa,$idprestamo,$renderTemplate);
+                $id_empresa = $id_empresa;
+                $renderTemplate = $this->renderTemplate2($matches,$psQueryTabla,$id_empresa,$idprestamo,$renderTemplate);
             }
             $html_templates[] = array(
                 'id' => $documento->id,
                 'nombre' => $documento->nombre,
                 'plantilla_html' => $renderTemplate,
-                'nit_empresa' => $nitempresa
+                'id_empresa' => $id_empresa
             );
         }
         return $html_templates;
     }
 
-    public function renderTemplate2($matches,$psQueryTabla,$nitempresa,$idprestamo,$renderTemplate){
+    public function renderTemplate2($matches,$psQueryTabla,$id_empresa,$idprestamo,$renderTemplate){
         $str2 = '';
         foreach ($matches as $value) {
             $qt = $value[0];
             $str = ltrim($value, $qt);
             if ((preg_match_all('/' . preg_quote('[') . '(.*?)' . preg_quote(']') . '/s', $str, $matchesv))) {
-                $qt = $psQueryTabla::where('codigo', $qt)->where('nitempresa', $nitempresa)->first()->sql;
-                $vars = $this->consultaVariablesPrestamo($nitempresa, $idprestamo)[0];
+                $qt = $psQueryTabla::where('codigo', $qt)->where('id_empresa', $id_empresa)->first()->sql;
+                $vars = $this->consultaVariablesPrestamo($id_empresa, $idprestamo)[0];
                 $array = json_decode(json_encode($vars), true);
                 $qt = $this->replaceVariablesInTemplate($qt,$array);
                 $query =  DB::select($qt);
@@ -182,8 +182,8 @@ trait prestamosTrait
 
     public function getPlantillasDocumentos($request, Pstdocplant $pstdocplant)
     {
-        $nit_empresa = $request->get('nitempresa');
-        $data = $pstdocplant::where('nitempresa', $nit_empresa)->get();
+        $id_empresa = $request->get('id_empresa');
+        $data = $pstdocplant::where('id_empresa', $id_empresa)->get();
         return $data;
     }
   
@@ -200,10 +200,10 @@ trait prestamosTrait
         }
         return $str2;
     }
-    public function getCapitalPrestado($nitempresa, Psprestamos $psPrestamos)
+    public function getCapitalPrestado($id_empresa, Psprestamos $psPrestamos)
     {
         try {
-            $valorpres = $psPrestamos->where('nitempresa', $nitempresa)
+            $valorpres = $psPrestamos->where('id_empresa', $id_empresa)
                                     ->where('ind_estado', 1)
                                     ->sum('valorpres');
 
@@ -220,10 +220,10 @@ trait prestamosTrait
     }
 
 
-    public function getCapitalInicial($nitempresa, Psempresa $psempresa)
+    public function getCapitalInicial($id_empresa, Psempresa $psempresa)
     {
         try {
-            $capitalInicial = $psempresa::where('nitempresa', $nitempresa)
+            $capitalInicial = $psempresa::where('id', $id_empresa)
                                     ->value('vlr_capinicial');
             return $capitalInicial;
         } catch (\Exception $e) {
@@ -236,20 +236,20 @@ trait prestamosTrait
         }
     }
 
-    public function getTotalCapital ($nit_empresa, Psempresa $psempresa, Psprestamos $psprestamos) {
-        $capitalinicial = $this->getCapitalInicial($nit_empresa,$psempresa);
-        $capitalPrestado = $this->getCapitalPrestado($nit_empresa,$psprestamos);
+    public function getTotalCapital ($id_empresa, Psempresa $psempresa, Psprestamos $psprestamos) {
+        $capitalinicial = $this->getCapitalInicial($id_empresa,$psempresa);
+        $capitalPrestado = $this->getCapitalPrestado($id_empresa,$psprestamos);
         return $capitalinicial - $capitalPrestado;
     }  
 
     public function getTotalPrestadoHoy($request, Psprestamos $psprestamos)
     {
         try {
-            $nitempresa = $request->get('nitempresa');
+            $id_empresa = $request->get('id_empresa');
             $fecha = Carbon::createFromFormat('Y-m-d', $request->get('fecha'))->toDateString();
             $fecIni = Carbon::parse($fecha)->startOfDay();
             $fecFin = Carbon::parse($fecha)->endOfDay();
-            $valorpres = $psprestamos::where('nitempresa', $nitempresa)
+            $valorpres = $psprestamos::where('id_empresa', $id_empresa)
                                     ->whereBetween('created_at', [$fecIni, $fecFin])
                                     ->where('ind_estado', 1)
                                     ->sum('valorpres');
@@ -269,7 +269,7 @@ trait prestamosTrait
 
     public function getTotalintereseshoy($request,Pspagos $pspagos)
     {
-        $nitempresa = $request->get('nitempresa');
+        $id_empresa = $request->get('id_empresa');
         $fecha = Carbon::createFromFormat('Y-m-d', $request->get('fecha'))->toDateString();
         $fecIni = Carbon::parse($fecha)->startOfDay();
         $fecFin = Carbon::parse($fecha)->endOfDay();
@@ -277,13 +277,13 @@ trait prestamosTrait
     
         if ($this->getPerfilUser() == 1) {
             // Sumar todos los pagos de la empresa
-            $data = $pspagos::where('nitempresa', $nitempresa)
+            $data = $pspagos::where('id_empresa', $id_empresa)
                 ->whereBetween('fecha_realpago', [$fecIni, $fecFin])
                 ->where('ind_estado', 1)
                 ->sum('valcuota');
         } else {
             // Sumar solo los pagos del usuario específico
-            $data = $pspagos::where('nitempresa', $nitempresa)
+            $data = $pspagos::where('id_empresa', $id_empresa)
                 ->whereBetween('fecha_realpago', [$fecIni, $fecFin])
                 ->where('ind_estado', 1)
                 ->where('id_usureg', Auth::user()->id)
@@ -301,9 +301,9 @@ trait prestamosTrait
     public function getValorPrestamos( $request, Psprestamos $psprestamos)
     {
         try {
-            $nitempresa = $request->get('nitempresa');
+            $id_empresa = $request->get('id_empresa');
 
-            $valorpres = $psprestamos::where('nitempresa', $nitempresa)
+            $valorpres = $psprestamos::where('id_empresa', $id_empresa)
                                     ->where('ind_estado', 1)
                                     ->sum('valorpres');
 
@@ -322,17 +322,17 @@ trait prestamosTrait
     public function getTotalintereses($request, Pspagos $pspagos)
     {
         try {
-            $nitempresa = $request->get('nitempresa');
+            $id_empresa = $request->get('id_empresa');
     
     
             if ($this->getPerfilUser() == 1) {
                
-                $totalintereses = $pspagos::where('nitempresa', $nitempresa)
+                $totalintereses = $pspagos::where('id_empresa', $id_empresa)
                     ->where('ind_estado', 1)
                     ->sum('valcuota');
             } else {
                
-                $totalintereses = $pspagos::where('nitempresa', $nitempresa)
+                $totalintereses = $pspagos::where('id_empresa', $id_empresa)
                     ->where('ind_estado', 1)
                     ->where('id_usureg', Auth::user()->id)
                     ->sum('valcuota');
@@ -349,9 +349,9 @@ trait prestamosTrait
         }
     }
 
-    public function totalPrestadoHoy ($nit_empresa, Psempresa $psempresa, Psprestamos $psprestamos) {
-        $capitalinicial = $this->getCapitalInicial($nit_empresa,$psempresa);
-        $capitalPrestado = $this->getCapitalPrestado($nit_empresa,$psprestamos);
+    public function totalPrestadoHoy ($id_empresa, Psempresa $psempresa, Psprestamos $psprestamos) {
+        $capitalinicial = $this->getCapitalInicial($id_empresa,$psempresa);
+        $capitalPrestado = $this->getCapitalPrestado($id_empresa,$psprestamos);
         return $capitalinicial + $capitalPrestado;
     }
 

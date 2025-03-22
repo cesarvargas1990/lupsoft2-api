@@ -13,7 +13,7 @@ class PsempresaTableSeeder extends Seeder
     {
          DB::table('psempresa')->insert([
             'nombre' => 'Empresa de pruebas',
-			'nitempresa' => '12345',
+			'nitempresa' => '1',
             'vlr_capinicial'=>'1500000',
             'email'=>'demo@email.com',
             'pagina'=>'https://credisoft.co',

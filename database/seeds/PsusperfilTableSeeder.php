@@ -18,14 +18,14 @@ class PsusperfilTableSeeder extends Seeder
             'id_user' => 1,
             'id_perfil' => 1,
             'ind_activo' => 1,
-			'nitempresa' => '12345'
+			'id_empresa' => '1'
         ]);
 
         DB::table('psusperfil')->insert([
             'id_user' => 2,
             'id_perfil' => 2,
             'ind_activo' => 1,
-			'nitempresa' => '12345'
+			'id_empresa' => '1'
         ]);
 		
 		

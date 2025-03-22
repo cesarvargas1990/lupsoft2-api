@@ -19,7 +19,7 @@ class CreatePsquerytablaTable extends Migration
             $table->increments('id');
             $table->integer('codigo');            
             $table->text('sql');
-            $table->string('nitempresa',30);
+            $table->string('id_empresa',30);
             $table->timestamps();
         });
     }

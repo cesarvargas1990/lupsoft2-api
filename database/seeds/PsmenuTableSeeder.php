@@ -21,7 +21,7 @@ class PsmenuTableSeeder extends Seeder
 			'icono' => 'dashboard',
 			'id_perfil' => 1,
 			'ind_activo' => 1,
-			'nitempresa' => '12345'
+			'id_empresa' => '1'
         ]);
 		
 		DB::table('psmenu')->insert([
@@ -31,7 +31,7 @@ class PsmenuTableSeeder extends Seeder
 			'icono' => 'logout',
 			'id_perfil' => 1,
 			'ind_activo' => 1,
-			'nitempresa' => '12345'
+			'id_empresa' => '1'
         ]);
 
 		
@@ -43,7 +43,7 @@ class PsmenuTableSeeder extends Seeder
 			'icono' => 'person',
 			'id_perfil' => 1,
 			'ind_activo' => 1,
-			'nitempresa' => '12345'
+			'id_empresa' => '1'
         ]);
 		
 				DB::table('psmenu')->insert([
@@ -54,7 +54,7 @@ class PsmenuTableSeeder extends Seeder
 					'id_perfil' => 1,
 					'ind_activo' => 1,
 					'id_mpadre' => 3,
-					'nitempresa' => '12345'
+					'id_empresa' => '1'
 				]);
 
 				DB::table('psmenu')->insert([
@@ -65,7 +65,7 @@ class PsmenuTableSeeder extends Seeder
 					'id_perfil' => 1,
 					'ind_activo' => 1,
 					'id_mpadre' => 3,
-					'nitempresa' => '12345'
+					'id_empresa' => '1'
 				]);
 				
 				DB::table('psmenu')->insert([
@@ -76,7 +76,7 @@ class PsmenuTableSeeder extends Seeder
 					'id_perfil' => 1,
 					'ind_activo' => 1,
 					'id_mpadre' => 3,
-					'nitempresa' => '12345'
+					'id_empresa' => '1'
 				]);
 			
 			
@@ -87,7 +87,7 @@ class PsmenuTableSeeder extends Seeder
 			'icono' => 'settings',
 			'id_perfil' => 1,
 			'ind_activo' => 1,
-			'nitempresa' => '12345'
+			'id_empresa' => '1'
         ]);
 		
 			
@@ -100,7 +100,7 @@ class PsmenuTableSeeder extends Seeder
 					'id_perfil' => 1,
 					'id_mpadre' => 7,
 					'ind_activo' => 1,
-					'nitempresa' => '12345'
+					'id_empresa' => '1'
 				]);
 				
 				DB::table('psmenu')->insert([
@@ -111,7 +111,7 @@ class PsmenuTableSeeder extends Seeder
 					'id_perfil' => 1,
 					'id_mpadre' => 7,
 					'ind_activo' => 1,
-					'nitempresa' => '12345'
+					'id_empresa' => '1'
 				]);
 
 
@@ -122,7 +122,7 @@ class PsmenuTableSeeder extends Seeder
 					'icono' => 'logout',
 					'id_perfil' => 2,
 					'ind_activo' => 1,
-					'nitempresa' => '12345'
+					'id_empresa' => '1'
 				]);
 
 		

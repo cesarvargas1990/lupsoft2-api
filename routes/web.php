@@ -61,7 +61,7 @@ $router->group(['prefix' => ''], function () use ($router) {
 
   
     // REST FULL SERVICES FOR TABLE => psclientes
-    $router->post('psclientes/{nitempresa}', ['uses' => 'PsclientesController@showAllPsclientes']);
+    $router->post('psclientes/{id_empresa}', ['uses' => 'PsclientesController@showAllPsclientes']);
     $router->get(PSCLIENTES_ROUTE, ['uses' => 'PsclientesController@showOnePsclientes']);
     $router->post('psclientes', ['uses' => 'PsclientesController@create']);
     $router->put(PSCLIENTES_ROUTE, ['uses' => 'PsclientesController@update']);
@@ -81,7 +81,7 @@ $router->group(['prefix' => ''], function () use ($router) {
     $router->post('psformapago', ['uses' => 'PsformapagoController@create']);
     $router->put(PSFORMAPAGO_ROUTE, ['uses' => 'PsformapagoController@update']);
     $router->delete(PSFORMAPAGO_ROUTE, ['uses' => 'PsformapagoController@delete']);
-    $router->get('listaformaspago/{nit_empresa}', ['uses' => 'PsformapagoController@ShowPsformapago']);
+    $router->get('listaformaspago/{id_empresa}', ['uses' => 'PsformapagoController@ShowPsformapago']);
 
     // REST FULL SERVICES FOR TABLE => psperiodospago
     $router->get('psperiodopago', ['uses' => 'PsperiodopagoController@showAllpsperiodospago']);
@@ -98,7 +98,7 @@ $router->group(['prefix' => ''], function () use ($router) {
     $router->post('pstdocadjuntos', ['uses' => 'PstdocadjuntosController@create']);
     $router->put(PSTDOCADJUNTOS_ID, ['uses' => 'PstdocadjuntosController@update']);
     $router->delete(PSTDOCADJUNTOS_ID, ['uses' => 'PstdocadjuntosController@delete']);
-    $router->get('listatdocadjuntos/{nitempresa}', ['uses' => 'PstdocadjuntosController@ShowPstdocadjuntos']);
+    $router->get('listatdocadjuntos/{id_empresa}', ['uses' => 'PstdocadjuntosController@ShowPstdocadjuntos']);
 
 
     // REST FULL SERVICES FOR TABLE => pstdocplant
@@ -165,15 +165,15 @@ $router->group(['prefix' => ''], function () use ($router) {
 
     
     $router->post('guardarPrestamo' , ['uses' => 'PrestamosController@guardarPrestamo']);
-    $router->get('generarVariablesPlantillas/{nit_empresa}' , ['uses' => 'PrestamosController@generarVariablesPlantillas']);
+    $router->get('generarVariablesPlantillas/{id_empresa}' , ['uses' => 'PrestamosController@generarVariablesPlantillas']);
     $router->post('guardarArchivoAdjunto' , ['uses' => 'GuardarArchivoController@guardarArchivoAdjunto']);
     $router->put('editarArchivoAdjunto' , ['uses' => 'GuardarArchivoController@editarArchivoAdjunto']);
     $router->delete('eliminarPrestamo/{id_prestamo}' , ['uses' => 'PrestamosController@eliminarPrestamo']);
-    $router->get('capitalprestado/{nit_empresa}',['uses'=>'PrestamosController@totalcapital']);
+    $router->get('capitalprestado/{id_empresa}',['uses'=>'PrestamosController@totalcapital']);
     $router->post('totalprestadohoy',['uses'=>'PrestamosController@totalprestadohoy']);
     $router->post('totalintereshoy',['uses'=>'PrestamosController@totalintereshoy']);
     $router->post('totalinteres',['uses'=>'PrestamosController@totalinteres']);
-    $router->get('totalprestado/{nit_empresa}',['uses'=>'PrestamosController@totalprestado']);
+    $router->get('totalprestado/{id_empresa}',['uses'=>'PrestamosController@totalprestado']);
     $router->post('totales_dashboard',['uses'=>'PrestamosController@totales_dashboard']);
 
 

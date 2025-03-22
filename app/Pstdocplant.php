@@ -23,7 +23,7 @@ class Pstdocplant extends Model
         
         'nombre',
         'plantilla_html',
-        'nitempresa'
+        'id_empresa'
     ];
   
 

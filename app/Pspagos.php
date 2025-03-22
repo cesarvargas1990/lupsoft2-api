@@ -21,7 +21,7 @@ class Pspagos extends Model
 
     protected $fillable = [
         
-        'fecha_pago','id_cliente','id_prestamo','valcuota','fecha_realpago','id_usureg','id_fecha_pago','nitempresa','ind_estado','ind_abonocapital'
+        'fecha_pago','id_cliente','id_prestamo','valcuota','fecha_realpago','id_usureg','id_fecha_pago','id_empresa','ind_estado','ind_abonocapital'
         
     ];
   

@@ -32,7 +32,7 @@ class Psclientes extends Model
 	'diretrabajo',
 	'ubicasa',
 	'ubictrabajo',
-	'nitempresa',
+	'id_empresa',
 	'ref1',
 	'ref2',
 	'id_cobrador',

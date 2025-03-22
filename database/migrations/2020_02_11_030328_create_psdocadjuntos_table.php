@@ -22,7 +22,7 @@ class CreatePsdocadjuntosTable extends Migration
             $table->integer('id_usu_cargarch')->nullable();
             $table->integer('id_cliente')->nullable();
             $table->string('nombrearchivo',1000);
-            $table->string('nitempresa',30);
+            $table->string('id_empresa',30);
             $table->timestamps();
         });
     }

@@ -69,18 +69,18 @@ class PrestamosTraitTest extends TestCase
     public function testConsultaListadoPrestamos()
     {
         // 1. Define un nit_empresa de prueba
-        $nit_empresa = '123456789';
+        $id_empresa = '123456789';
 
         // 2. Crea un mock parcial de la clase dummy
         //    que internamente usa el trait.
         $dummy = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
 
-        // 3. Simula la respuesta de obtenerQryListadoPrestamos($nit_empresa)
+        // 3. Simula la respuesta de obtenerQryListadoPrestamos($id_empresa)
         //    Devolvemos un query ficticio.
         $dummy->shouldReceive('obtenerQryListadoPrestamos')
               ->once()
-              ->with($nit_empresa)
-              ->andReturn('SELECT * FROM psprestamos WHERE nitempresa = :nit_empresa');
+              ->with($id_empresa)
+              ->andReturn('SELECT * FROM psprestamos WHERE id_empresa = :id_empresa');
 
         // 4. Preparamos un array de objetos que simulará la respuesta de DB::select
         $mockData = [
@@ -92,13 +92,13 @@ class PrestamosTraitTest extends TestCase
         DB::shouldReceive('select')
             ->once()
             ->with(
-                'SELECT * FROM psprestamos WHERE nitempresa = :nit_empresa',
-                ['nit_empresa' => $nit_empresa]
+                'SELECT * FROM psprestamos WHERE id_empresa = :id_empresa',
+                ['id_empresa' => $id_empresa]
             )
             ->andReturn($mockData);
 
         // 6. Invocamos el método a probar
-        $result = $dummy->consultaListadoPrestamos($nit_empresa);
+        $result = $dummy->consultaListadoPrestamos($id_empresa);
 
         // 7. Verificamos que se devuelva el mismo array que simulamos
         $this->assertEquals($mockData, $result, 'Debe retornar los resultados de DB::select');
@@ -107,13 +107,13 @@ class PrestamosTraitTest extends TestCase
      public function testObtenerQryListadoPrestamos()
     {
         // 1. Prepara el nit_empresa de ejemplo
-        $nit_empresa = '123456789';
+        $id_empresa = '123456789';
 
         // 2. Instancia la clase dummy que usa el trait (no hace falta mock porque este método no llama a DB)
         $dummy = new PrestamosTraitTestDummy();
 
         // 3. Ejecuta el método
-        $result = $dummy->obtenerQryListadoPrestamos($nit_empresa);
+        $result = $dummy->obtenerQryListadoPrestamos($id_empresa);
 
         // 4. Construimos el string que esperamos 
         //    (debe coincidir exactamente con lo que retorna el método)
@@ -137,11 +137,11 @@ class PrestamosTraitTest extends TestCase
         pstipodocidenti ide, 
         pstiposistemaprest tsip,
         psperiodopago pp
-        WHERE pre.nitempresa = :nit_empresa
+        WHERE pre.id_empresa = :id_empresa
         AND pre.id_cliente = cli.id
         and pre.codtipsistemap  = tsip.codtipsistemap 
         and pp.id = pre.id_forma_pago
-        AND em.nitempresa = pre.nitempresa
+        AND em.id = pre.id_empresa
         AND  cli.codtipdocid = ide.id
         AND pre.ind_estado = 1";
 
@@ -155,16 +155,16 @@ class PrestamosTraitTest extends TestCase
         $dummy = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
 
         // 2. Define valores de ejemplo
-        $nit_empresa  = '123456789';
+        $id_empresa  = '1';
         $id_prestamo  = 10;
 
-        // 3. Simula la respuesta de obtenerQryListadoPrestamos($nit_empresa)
+        // 3. Simula la respuesta de obtenerQryListadoPrestamos($id_empresa)
         //    Devuelve la parte base del query; luego se espera que el método
         //    añada " and pre.id = :id_prestamo"
-        $baseQuery = 'SELECT * FROM psprestamos pre WHERE pre.nitempresa = :nit_empresa AND pre.ind_estado = 1';
+        $baseQuery = 'SELECT * FROM psprestamos pre WHERE pre.id_empresa = :id_empresa AND pre.ind_estado = 1';
         $dummy->shouldReceive('obtenerQryListadoPrestamos')
             ->once()
-            ->with($nit_empresa)
+            ->with($id_empresa)
             ->andReturn($baseQuery);
 
         // 4. Prepara el query final que esperamos
@@ -180,13 +180,13 @@ class PrestamosTraitTest extends TestCase
         DB::shouldReceive('select')
             ->once()
             ->with($expectedQuery, [
-                'nit_empresa' => $nit_empresa,
+                'id_empresa' => $id_empresa,
                 'id_prestamo' => $id_prestamo
             ])
             ->andReturn($mockData);
 
         // 7. Ejecuta el método a probar
-        $result = $dummy->consultaVariablesPrestamo($nit_empresa, $id_prestamo);
+        $result = $dummy->consultaVariablesPrestamo($id_empresa, $id_prestamo);
 
         // 8. Verifica que retorne exactamente el array simulado
         $this->assertEquals($mockData, $result, 'Debe retornar el resultado de DB::select');
@@ -393,7 +393,7 @@ class PrestamosTraitTest extends TestCase
 
         // Simular el request
         $request = new Request([
-            'nitempresa' => 123456,
+            'id_empresa' => 123456,
             'fecha' => '2025-03-04'
         ]);
 
@@ -424,7 +424,7 @@ class PrestamosTraitTest extends TestCase
 
         // Simular el request
         $request = new Request([
-            'nitempresa' => 123456,
+            'id_empresa' => 123456,
             'fecha' => '2025-03-04'
         ]);
 
@@ -464,7 +464,7 @@ class PrestamosTraitTest extends TestCase
 
         // Simular el request
         $request = new Request([
-            'nitempresa' => 123456
+            'id_empresa' => 123456
         ]);
 
         // Llamar a la función con el mock
@@ -494,7 +494,7 @@ class PrestamosTraitTest extends TestCase
 
         // Simular el request
         $request = new Request([
-            'nitempresa' => 123456
+            'id_empresa' => 123456
         ]);
 
         // Llamar a la función con el mock
@@ -545,7 +545,7 @@ class PrestamosTraitTest extends TestCase
     {
         // Simular el request
         $request = new Request([
-            'nitempresa' => '123456'
+            'id_empresa' => '1'
         ]);
 
         // Crear el usuario mock con perfiles simulados
@@ -586,7 +586,7 @@ class PrestamosTraitTest extends TestCase
     {
         // Simular el request
         $request = new Request([
-            'nitempresa' => '123456'
+            'id_empresa' => '1'
         ]);
 
         // Crear el usuario mock con perfiles simulados
@@ -627,7 +627,7 @@ class PrestamosTraitTest extends TestCase
     {
         // Simular el request
         $request = new Request([
-            'nitempresa' => '123456'
+            'id_empresa' => '1'
         ]);
 
         // Crear el usuario mock con perfiles simulados
@@ -668,7 +668,7 @@ class PrestamosTraitTest extends TestCase
     {
         // Simular el request
         $request = new Request([
-            'nitempresa' => '123456',
+            'id_empresa' => '1',
             'fecha' => '2025-03-06'
         ]);
 
@@ -707,7 +707,7 @@ class PrestamosTraitTest extends TestCase
     {
         // Simular el request
         $request = new Request([
-            'nitempresa' => '123456'
+            'id_empresa' => '1'
         ]);
 
         // Crear el usuario mock con perfiles simulados
@@ -748,7 +748,7 @@ class PrestamosTraitTest extends TestCase
     {
         // Simular el request
         $request = new Request([
-            'nitempresa' => '123456',
+            'id_empresa' => '1',
             'fecha' => '2025-03-06'
         ]);
 
@@ -788,7 +788,7 @@ class PrestamosTraitTest extends TestCase
     {
         // Simular el request
         $request = new Request([
-            'nitempresa' => '123456'
+            'id_empresa' => '1'
         ]);
 
         // Simular la autenticación
@@ -827,14 +827,14 @@ class PrestamosTraitTest extends TestCase
     // Simular request
     $request = new Request([
         'id_prestamo' => 1,
-        'nitempresa' => '123456'
+        'id_empresa' => '1'
     ]);
 
     // Simular consultaVariablesPrestamo
     $mockInstance = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
 
     $mockInstance->shouldReceive('consultaVariablesPrestamo')
-        ->with('123456', 1)
+        ->with('1', 1)
         ->andReturn([
             (object)['cliente' => 'Juan Pérez', 'monto' => 100000]
         ]);
@@ -865,7 +865,7 @@ class PrestamosTraitTest extends TestCase
     // Simular Psquerytabla
     $mockPsquerytabla = Mockery::mock(Psquerytabla::class);
     $mockPsquerytabla->shouldReceive('where')->with('codigo', 'query1')->andReturnSelf();
-    $mockPsquerytabla->shouldReceive('where')->with('nitempresa', '123456')->andReturnSelf();
+    $mockPsquerytabla->shouldReceive('where')->with('id_empresa', '1')->andReturnSelf();
     $mockPsquerytabla->shouldReceive('first')->andReturn((object)['sql' => 'SELECT numero_cuota, fecha_pago, valor_pagar FROM cuotas WHERE id_prestamo = 1']);
 
     // Simular DB::select
@@ -902,10 +902,10 @@ class PrestamosTraitTest extends TestCase
         $mockInstance = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
         $request = new Request([
             'id_prestamo' => 1,
-            'nitempresa' => '123456'
+            'id_empresa' => '1'
         ]);
         $mockPstdocplant = Mockery::mock(Pstdocplant::class);
-        $mockPstdocplant->shouldReceive('where')->with('nitempresa', '123456')->andReturnSelf();
+        $mockPstdocplant->shouldReceive('where')->with('id_empresa', '1')->andReturnSelf();
         $mockPstdocplant->shouldReceive('get')->andReturn(collect([
             (object)['id' => 1, 'nombre' => 'Plantilla 1'],
             (object)['id' => 2, 'nombre' => 'Plantilla 2']
@@ -919,19 +919,19 @@ class PrestamosTraitTest extends TestCase
     public function test_total_prestado_hoy_returns_correct_value()
     {
         // Simular nit_empresa
-        $nit_empresa = '123456';
+        $id_empresa = '1';
 
         // Crear instancia simulada del trait
         $mockInstance = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
 
         // Simular getCapitalInicial
         $mockInstance->shouldReceive('getCapitalInicial')
-            ->with($nit_empresa, Mockery::type(Psempresa::class))
+            ->with($id_empresa, Mockery::type(Psempresa::class))
             ->andReturn(50000.00);
 
         // Simular getCapitalPrestado
         $mockInstance->shouldReceive('getCapitalPrestado')
-            ->with($nit_empresa, Mockery::type(Psprestamos::class))
+            ->with($id_empresa, Mockery::type(Psprestamos::class))
             ->andReturn(70000.00);
 
         // Simular los modelos Psempresa y Psprestamos
@@ -939,7 +939,7 @@ class PrestamosTraitTest extends TestCase
         $mockPsprestamos = Mockery::mock(Psprestamos::class);
 
         // Ejecutar la función
-        $resultado = $mockInstance->totalPrestadoHoy($nit_empresa, $mockPsempresa, $mockPsprestamos);
+        $resultado = $mockInstance->totalPrestadoHoy($id_empresa, $mockPsempresa, $mockPsprestamos);
 
         // Verificaciones
         $this->assertIsFloat($resultado);
@@ -952,7 +952,7 @@ class PrestamosTraitTest extends TestCase
     {
         // Simular Request
         $request = new Request([
-            'nitempresa' => '123456',
+            'id_empresa' => '1',
             'id_cliente' => 10,
             'valorpres' => 100000,
             'numcuotas' => 2,
@@ -1022,14 +1022,14 @@ class PrestamosTraitTest extends TestCase
 	    // Simular request
 	    $request = new Request([
 	        'id_prestamo' => 1,
-	        'nitempresa' => '123456'
+	        'id_empresa' => '1'
 	    ]);
 
 	    // Simular consultaVariablesPrestamo
 	    $mockInstance = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
 
 	    $mockInstance->shouldReceive('consultaVariablesPrestamo')
-	        ->with('123456', 1)
+	        ->with('1', 1)
 	        ->andReturn([
 	            (object)['cliente' => 'Juan Pérez', 'monto' => 100000]
 	        ]);
@@ -1054,7 +1054,7 @@ class PrestamosTraitTest extends TestCase
 	    // Simular Psquerytabla
 	    $mockPsquerytabla = Mockery::mock(Psquerytabla::class);
 	    $mockPsquerytabla->shouldReceive('where')->with('codigo', 'query1')->andReturnSelf();
-	    $mockPsquerytabla->shouldReceive('where')->with('nitempresa', '123456')->andReturnSelf();
+	    $mockPsquerytabla->shouldReceive('where')->with('id_empresa', '1')->andReturnSelf();
 	    $mockPsquerytabla->shouldReceive('first')->andReturn((object)['sql' => 'SELECT "Valor Query" AS campo1']);
 
 	    // Simular DB::select

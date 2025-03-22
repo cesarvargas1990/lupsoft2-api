@@ -20,7 +20,7 @@ class CreatePsusperfilTable extends Migration
             $table->string('id_user');
 			$table->string('id_perfil');
 			$table->integer('ind_activo');
-			$table->string('nitempresa',30)->nullable();
+			$table->string('id_empresa',30)->nullable();
             $table->timestamps();
         });
     }

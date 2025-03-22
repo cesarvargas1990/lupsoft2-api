@@ -55,7 +55,7 @@ class PsformapagoController extends Controller
 
     }
 	
-	public function ShowPsformapago($nitempresa)
+	public function ShowPsformapago($id_empresa)
     {
         try {
             $data = Psperiodopago::get(['id as value', 'nomperiodopago as label']);
@@ -134,9 +134,9 @@ class PsformapagoController extends Controller
     public function consultaTipoDocPlantilla(Request $request)
     {
         try {
-            $nit_empresa = $request->get('nitempresa');
+            $id_empresa = $request->get('id_empresa');
 
-            $data = Pstdocplant::where('nitempresa', $nit_empresa)->get();
+            $data = Pstdocplant::where('id_empresa', $id_empresa)->get();
 
             return response()->json($data);
         } catch (\Exception $e) {

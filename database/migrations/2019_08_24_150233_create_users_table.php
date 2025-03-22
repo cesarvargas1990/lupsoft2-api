@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique()->notNullable();
             $table->string('password');
-			$table->string('nitempresa',30)->nullable();
+			$table->integer('id_empresa')->nullable();
 			$table->integer('is_admin');
 			$table->integer('id_user')->nullable();
 			$table->integer('ind_activo');

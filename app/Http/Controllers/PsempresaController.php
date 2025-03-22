@@ -23,7 +23,7 @@ class PsempresaController extends Controller
  
         try {
 
-            $data = PsEmpresa::where('nitempresa',$nid);
+            $data = PsEmpresa::where('id',$nid);
             return response()->json($data->first());
 
 

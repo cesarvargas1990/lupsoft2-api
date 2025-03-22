@@ -22,7 +22,7 @@ class CreatePsfechaspagoTable extends Migration
             $table->integer('ind_renovar');
             $table->integer('ind_estado');
             $table->integer('id_cliente');
-            $table->string('nitempresa',30);
+            $table->string('id_empresa',30);
             $table->timestamps();
         });
     }

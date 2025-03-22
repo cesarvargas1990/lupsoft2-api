@@ -21,7 +21,7 @@ class GuardarArchivoController extends Controller
     public function guardarArchivoAdjunto(Request $request)
 {
     $tdoc = $request->get('id_tdocadjunto');
-    $nitempresa = $request->get('nitempresa');
+    $id_empresa = $request->get('id_empresa');
     $id_cliente = $request->get('id_cliente');
     $id_usuario = $request->get('id_usuario');
     $customFilename = $request->get('filename');
@@ -56,7 +56,7 @@ class GuardarArchivoController extends Controller
             'nombrearchivo' => $archivoAdjunto,
             'id_usu_cargarch' => $id_usuario,
             'id_cliente' => $id_cliente,
-            'nitempresa' => $nitempresa
+            'id_empresa' => $id_empresa
         ]);
     }
 
@@ -85,7 +85,7 @@ class GuardarArchivoController extends Controller
 	{
 	    $id_cliente = $request->get('id_cliente');
 	    $id_usuario = $request->get('id_usuario');
-	    $nitempresa = $request->get('nitempresa');
+	    $id_empresa = $request->get('id_empresa');
 	    $path = $request->get('path');
 	    $customFilename = $request->get('filename');
 	    $tdocs = $request->get('id_tdocadjunto');
@@ -130,7 +130,7 @@ class GuardarArchivoController extends Controller
 	                'rutaadjunto' => $filePath,
 	                'nombrearchivo' => $archivoAdjunto,
 	                'id_usu_cargarch' => $id_usuario,
-	                'nitempresa' => $nitempresa
+	                'id_empresa' => $id_empresa
 	            ]);
 	        } else {
 	            // Actualizar archivo adjunto existente
@@ -141,7 +141,7 @@ class GuardarArchivoController extends Controller
 	                    'rutaadjunto' => $filePath,
 	                    'nombrearchivo' => $archivoAdjunto,
 	                    'id_usu_cargarch' => $id_usuario,
-	                    'nitempresa' => $nitempresa
+	                    'id_empresa' => $id_empresa
 	                ]);
 	        }
 	    }

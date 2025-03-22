@@ -18,11 +18,11 @@ class PsclientesController extends Controller
         $this->middleware('auth');
     }
 
-    public function showAllPsclientes($nitempresa)
+    public function showAllPsclientes($id_empresa)
     {
         try {
             
-            $data = Psclientes::where('nitempresa', $nitempresa)
+            $data = Psclientes::where('id_empresa', $id_empresa)
                             ->where('ind_estado', 1)
                             ->get();
                             
@@ -62,11 +62,11 @@ class PsclientesController extends Controller
     }
     
 	
-	public function ShowPsclientes($nitempresa) {
+	public function ShowPsclientes($id_empresa) {
         try {
           
             $data = Psclientes::select('id as value', 'nomcliente as label')
-                             ->where('nitempresa', $nitempresa)
+                             ->where('id_empresa', $id_empresa)
                              ->where('ind_estado', 1)
                              ->get();
     
