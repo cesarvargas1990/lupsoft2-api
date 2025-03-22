@@ -19,7 +19,8 @@ class CreatePsquerytablaTable extends Migration
             $table->increments('id');
             $table->integer('codigo');            
             $table->text('sql');
-            $table->string('id_empresa',30);
+            $table->unsignedInteger('id_empresa');
+            $table->foreign('id_empresa')->references('id')->on('psempresa');
             $table->timestamps();
         });
     }

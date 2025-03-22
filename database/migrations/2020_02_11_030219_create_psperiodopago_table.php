@@ -19,7 +19,8 @@ class CreatePsperiodopagoTable extends Migration
         Schema::create('psperiodopago', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nomperiodopago');
-            $table->string('id_empresa');
+            $table->unsignedInteger('id_empresa');
+            $table->foreign('id_empresa')->references('id')->on('psempresa');
             $table->timestamps();
         });
     }

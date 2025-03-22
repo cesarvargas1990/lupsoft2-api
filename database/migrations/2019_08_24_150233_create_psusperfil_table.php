@@ -18,9 +18,11 @@ class CreatePsusperfilTable extends Migration
         Schema::create('psusperfil', function (Blueprint $table) {
             $table->increments('id');
             $table->string('id_user');
-			$table->string('id_perfil');
+			$table->unsignedInteger('id_perfil');
+            $table->foreign('id_perfil')->references('id')->on('psperfil');
 			$table->integer('ind_activo');
-			$table->string('id_empresa',30)->nullable();
+			$table->unsignedInteger('id_empresa');
+            $table->foreign('id_empresa')->references('id')->on('psempresa');
             $table->timestamps();
         });
     }

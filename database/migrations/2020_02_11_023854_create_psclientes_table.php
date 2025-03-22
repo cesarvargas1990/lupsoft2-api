@@ -27,14 +27,16 @@ class CreatePsclientesTable extends Migration
 			$table->string('diretrabajo',200)->nullable();
 			$table->string('ubicasa',255)->nullable();
 			$table->string('ubictrabajo',255)->nullable();
-			$table->string('id_empresa',30);
+			$table->unsignedInteger('id_empresa')->nullable();
+            $table->foreign('id_empresa')->references('id')->on('psempresa');
 			$table->string('ref1',255)->nullable();
 			$table->string('ref2',255)->nullable();
             $table->integer('id_cobrador')->nullable();
             $table->string('email',255)->nullable();
             $table->date('fch_expdocumento')->nullable();
             $table->date('fch_nacimiento')->nullable();
-            $table->integer('id_user');
+            $table->unsignedInteger('id_user')->nullable();
+            $table->foreign('id_user')->references('id')->on('users');
             $table->integer('ind_estado');
 			$table->timestamps();
         });

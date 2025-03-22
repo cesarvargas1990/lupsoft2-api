@@ -21,8 +21,10 @@ class CreatePsfechaspagoTable extends Migration
             $table->date('fecha_pago');
             $table->integer('ind_renovar');
             $table->integer('ind_estado');
-            $table->integer('id_cliente');
-            $table->string('id_empresa',30);
+            $table->unsignedInteger('id_cliente')->nullable();
+            $table->foreign('id_cliente')->references('id')->on('psclientes');
+            $table->unsignedInteger('id_empresa');
+            $table->foreign('id_empresa')->references('id')->on('psempresa');
             $table->timestamps();
         });
     }

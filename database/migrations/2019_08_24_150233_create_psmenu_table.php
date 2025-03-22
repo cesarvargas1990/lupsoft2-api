@@ -19,10 +19,13 @@ class CreatePsmenuTable extends Migration
             $table->string('ruta',500)->nullable();
 			$table->string('icono',50)->nullable();
             $table->integer('orden')->nullable();
-			$table->integer('id_mpadre')->nullable();
-			$table->integer('id_perfil')->nullable();
+			$table->unsignedInteger('id_mpadre')->nullable();
+            $table->foreign('id_mpadre')->references('id')->on('psmenu');
+			$table->unsignedInteger('id_perfil');
+            $table->foreign('id_perfil')->references('id')->on('psperfil');
 			$table->integer('ind_activo')->nullable();
-			$table->string('id_empresa',30);
+			$table->unsignedInteger('id_empresa');
+            $table->foreign('id_empresa')->references('id')->on('psempresa');
             $table->timestamps();
         });
     }

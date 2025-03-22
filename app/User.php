@@ -58,4 +58,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->belongsToMany(Psperfil::class, 'psusperfil', 'id_user', 'id_perfil');
     }
+
+    public function empresa()
+    {
+        return $this->belongsTo(PsEmpresa::class, 'id_empresa');
+    }
+
+    
 }

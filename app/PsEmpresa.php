@@ -27,6 +27,16 @@ class PsEmpresa extends Model
 
 	];
 
+	public function users()
+    {
+        return $this->hasMany(User::class, 'id_empresa');
+    }
+
+	public function clientes()
+    {
+        return $this->hasMany(Psclientes::class, 'id_empresa');
+    }
+
 
 
 }

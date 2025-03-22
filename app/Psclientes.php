@@ -54,7 +54,10 @@ class Psclientes extends Model
 
 	//protected $dateFormat = 'd/m/Y';
 
-	
+	public function empresa()
+	{
+		return $this->belongsTo(PsEmpresa::class, 'id_empresa');
+	}
 
 
 

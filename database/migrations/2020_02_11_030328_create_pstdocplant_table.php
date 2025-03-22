@@ -21,7 +21,8 @@ class CreatePstdocplantTable extends Migration
             $table->increments('id');
             $table->string('nombre');
             $table->longText('plantilla_html');
-            $table->string('id_empresa',30);
+            $table->unsignedInteger('id_empresa');
+            $table->foreign('id_empresa')->references('id')->on('psempresa');
 			$table->integer('idtipaccionsist')->nullable();
             $table->timestamps();
         });

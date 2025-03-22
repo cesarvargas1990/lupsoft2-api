@@ -17,7 +17,8 @@ class CreatePsformapagoTable extends Migration
 
         Schema::create('psformapago', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_periodo_pago'); 
+            $table->unsignedInteger('id_periodo_pago')->nullable();
+            $table->foreign('id_periodo_pago')->references('id')->on('psperiodopago');
             $table->double('porcint',13,2)->nullable();
             $table->integer('ind_solicporcint')->nullable();
             $table->integer('ind_solinumc')->nullable();
@@ -25,7 +26,8 @@ class CreatePsformapagoTable extends Migration
             $table->double('valorpres',13,2)->nullable();
             $table->integer('numcuotas')->nullable();
             $table->string('nomfpago');
-            $table->string('id_empresa',30);
+            $table->unsignedInteger('id_empresa');
+            $table->foreign('id_empresa')->references('id')->on('psempresa');
             $table->timestamps();
         });
     }

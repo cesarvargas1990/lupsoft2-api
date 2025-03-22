@@ -20,9 +20,11 @@ class CreatePsdocadjuntosTable extends Migration
             $table->string('rutaadjunto',100);
             $table->integer('id_tdocadjunto')->nullable();
             $table->integer('id_usu_cargarch')->nullable();
-            $table->integer('id_cliente')->nullable();
+            $table->unsignedInteger('id_cliente')->nullable();
+            $table->foreign('id_cliente')->references('id')->on('psclientes');
             $table->string('nombrearchivo',1000);
-            $table->string('id_empresa',30);
+            $table->unsignedInteger('id_empresa');
+            $table->foreign('id_empresa')->references('id')->on('psempresa');
             $table->timestamps();
         });
     }
