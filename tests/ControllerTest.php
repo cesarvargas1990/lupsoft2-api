@@ -36,7 +36,7 @@ class ControllerTest extends TestCase
 
         // Simular el modelo PsEmpresa
         $mockPsempresa = Mockery::mock(PsEmpresa::class);
-        $mockPsempresa->shouldReceive('where')->with('id_empresa', '1')->andReturnSelf();
+        $mockPsempresa->shouldReceive('where')->with('id', '1')->andReturnSelf();
         $mockPsempresa->shouldReceive('first')->andReturn((object)['id' => 1]);
 
         // Simular el modelo Psusuperfil
