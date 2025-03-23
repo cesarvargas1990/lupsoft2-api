@@ -19,7 +19,7 @@ class CreatePsclientesTable extends Migration
 			$table->increments('id');
 			$table->string('nomcliente')->nullable();
             $table->unsignedInteger('id_tipo_docid');
-            $table->foreign('id_tipo_docid')->references('id')->on('tipodocidenti');
+            $table->foreign('id_tipo_docid')->references('id')->on('pstipodocidenti');
 			$table->string('numdocumento',30)->nullable();
 			$table->string('ciudad',50)->nullable();
 			$table->string('telefijo',20)->nullable();

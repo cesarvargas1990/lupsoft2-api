@@ -14,11 +14,11 @@ class DatabaseSeeder extends Seeder
 		
 		$this->call('PsempresaTableSeeder');
 		$this->call('UsersTableSeeder');
+		$this->call('PstipodocidentiTableSeeder');
 		$this->call('PsclientesTableSeeder');
 		$this->call('PsperfilTableSeeder');
 		$this->call('PsmenuTableSeeder');
 		$this->call('PsusperfilTableSeeder');
-		$this->call('PstipodocidentiTableSeeder');
 		$this->call('PsperiodopagoTableSeeder');
 		$this->call('PstdocadjuntosTableSeeder');
 		$this->call('PstdocplantTableSeeder');
