@@ -19,7 +19,7 @@ class CreatePsprestamosTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('id_cliente');
             $table->foreign('id_cliente')->references('id')->on('psclientes');
-			$table->integer('codtipsistemap')->nullable();
+			$table->integer('id_tipo_sistema_prest')->nullable();
 			$table->double('valorpres', 13,2)->nullable();
 			$table->integer('numcuotas')->nullable();
 			$table->unsignedInteger('id_forma_pago')->nullable();

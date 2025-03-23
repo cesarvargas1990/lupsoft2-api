@@ -31,7 +31,7 @@ trait prestamosTrait
                 'valcuota' => $valor_cuota,
                 'porcint' => $request->get('porcint'),
                 'id_forma_pago' => $request->get('id_forma_pago'),
-                'codtipsistemap' => $request->get('id_sistema_pago'),
+                'id_tipo_sistema_prest' => $request->get('id_sistema_pago'),
                 'fec_inicial' => date("Y-m-d", strtotime(str_replace('/', '-', $request->get('fec_inicial')))),
                 'id_cobrador' => $request->get('id_cobrador'),
                 'id_empresa' => $request->get('id_empresa'),
@@ -85,7 +85,7 @@ trait prestamosTrait
         psperiodopago pp
         WHERE pre.id_empresa = :id_empresa
         AND pre.id_cliente = cli.id
-        and pre.codtipsistemap  = tsip.codtipsistemap 
+        and pre.id_tipo_sistema_prest  = tsip.id
         and pp.id = pre.id_forma_pago
         AND em.id = pre.id_empresa
         AND  cli.codtipdocid = ide.id

@@ -139,7 +139,7 @@ class PrestamosTraitTest extends TestCase
         psperiodopago pp
         WHERE pre.id_empresa = :id_empresa
         AND pre.id_cliente = cli.id
-        and pre.codtipsistemap  = tsip.codtipsistemap 
+        and pre.id_tipo_sistema_prest  = tsip.id
         and pp.id = pre.id_forma_pago
         AND em.id = pre.id_empresa
         AND  cli.codtipdocid = ide.id
