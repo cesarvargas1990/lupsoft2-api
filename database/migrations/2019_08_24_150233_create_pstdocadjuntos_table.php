@@ -18,7 +18,6 @@ class CreatePstdocadjuntosTable extends Migration
 			$table->string('nombre',100)->nullable();
 			$table->unsignedInteger('id_empresa');
             $table->foreign('id_empresa')->references('id')->on('psempresa');
-			$table->integer('idtipaccionsist')->nullable();
 			
             $table->timestamps();
         });

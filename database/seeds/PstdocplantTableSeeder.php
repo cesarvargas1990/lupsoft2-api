@@ -113,8 +113,7 @@ class PstdocplantTableSeeder extends Seeder
     </div>
 </body>
 </html>',
-            'id_empresa' => '1',
-			'idtipaccionsist' => 2
+            'id_empresa' => '1'
 
         ]);
 		
@@ -181,8 +180,7 @@ class PstdocplantTableSeeder extends Seeder
     </table>
 </body>
 </html>',
-            'id_empresa' => '1',
-			'idtipaccionsist' => 2
+            'id_empresa' => '1'
 
 
         ]);

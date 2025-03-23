@@ -18,7 +18,6 @@ use Illuminate\Http\Request;
 // Definir constantes para rutas repetitivas
 define('PSCLIENTES_ROUTE', 'psclientes/{id}');
 define('PSDOCADJUNTOS_ROUTE', 'psdocadjuntos/{id}');
-define('PSFORMAPAGO_ROUTE', 'psformapago/{id}');
 define('PSTIPOSISTEMAPREST_ROUTE', 'pstiposistemaprest/{id}');
 define('PSEMPRESA_ROUTE', 'psempresa/{id}');
 define('PSPERIODO_PAGO_ROUTE', 'psperiodopago/{id}');
@@ -76,11 +75,7 @@ $router->group(['prefix' => ''], function () use ($router) {
 
 
     // REST FULL SERVICES FOR TABLE => psformapago
-    $router->get('psformapago', ['uses' => 'PsformapagoController@showAllpsformapago']);
-    $router->get(PSFORMAPAGO_ROUTE, ['uses' => 'PsformapagoController@ShowPsformapago']);
-    $router->post('psformapago', ['uses' => 'PsformapagoController@create']);
-    $router->put(PSFORMAPAGO_ROUTE, ['uses' => 'PsformapagoController@update']);
-    $router->delete(PSFORMAPAGO_ROUTE, ['uses' => 'PsformapagoController@delete']);
+
     $router->get('listaformaspago/{id_empresa}', ['uses' => 'PsformapagoController@ShowPsformapago']);
 
     // REST FULL SERVICES FOR TABLE => psperiodospago

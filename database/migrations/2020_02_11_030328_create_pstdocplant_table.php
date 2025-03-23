@@ -23,7 +23,6 @@ class CreatePstdocplantTable extends Migration
             $table->longText('plantilla_html');
             $table->unsignedInteger('id_empresa');
             $table->foreign('id_empresa')->references('id')->on('psempresa');
-			$table->integer('idtipaccionsist')->nullable();
             $table->timestamps();
         });
     }
