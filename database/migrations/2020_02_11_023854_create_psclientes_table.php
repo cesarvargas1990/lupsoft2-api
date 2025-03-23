@@ -18,7 +18,8 @@ class CreatePsclientesTable extends Migration
         Schema::create('psclientes', function (Blueprint $table) {
 			$table->increments('id');
 			$table->string('nomcliente')->nullable();
-			$table->integer('codtipdocid')->nullable();
+            $table->unsignedInteger('id_tipo_docid');
+            $table->foreign('id_tipo_docid')->references('id')->on('tipodocidenti');
 			$table->string('numdocumento',30)->nullable();
 			$table->string('ciudad',50)->nullable();
 			$table->string('telefijo',20)->nullable();

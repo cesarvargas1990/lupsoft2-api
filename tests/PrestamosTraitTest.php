@@ -142,7 +142,7 @@ class PrestamosTraitTest extends TestCase
         and pre.id_tipo_sistema_prest  = tsip.id
         and pp.id = pre.id_forma_pago
         AND em.id = pre.id_empresa
-        AND  cli.codtipdocid = ide.id
+        AND  cli.id_tipo_docid = ide.id
         AND pre.ind_estado = 1";
 
         // 5. Afirmamos que el resultado sea igual al string esperado

@@ -23,7 +23,7 @@ class Psclientes extends Model
 
     protected $fillable = [
 	'nomcliente',
-	'codtipdocid',
+	'id_tipo_docid',
 	'numdocumento',
 	'ciudad',
 	'telefijo',

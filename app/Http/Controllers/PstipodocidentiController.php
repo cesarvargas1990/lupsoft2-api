@@ -57,7 +57,7 @@ class PstipodocidentiController extends Controller
     public function ShowPstipodocidenti()
     {
         try {
-            $data = Pstipodocidenti::select('codtipdocid as value', 'nomtipodocumento as label')
+            $data = Pstipodocidenti::select('id_tipo_docid as value', 'nomtipodocumento as label')
                 ->get();
 
             return response()->json($data);

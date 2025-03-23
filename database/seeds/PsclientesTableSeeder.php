@@ -15,7 +15,7 @@ class PsclientesTableSeeder extends Seeder
 
          DB::table('psclientes')->insert([
 			'nomcliente' => 'Cliente de Prueba',
-			'codtipdocid' =>  '1',
+			'id_tipo_docid' =>  '1',
 			'numdocumento' => '12345678' ,
 			'ciudad' =>  'Santiago de cali',
 			'telefijo' => '0324556525',
