@@ -15,7 +15,8 @@ class CreatePerfilAccionTable extends Migration
     {
         Schema::create('psperfilaccion', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_perfil')->nullable();
+            $table->unsignedInteger('id_perfil');
+            $table->foreign('id_perfil')->references('id')->on('users');
             $table->string('nom_accion');
             $table->timestamps();
         });
