@@ -140,7 +140,7 @@ class PrestamosTraitTest extends TestCase
         WHERE pre.id_empresa = :id_empresa
         AND pre.id_cliente = cli.id
         and pre.id_tipo_sistema_prest  = tsip.id
-        and pp.id = pre.id_forma_pago
+        and pp.id = pre.id_periodo_pago
         AND em.id = pre.id_empresa
         AND  cli.id_tipo_docid = ide.id
         AND pre.ind_estado = 1";
@@ -957,7 +957,7 @@ class PrestamosTraitTest extends TestCase
             'valorpres' => 100000,
             'numcuotas' => 2,
             'porcint' => 5,
-            'id_forma_pago' => 1,
+            'id_periodo_pago' => 1,
             'id_sistema_pago' => 'SIS01',
             'fec_inicial' => '01/01/2023',
             'id_cobrador' => 999,

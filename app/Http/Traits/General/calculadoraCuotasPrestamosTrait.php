@@ -14,8 +14,8 @@ trait calculadoraCuotasPrestamosTrait
 
     public function calcularCuota($request,Psperiodopago $psperiodopago, Pspstiposistemaprest $pspstiposistemaprest){
         setlocale(LC_ALL,"es_ES@euro","es_ES","esp");
-        $id_forma_pago = $request->get('id_forma_pago');
-        $formaPago = $psperiodopago::find( $id_forma_pago);
+        $id_periodo_pago = $request->get('id_periodo_pago');
+        $formaPago = $psperiodopago::find( $id_periodo_pago);
         $id_periodo_pago = $formaPago->id; // se usa dentro del eval
         $sistemaPrestamo =$request->get('id_sistema_pago');
         $formula =  $pspstiposistemaprest::where('codtipsistemap',$sistemaPrestamo)->first()->formula;

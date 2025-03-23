@@ -23,7 +23,7 @@ class CreatePsprestamosTable extends Migration
             $table->foreign('id_tipo_sistema_prest')->references('id')->on('pstiposistemaprest');
 			$table->double('valorpres', 13,2)->nullable();
 			$table->integer('numcuotas')->nullable();
-			$table->unsignedInteger('id_forma_pago')->nullable();
+			$table->unsignedInteger('id_periodo_pago')->nullable();
 			$table->double('valcuota', 13,2)->nullable();
 			$table->double('porcint', 10,2)->nullable();
 			$table->date('fec_inicial')->nullable();

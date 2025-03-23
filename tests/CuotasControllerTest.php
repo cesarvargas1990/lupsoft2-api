@@ -40,7 +40,7 @@ class CuotasControllerTest extends TestCase
     {
         // Simular el request
         $request = new Request([
-            'id_forma_pago' => 1,
+            'id_periodo_pago' => 1,
             'id_sistema_pago' => 'SIS01',
             'numcuotas' => 12,
             'porcint' => 5,
@@ -82,7 +82,7 @@ class CuotasControllerTest extends TestCase
     public function test_calcular_cuotas_handles_exception()
     {
         $request = new Request([
-            'id_forma_pago' => 1,
+            'id_periodo_pago' => 1,
             'id_sistema_pago' => 'SIS01'
         ]);
 
@@ -113,7 +113,7 @@ class CuotasControllerTest extends TestCase
     {
         // Simular el request
         $request = new Request([
-            'id_forma_pago' => 1,
+            'id_periodo_pago' => 1,
             'id_sistema_pago' => 'SIS01',
             'numcuotas' => 12,
             'porcint' => 5,
@@ -150,7 +150,7 @@ class CuotasControllerTest extends TestCase
     public function test_calcular_cuotas2_handles_exception()
     {
         $request = new Request([
-            'id_forma_pago' => 1,
+            'id_periodo_pago' => 1,
             'id_sistema_pago' => 'SIS01'
         ]);
 

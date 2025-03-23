@@ -43,7 +43,7 @@ class CalculadoraCuotasPrestamosTraitTest extends TestCase
     {
         // Simular request
         $request = new Request([
-            'id_forma_pago' => 1,
+            'id_periodo_pago' => 1,
             'id_sistema_pago' => 'SIS01',
             'numcuotas' => 12,
             'porcint' => 5,
@@ -78,7 +78,7 @@ class CalculadoraCuotasPrestamosTraitTest extends TestCase
     {
         // Simular request
         $request = new Request([
-            'id_forma_pago' => 1,
+            'id_periodo_pago' => 1,
             'id_sistema_pago' => 'SIS01',
             'numcuotas' => 12,
             'porcint' => 5,
