@@ -34,6 +34,11 @@ class Pstipodocidenti extends Model
 
     ];
 
+    public function clientes()
+    {
+        return $this->hasMany(Psclientes::class, 'id_tipodocidenti');
+    }
+
 
 
 }

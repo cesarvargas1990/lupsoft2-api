@@ -34,6 +34,16 @@ class Psperiodopago extends Model
 
     ];
 
+    public function empresa()
+    {
+        return $this->belongsTo(Psempresa::class, 'id_empresa');
+    }
+
+    public function prestamos()
+    {
+        return $this->hasMany(Psprestamos::class, 'id_periodo_pago');
+    }
+
 
 
 }

@@ -37,6 +37,12 @@ class Psquerytabla extends Model
 
     ];
 
+    public function empresa()
+    {
+        return $this->belongsTo(Psempresa::class, 'id_empresa');
+    }
+
+
 
 
 }

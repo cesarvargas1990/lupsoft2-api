@@ -45,7 +45,30 @@ class Psprestamos extends Model
         return $this->hasMany(PsPagos::class, 'id_prestamo', 'id');
     }
 
-   
+    public function periodoPago()
+    {
+        return $this->belongsTo(Psperiodopago::class, 'id_periodo_pago');
+    }
+
+    public function empresa()
+    {
+        return $this->belongsTo(Psempresa::class, 'id_empresa');
+    }
+
+    public function usuarioRegistro()
+    {
+        return $this->belongsTo(User::class, 'id_usu_reg');
+    }
+
+    public function cobrador()
+    {
+        return $this->belongsTo(User::class, 'id_cobrador');
+    }
+
+    public function tipoSistemaPrestamo()
+    {
+        return $this->belongsTo(Pspstiposistemaprest::class, 'id_tiposistemaprest');
+    }
 
 
 

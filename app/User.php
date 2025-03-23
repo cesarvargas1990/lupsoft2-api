@@ -64,5 +64,30 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->belongsTo(PsEmpresa::class, 'id_empresa');
     }
 
+    public function prestamosCreados()
+    {
+        return $this->hasMany(Psprestamos::class, 'id_usu_reg');
+    }
+
+    public function pagosRegistrados()
+    {
+        return $this->hasMany(Pspagos::class, 'id_usureg');
+    }
+
+    public function usuariosCreados()
+    {
+        return $this->hasMany(User::class, 'id_user');
+    }
+
+    public function docAdjuntos()
+    {
+        return $this->hasMany(Psdocadjuntos::class, 'id_usu_cargarch');
+    }
+
+    public function tienePerfil($nombrePerfil)
+    {
+        return $this->perfiles()->where('nombre', $nombrePerfil)->exists();
+    }
+
     
 }

@@ -37,6 +37,26 @@ class Psdocadjuntos extends Model
 
     ];
 
+    public function tipoDocumento()
+    {
+        return $this->belongsTo(Pstdocadjuntos::class, 'id_tipodocjunto');
+    }
+
+    public function usuarioCargador()
+    {
+        return $this->belongsTo(User::class, 'id_usu_cargarch');
+    }
+
+    public function cliente()
+    {
+        return $this->belongsTo(Psclientes::class, 'id_cliente');
+    }
+
+    public function empresa()
+    {
+        return $this->belongsTo(Psempresa::class, 'id_empresa');
+    }
+
 
 
 }

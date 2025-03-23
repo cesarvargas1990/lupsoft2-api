@@ -37,6 +37,56 @@ class PsEmpresa extends Model
         return $this->hasMany(Psclientes::class, 'id_empresa');
     }
 
+	public function prestamos()
+	{
+		return $this->hasMany(Psprestamos::class, 'id_empresa');
+	}
+
+	public function fechaspago()
+	{
+		return $this->hasMany(Psfechaspago::class, 'id_empresa');
+	}
+
+	public function pagos()
+	{
+		return $this->hasMany(Pspagos::class, 'id_empresa');
+	}
+
+	public function docadjuntos()
+	{
+		return $this->hasMany(Psdocadjuntos::class, 'id_empresa');
+	}
+
+	public function periodospago()
+	{
+		return $this->hasMany(Psperiodopago::class, 'id_empresa');
+	}
+
+	public function querytablas()
+	{
+		return $this->hasMany(Psquerytabla::class, 'id_empresa');
+	}
+
+	public function perfiles()
+	{
+		return $this->hasMany(Psperfil::class, 'id_empresa');
+	}
+
+	public function userperfiles()
+	{
+		return $this->hasMany(Psuserperfil::class, 'id_empresa');
+	}
+
+	public function menus()
+	{
+		return $this->hasMany(Psmenu::class, 'id_empresa');
+	}
+
+	public function docplantillas()
+	{
+		return $this->hasMany(Psdocplant::class, 'id_empresa');
+	}
+
 
 
 }

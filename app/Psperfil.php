@@ -24,4 +24,20 @@ class Psperfil extends Model
     {
         return $this->belongsToMany(User::class, 'psusperfil', 'id_perfil', 'id_user');
     }
+
+    public function menus()
+    {
+        return $this->hasMany(Psmenu::class, 'id_perfil');
+    }
+
+    public function acciones()
+    {
+        return $this->hasMany(Psperfilaccion::class, 'id_perfil');
+    }
+
+    public function empresa()
+    {
+        return $this->belongsTo(Psempresa::class, 'id_empresa');
+    }
+
 }

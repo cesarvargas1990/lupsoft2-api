@@ -42,5 +42,20 @@ class Psusuperfil extends Model
         return $this->hasMany(User::class, 'id_perfil','id');  // Asumiendo que 'perfil_id' es la clave foránea en la tabla de usuarios
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user');
+    }
+
+    public function perfil()
+    {
+        return $this->belongsTo(Psperfil::class, 'id_perfil');
+    }
+
+    public function empresa()
+    {
+        return $this->belongsTo(Psempresa::class, 'id_empresa');
+    }
+
 
 }

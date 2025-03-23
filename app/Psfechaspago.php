@@ -42,6 +42,16 @@ class Psfechaspago extends Model
         return $this->hasMany(PsPagos::class, 'id_fecha_pago', 'id');
     }
 
+    public function cliente()
+    {
+        return $this->belongsTo(Psclientes::class, 'id_cliente');
+    }
+
+    public function empresa()
+    {
+        return $this->belongsTo(Psempresa::class, 'id_empresa');
+    }
+
 
 
 }

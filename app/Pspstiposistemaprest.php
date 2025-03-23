@@ -37,6 +37,11 @@ class Pspstiposistemaprest extends Model
 
     ];
 
+    public function prestamos()
+    {
+        return $this->hasMany(Psprestamos::class, 'id_tiposistemaprest');
+    }
+
 
 
 }

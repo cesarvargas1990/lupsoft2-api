@@ -37,6 +37,16 @@ class Pstdocadjuntos extends Model
 
     ];
 
+    public function adjuntos()
+    {
+        return $this->hasMany(Psdocadjuntos::class, 'id_tipodocjunto');
+    }
+
+    public function empresa()
+    {
+        return $this->belongsTo(Psempresa::class, 'id_empresa');
+    }
+
 
 
 }

@@ -56,7 +56,7 @@ class CalculadoraCuotasPrestamosTraitTest extends TestCase
 
         // Simular modelo Pspstiposistemaprest
         $mockPspstiposistemaprest = Mockery::mock(Pspstiposistemaprest::class);
-        $mockPspstiposistemaprest->shouldReceive('where')->with('id', 'SIS01')->andReturnSelf();
+        $mockPspstiposistemaprest->shouldReceive('where')->with('codtipsistemap', 'SIS01')->andReturnSelf();
         $mockPspstiposistemaprest->shouldReceive('first')->andReturn((object)['formula' => 'return ($valorpres * ($porcint / 100)) / $numcuotas;']);
 
         // Crear una instancia de la clase que contiene la función con el trait
@@ -79,7 +79,7 @@ class CalculadoraCuotasPrestamosTraitTest extends TestCase
         // Simular request
         $request = new Request([
             'id_periodo_pago' => 1,
-            'id_sistema_pago' => 'SIS01',
+            'id_sistema_pago' => '1',
             'numcuotas' => 12,
             'porcint' => 5,
             'valorpres' => 100000
@@ -91,7 +91,7 @@ class CalculadoraCuotasPrestamosTraitTest extends TestCase
 
         // Simular modelo Pspstiposistemaprest
         $mockPspstiposistemaprest = Mockery::mock(Pspstiposistemaprest::class);
-        $mockPspstiposistemaprest->shouldReceive('where')->with('id', 'SIS01')->andReturnSelf();
+        $mockPspstiposistemaprest->shouldReceive('where')->with('codtipsistemap', '1')->andReturnSelf();
         $mockPspstiposistemaprest->shouldReceive('first')->andReturn((object)['formula' => 'return ($valorpres * ($porcint / 100)) / $numcuotas;']);
 
         // Crear una instancia de la clase que contiene la función con el trait
