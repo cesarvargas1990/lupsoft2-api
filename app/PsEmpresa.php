@@ -74,7 +74,7 @@ class PsEmpresa extends Model
 
 	public function userperfiles()
 	{
-		return $this->hasMany(Psuserperfil::class, 'id_empresa');
+		return $this->hasMany(Psusuperfil::class, 'id_empresa');
 	}
 
 	public function menus()
@@ -84,7 +84,7 @@ class PsEmpresa extends Model
 
 	public function docplantillas()
 	{
-		return $this->hasMany(Psdocplant::class, 'id_empresa');
+		return $this->hasMany(Pstdocplant::class, 'id_empresa');
 	}
 
 

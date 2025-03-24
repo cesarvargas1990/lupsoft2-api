@@ -2,11 +2,7 @@
 
 namespace App;
 
-
 use Illuminate\Database\Eloquent\Model;
-
-
-//this is new
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Psdocadjuntos extends Model
@@ -18,20 +14,8 @@ class Psdocadjuntos extends Model
      *
      * @var array
      */
-
-
-
-   
-
-    
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
 	 
-	 protected $table = 'psdocadjuntos';
+	protected $table = 'psdocadjuntos';
 	 
     protected $hidden = [
 
@@ -39,7 +23,7 @@ class Psdocadjuntos extends Model
 
     public function tipoDocumento()
     {
-        return $this->belongsTo(Pstdocadjuntos::class, 'id_tipodocjunto');
+        return $this->belongsTo(Pstdocadjuntos::class, 'id_tdocadjunto');
     }
 
     public function usuarioCargador()
@@ -56,7 +40,5 @@ class Psdocadjuntos extends Model
     {
         return $this->belongsTo(Psempresa::class, 'id_empresa');
     }
-
-
 
 }

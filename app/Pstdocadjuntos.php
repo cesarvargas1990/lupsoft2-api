@@ -18,29 +18,12 @@ class Pstdocadjuntos extends Model
      *
      * @var array
      */
-
-
-
-   
-
-    
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
 	 
-	 protected $table = 'pstdocadjuntos';
+	protected $table = 'pstdocadjuntos';
 	 
     protected $hidden = [
 
     ];
-
-    public function adjuntos()
-    {
-        return $this->hasMany(Psdocadjuntos::class, 'id_tipodocjunto');
-    }
 
     public function empresa()
     {

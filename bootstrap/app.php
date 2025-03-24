@@ -80,7 +80,7 @@ $app->register(App\Providers\AuthServiceProvider::class);
 
 // Add this line
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
-
+$app->register(Laravel\Tinker\TinkerServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes

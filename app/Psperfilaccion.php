@@ -14,6 +14,8 @@ class Psperfilaccion extends Model
 {
 
 
+    protected $table = 'psperfilaccion';
+
     /**
      * The attributes that are mass assignable.
      *

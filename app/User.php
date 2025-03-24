@@ -89,5 +89,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->perfiles()->where('nombre', $nombrePerfil)->exists();
     }
 
+    public function clientesRegistrados()
+    {
+        return $this->hasMany(Psclientes::class, 'id_user');
+    }
+
+    public function clientesCobrador()
+    {
+        return $this->hasMany(Psclientes::class, 'id_cobrador');
+    }
+
     
 }

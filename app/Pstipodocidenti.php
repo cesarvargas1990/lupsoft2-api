@@ -12,16 +12,6 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class Pstipodocidenti extends Model
 {
 
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-
-
-  
-
     /**
      * The attributes excluded from the model's JSON form.
      *
@@ -36,9 +26,7 @@ class Pstipodocidenti extends Model
 
     public function clientes()
     {
-        return $this->hasMany(Psclientes::class, 'id_tipodocidenti');
+        return $this->hasMany(Psclientes::class, 'id_tipo_docid');
     }
-
-
 
 }

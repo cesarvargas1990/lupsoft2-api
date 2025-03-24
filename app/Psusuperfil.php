@@ -14,13 +14,7 @@ class Psusuperfil extends Model
 {
 
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-
-
+    
     protected $fillable = [
 	
     ];
@@ -36,11 +30,6 @@ class Psusuperfil extends Model
 
     protected $table = 'psusperfil';
 
-
-    public function usuarios()
-    {
-        return $this->hasMany(User::class, 'id_perfil','id');  // Asumiendo que 'perfil_id' es la clave foránea en la tabla de usuarios
-    }
 
     public function user()
     {
