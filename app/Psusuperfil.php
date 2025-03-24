@@ -46,5 +46,7 @@ class Psusuperfil extends Model
         return $this->belongsTo(Psempresa::class, 'id_empresa');
     }
 
+    
+
 
 }
