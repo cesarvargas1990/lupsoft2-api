@@ -14,7 +14,8 @@
 -   `cp .env.example .env`
 -   `docker-compose build`
 -   `docker-compose up -d`
--   `docker-compose exec app sh -c "composer install && php artisan migrate --force && true && php artisan db:seed"`
+-   `docker-compose exec app sh -c "composer install && php artisan migrate --force && true && php artisan db:seed"` -- first run
+-   `docker-compose run -d app ` -- run 
 
 
 ## Test curl
