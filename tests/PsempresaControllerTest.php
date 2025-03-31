@@ -44,7 +44,7 @@ class PsempresaControllerTest extends TestCase
             ->andReturn($empresa);
 
         $controller = new PsempresaController();
-        $response = $controller->showOnePsempresa(1, $psempresaMock);
+        $response = $controller->showOnePsempresa( $psempresaMock, 1);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
@@ -61,7 +61,7 @@ class PsempresaControllerTest extends TestCase
             ->andThrow(new \Exception('Fallo en la base de datos', 500));
 
         $controller = new PsempresaController();
-        $response = $controller->showOnePsempresa(1, $psempresaMock);
+        $response = $controller->showOnePsempresa($psempresaMock,1);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
