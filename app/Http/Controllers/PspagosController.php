@@ -19,37 +19,46 @@ class PspagosController extends Controller
 	 
 	// Generic for tables, make repaces Pspagos  and Pspagos for  your tables  names 
 
-    public function showAllPspagos()
+    public function showAllPspagos(Pspagos $pspagos)
     {
 
 
         try {
 
-            return response()->json(Pspagos::all());
+            return response()->json($pspagos::all());
 
 
         } catch (\Exception $e) {
 
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
 
         }
 
 
     }
 
-    public function showOnePspagos($id)
+    public function showOnePspagos(Pspagos $pspagos, $id)
     {
 
 
         try {
 
-            return response()->json(Pspagos::find($id));
+            return response()->json($pspagos::find($id));
 
 
         } catch (\Exception $e) {
 
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
 
         }
 
@@ -58,7 +67,7 @@ class PspagosController extends Controller
 	
 	
 
-    public function create(Request $request)
+    public function create(Request $request, Psfechaspago $psfechaspago, Pspagos $pspagos)
     {
         try {
             if (!$request->has('fecha_pago')) {
@@ -66,7 +75,7 @@ class PspagosController extends Controller
             }
 
             // Buscar la fecha de pago
-            $fechaPago = Psfechaspago::find($request->get('id'));
+            $fechaPago = $psfechaspago::find($request->get('id'));
 
             if (!$fechaPago) {
                 return response()->json(['error' => 'Fecha de pago no encontrada'], 404);
@@ -86,7 +95,7 @@ class PspagosController extends Controller
             $fechaHora = Carbon::parse($request->get('fecha'));
 
             // Verificar si ya existe un pago registrado para esta fecha y préstamo
-            $pagoExistente = Pspagos::where('id_fecha_pago', $request->get('id'))
+            $pagoExistente = $pspagos::where('id_fecha_pago', $request->get('id'))
                 ->where('id_prestamo', $request->get('id_prestamo'))
                 ->exists();
 
@@ -95,7 +104,7 @@ class PspagosController extends Controller
             }
 
             // Registrar el pago de la cuota
-            Pspagos::create([
+            $pspagos::create([
                 'fecha_pago'      => $fechaPago->fecha_pago,
                 'id_cliente'      => $request->get('id_cliente'),
                 'id_usureg'       => $request->get('id_user'),
@@ -114,13 +123,13 @@ class PspagosController extends Controller
         }
     }
 
-    public function update($id,Request $request)
+    public function update($id,Request $request, Pspagos $pspagos)
     {
 
 
         try {
 
-            $data = Pspagos::findOrFail($id);
+            $data = $pspagos::findOrFail($id);
             $data->update($request->all());
 
             return response()->json($data, 200);
