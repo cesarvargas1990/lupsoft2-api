@@ -17,7 +17,7 @@ class PsempresaController extends Controller
 
     
 
-    public function showOnePsempresa($nid, PsEmpresa $psempresa)
+    public function showOnePsempresa(PsEmpresa $psempresa,$nid)
     {
 
  
