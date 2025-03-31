@@ -17,32 +17,38 @@ class PsempresaController extends Controller
 
     
 
-    public function showOnePsempresa($nid)
+    public function showOnePsempresa($nid, PsEmpresa $psempresa)
     {
 
  
         try {
 
-            $data = PsEmpresa::where('id',$nid);
+            $data = $psempresa::where('id',$nid);
             return response()->json($data->first());
 
 
         } catch (\Exception $e) {
 
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
+            
 
         }
 
 
     }
 	
-    public function update($id,Request $request)
+    public function update($id,Request $request, PsEmpresa $psempresa)
     {
 
 
         try {
 
-            $data = PsEmpresa::findOrFail($id);
+            $data = $psempresa::findOrFail($id);
             $request->request->add(['nitempresa' => $request->get('nit')]);
             $data->update($request->all());
 
@@ -51,7 +57,13 @@ class PsempresaController extends Controller
 
         } catch (\Exception $e) {
 
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
+            
 
         }
 
