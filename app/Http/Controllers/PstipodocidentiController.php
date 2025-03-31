@@ -15,37 +15,46 @@ class PstipodocidentiController extends Controller
         $this->middleware('auth');
     }
 
-    public function showAllPstipodocidenti()
+    public function showAllPstipodocidenti(Pstipodocidenti $pstipodocidenti)
     {
 
 
         try {
 
-            return response()->json(Pstipodocidenti::all());
+            return response()->json($pstipodocidenti::all());
 
 
         } catch (\Exception $e) {
 
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
 
         }
 
 
     }
 
-    public function showOnePstipodocidenti($id)
+    public function showOnePstipodocidenti(Pstipodocidenti $pstipodocidenti, $id)
     {
 
 
         try {
 
-            return response()->json(Pstipodocidenti::find($id));
+            return response()->json($pstipodocidenti::find($id));
 
 
         } catch (\Exception $e) {
 
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
 
         }
 
@@ -54,10 +63,10 @@ class PstipodocidentiController extends Controller
 	
 	
 
-    public function ShowPstipodocidenti()
+    public function ShowPstipodocidenti(Pstipodocidenti $pstipodocidenti)
     {
         try {
-            $data = Pstipodocidenti::select('codtipdocid as value', 'nomtipodocumento as label')
+            $data = $pstipodocidenti::select('codtipdocid as value', 'nomtipodocumento as label')
                 ->get();
 
             return response()->json($data);
@@ -71,32 +80,37 @@ class PstipodocidentiController extends Controller
         }
     }       
 
-    public function create(Request $request)
+    public function create(Request $request,Pstipodocidenti $pstipodocidenti)
     {
 
 
         try {
 
-            $data = Pstipodocidenti::create($request->all());
+            $data = $pstipodocidenti::create($request->all());
 
             return response()->json($data, 201);
 
         } catch (\Exception $e) {
 
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
 
         }
 
 
     }
 
-    public function update($id,Request $request)
+    public function update($id,Request $request,Pstipodocidenti $pstipodocidenti)
     {
 
 
         try {
 
-            $data = Pstipodocidenti::findOrFail($id);
+            $data = $pstipodocidenti::findOrFail($id);
             $data->update($request->all());
 
             return response()->json($data, 200);
@@ -104,25 +118,35 @@ class PstipodocidentiController extends Controller
 
         } catch (\Exception $e) {
 
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
 
         }
 
 
     }
 
-    public function delete($id)
+    public function delete($id, Psclientes $psclientes)
     {
 
 
         try {
 
-            Psclientes::findOrFail($id)->delete();
+            $psclientes::findOrFail($id)->delete();
             return response(array('message' => 'Deleted Successfully') , 200);
 
         } catch (\Exception $e) {
 
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
 
         }
 
