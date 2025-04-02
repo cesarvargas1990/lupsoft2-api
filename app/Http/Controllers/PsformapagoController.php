@@ -18,7 +18,7 @@ class PsformapagoController extends Controller
         $this->middleware('auth');
     }
 
-    public function ShowPsformapago($id_empresa)
+    public function ShowPsformapago($id_empresa,Psperiodopago $psperiodopago)
     {
         try {
             $data = Psperiodopago::get(['id as value', 'nomperiodopago as label']);
@@ -34,12 +34,12 @@ class PsformapagoController extends Controller
         }
     }
 
-    public function consultaTipoDocPlantilla(Request $request)
+    public function consultaTipoDocPlantilla(Request $request,Pstdocplant $psdocplant)
     {
         try {
             $id_empresa = $request->get('id_empresa');
 
-            $data = Pstdocplant::where('id_empresa', $id_empresa)->get();
+            $data = $psdocplant::where('id_empresa', $id_empresa)->get();
 
             return response()->json($data);
         } catch (\Exception $e) {
