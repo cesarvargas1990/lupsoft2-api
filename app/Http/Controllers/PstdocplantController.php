@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Pstdocplant;
-
 use Illuminate\Http\Request;
-
 use DB;
 
 class PstdocplantController extends Controller
@@ -14,51 +12,40 @@ class PstdocplantController extends Controller
     { 
         $this->middleware('auth');
     }
-	
-	// Generic for tables, make repaces Pstdocplant  and pstdocplant for  your tables  names 
 
-    public function showAllPstdocplant()
+    public function showAllPstdocplant(Pstdocplant $pstdocplant)
     {
-
-
         try {
-
-            return response()->json(Pstdocplant::all());
-
-
+            return response()->json($pstdocplant::all());
         } catch (\Exception $e) {
 
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
-
+            return response([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
-
-
     }
 
-    public function showOnePstdocplant($id)
+    public function showOnePstdocplant($id,Pstdocplant $pstdocplant)
     {
-
-
         try {
-
-            return response()->json(Pstdocplant::find($id));
-
-
+            return response()->json($pstdocplant::find($id));
         } catch (\Exception $e) {
-
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
-
+            return response([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
-
-
     }
 	
-	public function ShowPstdocplant()
+	public function ShowPstdocplant(Pstdocplant $pstdocplant)
     {
         try {
-            $data = Pstdocplant::select('codtipdocid as value', 'nomtipodocumento as label')->get();
-
+            $data = $pstdocplant::select('codtipdocid as value', 'nomtipodocumento as label')->get();
             return response()->json($data);
         } catch (\Exception $e) {
             return response()->json([
@@ -70,63 +57,52 @@ class PstdocplantController extends Controller
         }
     }
 
-    public function create(Request $request)
+    public function create(Request $request, Pstdocplant $pstdocplant)
     {
-
-
         try {
-
-            $data = Pstdocplant::create($request->all());
-
+            $data = $pstdocplant::create($request->all());
             return response()->json($data, 201);
-
         } catch (\Exception $e) {
-
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
-
+            return response([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
-
-
     }
 
-    public function update($id,Request $request)
+    public function update($id,Request $request, Pstdocplant $pstdocplant)
     {
-
-
         try {
-
-            $data = Pstdocplant::findOrFail($id);
+            $data = $pstdocplant::findOrFail($id);
             $data->update($request->all());
-
             return response()->json($data, 200);
-
-
         } catch (\Exception $e) {
-
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
-
+            return response([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
-
 
     }
 
-    public function delete($id)
+    public function delete($id,Pstdocplant $pstdocplant)
     {
 
-
         try {
-
-            Pstdocplant::findOrFail($id)->delete();
+            $pstdocplant::findOrFail($id)->delete();
             return response(array('message' => 'Deleted Successfully') , 200);
-
         } catch (\Exception $e) {
 
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
-
+            return response([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
-
-
-    }
-	
-	
+    }	
 }
