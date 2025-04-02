@@ -68,19 +68,19 @@ class PstdocplantControllerTest extends TestCase
         $this->assertEquals(404, $response->getStatusCode());
     }
 
-    // public function test_show_select_pstdocplant_returns_data()
-    // {
-    //     $mock = Mockery::mock(Pstdocplant::class);
-    //     $mock->shouldReceive('select')->with(['codtipdocid as value', 'nomtipodocumento as label'])->andReturnSelf();
-    //     $mock->shouldReceive('get')->andReturn([
-    //         ['value' => 'DOC01', 'label' => 'Cédula']
-    //     ]);
+    public function test_show_select_pstdocplant_returns_data()
+    {
+        $mock = Mockery::mock(Pstdocplant::class);
+        $mock->shouldReceive('select')->with('codtipdocid as value', 'nomtipodocumento as label')->andReturnSelf();
+        $mock->shouldReceive('get')->andReturn([
+            ['value' => 'DOC01', 'label' => 'Cédula']
+        ]);
 
-    //     $controller = new PstdocplantController();
-    //     $response = $controller->ShowPstdocplant($mock);
+        $controller = new PstdocplantController();
+        $response = $controller->ShowPstdocplant($mock);
 
-    //     $this->assertEquals(200, $response->getStatusCode());
-    // }
+        $this->assertEquals(200, $response->getStatusCode());
+    }
 
     public function test_show_select_pstdocplant_handles_exception()
     {
