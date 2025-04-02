@@ -15,48 +15,44 @@ class PsperiodopagoController extends Controller
         $this->middleware('auth');
     }
 
-    public function showAllPsperiodopago()
+    public function showAllPsperiodopago(Psperiodopago $psperiodopago)
     {
 
-
         try {
-
-            return response()->json(Psperiodopago::all());
-
-
+            return response()->json($psperiodopago::all());
         } catch (\Exception $e) {
 
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
-
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
 
 
     }
 
-    public function showOnePsperiodopago($id)
+    public function showOnePsperiodopago($id,Psperiodopago $psperiodopago)
     {
 
-
         try {
-
-            return response()->json(Psperiodopago::find($id));
-
-
+            return response()->json($psperiodopago::find($id));
         } catch (\Exception $e) {
-
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
-
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
-
 
     }
 	
-	public function ShowPsperiodopago()
+	public function ShowPsperiodopago(Psperiodopago $psperiodopago)
     {
         try {
-            $data = Psperiodopago::select('id as value', 'nomperiodopago as label')->get();
-
+            $data = $psperiodopago::select('id as value', 'nomperiodopago as label')->get();
             return response()->json($data);
         } catch (\Exception $e) {
             return response()->json([
@@ -68,65 +64,55 @@ class PsperiodopagoController extends Controller
         }
     }
 
-    public function create(Request $request)
+    public function create(Request $request,Psperiodopago $psperiodopago)
     {
 
 
         try {
-
-            $data = Psperiodopago::create($request->all());
-
+            $data = $psperiodopago::create($request->all());
             return response()->json($data, 201);
-
         } catch (\Exception $e) {
-
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
-
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
-
 
     }
 
-    public function update($id,Request $request)
+    public function update($id,Request $request,Psperiodopago $psperiodopago)
     {
-
-
         try {
-
-            $data = Psperiodopago::findOrFail($id);
+            $data = $psperiodopago::findOrFail($id);
             $data->update($request->all());
-
             return response()->json($data, 200);
 
-
         } catch (\Exception $e) {
-
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
-
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
-
 
     }
 
-    public function delete($id)
+    public function delete($id,Psperiodopago $psperiodopago)
     {
-
-
         try {
-
-            Psperiodopago::findOrFail($id)->delete();
+            $psperiodopago::findOrFail($id)->delete();
             return response(array('message' => 'Deleted Successfully') , 200);
-
         } catch (\Exception $e) {
-
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
-
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
 
-
     }
-
-  
-	
-	
 }

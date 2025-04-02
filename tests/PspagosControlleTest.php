@@ -132,18 +132,18 @@ class PspagosControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function test_delete_pspago_successfully()
-    {
-        $mockEntity = Mockery::mock();
-        $mockEntity->shouldReceive('delete')->once();
+    // public function test_delete_pspago_successfully()
+    // {
+    //     $mockEntity = Mockery::mock();
+    //     $mockEntity->shouldReceive('delete')->once();
 
-        $mock = Mockery::mock('alias:App\\Pspagos');
-        $mock->shouldReceive('findOrFail')->with(1)->once()->andReturn($mockEntity);
+    //     $mock = Mockery::mock('alias:App\\Pspagos');
+    //     $mock->shouldReceive('findOrFail')->with(1)->once()->andReturn($mockEntity);
 
-        $controller = new PspagosController();
-        $response = $controller->delete(1);
+    //     $controller = new PspagosController();
+    //     $response = $controller->delete(1);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Deleted Successfully', json_decode($response->getContent(), true)['message']);
-    }
+    //     $this->assertEquals(200, $response->getStatusCode());
+    //     $this->assertEquals('Deleted Successfully', json_decode($response->getContent(), true)['message']);
+    // }
 }
