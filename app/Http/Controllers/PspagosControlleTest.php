@@ -23,6 +23,14 @@ class PspagosControllerTest extends TestCase
         parent::tearDown();
     }
 
+    public function test_controller_applies_auth_middleware()
+    {
+        $mockController = Mockery::mock(PspagosController::class)->makePartial();
+        $mockController->shouldReceive('middleware')->once()->with('auth')->andReturnNull();
+        $mockController->__construct();
+        $this->assertTrue(true);
+    }
+
     public function test_show_all_pspagos_successfully()
     {
         $mock = Mockery::mock(Pspagos::class);
