@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Psdocadjuntos;
-
 use Illuminate\Http\Request;
-
 use DB;
 
 class PsdocadjuntosController extends Controller
@@ -15,32 +13,27 @@ class PsdocadjuntosController extends Controller
         $this->middleware('auth');
     }
 	
-	// Generic for tables, make repaces Pstdocadjuntos  and Pstdocadjuntos for  your tables  names 
-
-    public function showAllPstdocadjuntos()
+    public function showAllPstdocadjuntos(Psdocadjuntos $psdocadjuntos)
     {
 
-
         try { 
-
-            return response()->json(Psdocadjuntos::all());
-
-
+            return response()->json($psdocadjuntos::all());
         } catch (\Exception $e) {
-
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', 'application/json');
-
+            return response([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
 
 
     }
 
-    public function showOnePsdocadjuntos($id)
+    public function showOnePsdocadjuntos($id,Psdocadjuntos $psdocadjuntos)
     {
         try {
-            $data = Psdocadjuntos::where('id_cliente', $id)->get();
-
+            $data = $psdocadjuntos::where('id_cliente', $id)->get();
             return response()->json($data);
         } catch (\Exception $e) {
             return response([
@@ -52,65 +45,52 @@ class PsdocadjuntosController extends Controller
         }
     }
 	
-	
 
-    public function create(Request $request)
+    public function create(Request $request, Psdocadjuntos $psdocadjuntos)
     {
 
-
         try {
-
-            $data = Psdocadjuntos::create($request->all());
-
+            $data = $psdocadjuntos::create($request->all());
             return response()->json($data, 201);
-
         } catch (\Exception $e) {
-
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
-
+            return response([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
-
-
     }
 
-    public function update($id,Request $request)
+    public function update($id,Request $request, Psdocadjuntos $psdocadjuntos)
     {
-
-
         try {
-
-            $data = Psdocadjuntos::findOrFail($id);
+            $data = $psdocadjuntos::findOrFail($id);
             $data->update($request->all());
-
             return response()->json($data, 200);
-
-
         } catch (\Exception $e) {
-
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
-
+            return response([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
-
-
     }
 
-    public function delete($id)
+    public function delete($id, Psdocadjuntos $psdocadjuntos)
     {
-
-
         try {
-
-            Psdocadjuntos::findOrFail($id)->delete();
+            $psdocadjuntos::findOrFail($id)->delete();
             return response(array('message' => 'Deleted Successfully') , 200);
-
         } catch (\Exception $e) {
-
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
-
+            return response([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
         }
-
-
     }
-	
 	
 }
