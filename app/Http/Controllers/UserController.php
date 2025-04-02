@@ -23,9 +23,9 @@ class UserController extends Controller
      *
      * @return Response
      */
-    public function profile()
+    public function profile(Auth $auth)
     {
-        return response()->json(['user' => Auth::user()], 200);
+        return response()->json(['user' => $auth::user()], 200);
     }
 
     /**
@@ -33,9 +33,9 @@ class UserController extends Controller
      *
      * @return Response
      */
-    public function allUsers()
+    public function allUsers(User $user)
     {
-         return response()->json(['users' =>  User::all()], 200);
+         return response()->json(['users' =>  $user::all()], 200);
     }
 
     /**
@@ -43,10 +43,10 @@ class UserController extends Controller
      *
      * @return Response
      */
-    public function singleUser($id)
+    public function singleUser($id, User $user)
     {
         try {
-            $user = User::findOrFail($id);
+            $user = $user::findOrFail($id);
 
             return response()->json(['user' => $user], 200);
 
@@ -57,10 +57,10 @@ class UserController extends Controller
 
     }
 	
-    public function getUsers($id)
+    public function getUsers($id, User $user)
     {
         try {
-            $data = User::select('id as value', 'name as label')
+            $data = $user::select('id as value', 'name as label')
                         ->where('id_user', $id)
                         ->get();
             if ($data->isEmpty()) {

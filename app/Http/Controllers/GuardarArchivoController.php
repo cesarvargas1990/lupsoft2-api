@@ -19,49 +19,49 @@ class GuardarArchivoController extends Controller
     }
 
     public function guardarArchivoAdjunto(Request $request)
-{
-    $tdoc = $request->get('id_tdocadjunto');
-    $id_empresa = $request->get('id_empresa');
-    $id_cliente = $request->get('id_cliente');
-    $id_usuario = $request->get('id_usuario');
-    $customFilename = $request->get('filename');
-    $path = $request->get('path');
+	{
+		$tdoc = $request->get('id_tdocadjunto');
+		$id_empresa = $request->get('id_empresa');
+		$id_cliente = $request->get('id_cliente');
+		$id_usuario = $request->get('id_usuario');
+		$customFilename = $request->get('filename');
+		$path = $request->get('path');
 
-    if (!$request->has('image')) {
-        return $this->responseRequestError('File not found');
-    }
+		if (!$request->has('image')) {
+			return $this->responseRequestError('File not found');
+		}
 
-    $imageData = $request->get('image');
+		$imageData = $request->get('image');
 
-    // Determinar la extensión del archivo
-    $extension = $this->obtenerExtensionArchivo($imageData);
+		// Determinar la extensión del archivo
+		$extension = $this->obtenerExtensionArchivo($imageData);
 
-    // Definir el nombre del archivo
-    $archivoAdjunto = $tdoc ? "{$tdoc}-" . time() . ".{$extension}" : $customFilename;
-    $filePath = $path . $archivoAdjunto;
+		// Definir el nombre del archivo
+		$archivoAdjunto = $tdoc ? "{$tdoc}-" . time() . ".{$extension}" : $customFilename;
+		$filePath = $path . $archivoAdjunto;
 
-    // Decodificar el archivo
-    $data = $this->decodificarArchivoBase64($imageData, $extension);
+		// Decodificar el archivo
+		$data = $this->decodificarArchivoBase64($imageData, $extension);
 
-    // Guardar el archivo
-    if (!file_put_contents($filePath, $data)) {
-        return $this->responseRequestError('Cannot upload file');
-    }
+		// Guardar el archivo
+		if (!file_put_contents($filePath, $data)) {
+			return $this->responseRequestError('Cannot upload file');
+		}
 
-    // Si hay un tipo de documento, guardar en la base de datos
-    if (!empty($tdoc)) {
-        DB::table('psdocadjuntos')->insertGetId([
-            'rutaadjunto' => $filePath,
-            'id_tdocadjunto' => $tdoc,
-            'nombrearchivo' => $archivoAdjunto,
-            'id_usu_cargarch' => $id_usuario,
-            'id_cliente' => $id_cliente,
-            'id_empresa' => $id_empresa
-        ]);
-    }
+		// Si hay un tipo de documento, guardar en la base de datos
+		if (!empty($tdoc)) {
+			DB::table('psdocadjuntos')->insertGetId([
+				'rutaadjunto' => $filePath,
+				'id_tdocadjunto' => $tdoc,
+				'nombrearchivo' => $archivoAdjunto,
+				'id_usu_cargarch' => $id_usuario,
+				'id_cliente' => $id_cliente,
+				'id_empresa' => $id_empresa
+			]);
+		}
 
-    return $this->responseRequestSuccess($filePath);
-}
+		return $this->responseRequestSuccess($filePath);
+	}
 
 	/**
 	 * Obtiene la extensión del archivo a partir del contenido en base64.

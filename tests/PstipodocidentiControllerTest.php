@@ -33,6 +33,25 @@ class PstipodocidentiControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
+    public function test_show_all_pstipodocidenti_handles_exception()
+    {
+        $mock = Mockery::mock(Pstipodocidenti::class);
+        $mock->shouldReceive('all')
+            ->once()
+            ->andThrow(new \Exception('Error al obtener documentos', 500));
+
+        $controller = new PstipodocidentiController();
+        $response = $controller->showAllPstipodocidenti($mock);
+
+        $this->assertEquals(404, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertEquals('Error al obtener documentos', $data['message']);
+        $this->assertEquals(500, $data['errorCode']);
+        $this->assertArrayHasKey('lineError', $data);
+        $this->assertArrayHasKey('file', $data);
+    }
+
     public function test_show_one_pstipodocidenti_returns_correct_data()
     {
         $mock = Mockery::mock(Pstipodocidenti::class);
@@ -95,6 +114,8 @@ class PstipodocidentiControllerTest extends TestCase
         $this->assertEquals(201, $response->getStatusCode());
     }
 
+   
+
     public function test_update_pstipodocidenti_successfully()
     {
         $request = new Request(['nomtipodocumento' => 'Pasaporte']);
@@ -111,6 +132,29 @@ class PstipodocidentiControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
+
+
+    public function test_update_pstipodocidenti_handles_exception()
+    {
+        $request = new Request(['nomtipodocumento' => 'Nuevo Nombre']);
+
+        $mock = Mockery::mock(Pstipodocidenti::class);
+        $mock->shouldReceive('findOrFail')
+            ->with(1)
+            ->once()
+            ->andThrow(new \Exception('Error actualizando', 500));
+
+        $controller = new PstipodocidentiController();
+        $response = $controller->update(1, $request, $mock);
+
+        $this->assertEquals(404, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertEquals('Error actualizando', $data['message']);
+        $this->assertEquals(500, $data['errorCode']);
+        $this->assertArrayHasKey('lineError', $data);
+        $this->assertArrayHasKey('file', $data);
+    }
 
 
     public function test_show_one_pstipodocidenti_handles_exception()
@@ -143,4 +187,39 @@ class PstipodocidentiControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
     }
+
+    public function test_delete_pstipodocidenti_successfully()
+    {
+        $mockEntity = Mockery::mock();
+        $mockEntity->shouldReceive('delete')->once()->andReturnTrue();
+
+        $mockPsclientes = Mockery::mock('App\\Http\\Controllers\\Psclientes');
+        $mockPsclientes->shouldReceive('findOrFail')->with(1)->once()->andReturn($mockEntity);
+
+        $controller = new PstipodocidentiController();
+        $response = $controller->delete(1, $mockPsclientes);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('Deleted Successfully', json_decode($response->getContent(), true)['message']);
+    }
+
+    public function test_delete_pstipodocidenti_handles_exception()
+    {
+        $mockPsclientes = Mockery::mock('App\\Http\\Controllers\\Psclientes');
+        $mockPsclientes->shouldReceive('findOrFail')->with(999)->once()->andThrow(new \Exception('Error eliminando', 500));
+
+        $controller = new PstipodocidentiController();
+        $response = $controller->delete(999, $mockPsclientes);
+
+        $this->assertEquals(404, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertEquals('Error eliminando', $data['message']);
+        $this->assertEquals(500, $data['errorCode']);
+        $this->assertArrayHasKey('lineError', $data);
+        $this->assertArrayHasKey('file', $data);
+    }
+
+    
+
 }
