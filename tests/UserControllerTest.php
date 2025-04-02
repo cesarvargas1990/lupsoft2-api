@@ -22,17 +22,16 @@ class UserControllerTest extends TestCase
         parent::tearDown();
     }
 
-    // public function test_profile_returns_authenticated_user()
-    // {
-    //     $mockAuth = Mockery::mock('alias:Illuminate\\Support\\Facades\\Auth');
-    //     $mockAuth->shouldReceive('user')->once()->andReturn(['id' => 1, 'name' => 'Test User']);
+    public function test_profile_returns_authenticated_user()
+    {
+        Auth::shouldReceive('user')->once()->andReturn(['id' => 1, 'name' => 'Test User']);
 
-    //     $controller = new UserController();
-    //     $response = $controller->profile($mockAuth);
+        $controller = new UserController();
+        $response = $controller->profile(new Auth);
 
-    //     $this->assertEquals(200, $response->getStatusCode());
-    //     $this->assertEquals(['user' => ['id' => 1, 'name' => 'Test User']], json_decode($response->getContent(), true));
-    // }
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(['user' => ['id' => 1, 'name' => 'Test User']], json_decode($response->getContent(), true));
+    }
 
     public function test_all_users_returns_user_list()
     {
@@ -74,22 +73,8 @@ class UserControllerTest extends TestCase
         $this->assertEquals(['message' => 'user not found!'], json_decode($response->getContent(), true));
     }
 
-    // public function test_get_users_returns_transformed_data()
-    // {
-    //     $mockUser = Mockery::mock(User::class);
-    //     $mockUser->shouldReceive('select')->with(['id as value', 'name as label'])->andReturnSelf();
-    //     $mockUser->shouldReceive('where')->with('id_user', 1)->andReturnSelf();
-    //     $mockUser->shouldReceive('get')->andReturn(collect([
-    //         ['value' => 1, 'label' => 'Test User']
-    //     ]));
+    
 
-    //     $controller = new UserController();
-    //     $response = $controller->getUsers(1, $mockUser);
-
-    //     $this->assertEquals(200, $response->getStatusCode());
-    //     $data = json_decode($response->getContent(), true);
-    //     $this->assertEquals('Test User', $data[0]['label']);
-    // }
 
     public function test_get_users_returns_404_if_empty()
     {
