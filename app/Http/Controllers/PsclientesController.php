@@ -18,7 +18,7 @@ class PsclientesController extends Controller
         $this->middleware('auth');
     }
 
-    public function showAllPsclientes($id_empresa)
+    public function showAllPsclientes($id_empresa, Psclientes $psclientes)
     {
         try {
             
@@ -40,7 +40,7 @@ class PsclientesController extends Controller
         }
     }
 
-    public function showOnePsclientes($id)
+    public function showOnePsclientes($id, Psclientes $psclientes)
     {
         try {
             $data = Psclientes::find($id);
@@ -62,7 +62,7 @@ class PsclientesController extends Controller
     }
     
 	
-	public function ShowPsclientes($id_empresa) {
+	public function ShowPsclientes($id_empresa, Psclientes $psclientes) {
         try {
           
             $data = Psclientes::select('id as value', 'nomcliente as label')
@@ -84,7 +84,7 @@ class PsclientesController extends Controller
         }
     }
 
-    public function create(Request $request)
+    public function create(Request $request, Psclientes $psclientes)
     {
 
  
@@ -111,14 +111,19 @@ class PsclientesController extends Controller
 
         } catch (\Exception $e) {
 
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
 
         }
 
 
     }
 
-    public function update($id,Request $request)
+    public function update($id,Request $request, Psclientes $psclientes)
     {
 
 
@@ -146,28 +151,38 @@ class PsclientesController extends Controller
 
         } catch (\Exception $e) {
 
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
 
         }
 
 
     }
 
-    public function delete($id)
+    public function delete($id, Psclientes $psclientes, Psprestamos $psprestamos, Pspagos $pspagos, Psfechaspago $psfechaspago)
     {
 
 
         try {
 
-            Psclientes::findOrFail($id)->update(['ind_estado'=>0]);
-            Psprestamos::where(['id_cliente'=>$id])->update(['ind_estado'=>0]);
-            Pspagos::where(['id_cliente' =>$id])->update(['ind_estado'=>0]);
-            Psfechaspago::where(['id_cliente' =>$id])->update(['ind_estado'=>0]);
+            $psclientes::findOrFail($id)->update(['ind_estado'=>0]);
+            $psprestamos::where(['id_cliente'=>$id])->update(['ind_estado'=>0]);
+            $pspagos::where(['id_cliente' =>$id])->update(['ind_estado'=>0]);
+            $psfechaspago::where(['id_cliente' =>$id])->update(['ind_estado'=>0]);
             return response(array('message' => 'Deleted Successfully') , 200);
 
         } catch (\Exception $e) {
 
-            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
 
         }
 
