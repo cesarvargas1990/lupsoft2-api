@@ -22,29 +22,34 @@ class PsformapagoControllerTest extends TestCase
         parent::tearDown();
     }
 
-    // public function test_show_psformapago_returns_data()
-    // {
-    //     $mock = Mockery::mock('alias:' . Psperiodopago::class);
-    //     $mock->shouldReceive('get')->with(['id as value', 'nomperiodopago as label'])->andReturn([
-    //         ['value' => 1, 'label' => 'Mensual']
-    //     ]);
+    public function test_show_psformapago_returns_data()
+    {
+        $mock = Mockery::mock(Psperiodopago::class);
+        $mock->shouldReceive('get')->with(['id as value', 'nomperiodopago as label'])->andReturn([
+            ['value' => 1, 'label' => 'Mensual']
+        ]);
 
-    //     $controller = new PsformapagoController();
-    //     $response = $controller->ShowPsformapago(1, new Psperiodopago());
+        $controller = new PsformapagoController();
+        $response = $controller->ShowPsformapago(1, new Psperiodopago());
 
-    //     $this->assertEquals(200, $response->getStatusCode());
-    // }
+        $this->assertEquals(200, $response->getStatusCode());
+    }
 
-    // public function test_show_psformapago_handles_exception()
-    // {
-    //     $mock = Mockery::mock('alias:' . Psperiodopago::class);
-    //     $mock->shouldReceive('get')->andThrow(new \Exception('DB Error', 500));
 
-    //     $controller = new PsformapagoController();
-    //     $response = $controller->ShowPsformapago(1, new Psperiodopago());
-
-    //     $this->assertEquals(404, $response->getStatusCode());
-    // }
+    public function test_show_psformapago_handles_exception()
+    {
+        // Mock del alias para interceptar Psperiodopago::get()
+        $mock = Mockery::mock(Psperiodopago::class);
+        $mock->shouldReceive('get')
+            ->andThrow(new \Exception('DB Error', 500));
+        $controller = new PsformapagoController();
+        $response = $controller->ShowPsformapago(1, $mock);
+        $this->assertEquals(404, $response->getStatusCode());
+        $data = json_decode($response->getContent(), true);
+        $this->assertEquals('DB Error', $data['message']);
+        $this->assertEquals(500, $data['errorCode']);
+    }
+ 
 
     public function test_consulta_tipo_doc_plantilla_returns_data()
     {
@@ -74,4 +79,6 @@ class PsformapagoControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
     }
+
+    
 }

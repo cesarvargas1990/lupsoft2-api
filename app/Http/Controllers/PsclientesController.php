@@ -62,7 +62,7 @@ class PsclientesController extends Controller
     }
     
 	
-	public function ShowPsclientes($id_empresa, Psclientes $psclientes) {
+	public function ShowPsclientes (Psclientes $psclientes, $id_empresa) {
         try {
           
             $data = Psclientes::select('id as value', 'nomcliente as label')

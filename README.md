@@ -43,4 +43,4 @@
   -Dsonar.projectKey=psoft2 \
   -Dsonar.sources=. \
   -Dsonar.host.url=http://localhost:9000 \
-  -Dsonar.login=sqp_2e8c1844cc6de892496c03f25cc7a525f127d80d ```
+  -Dsonar.login=sqp_cbb58fffd1e50726a877df78dd122245e708823e ```

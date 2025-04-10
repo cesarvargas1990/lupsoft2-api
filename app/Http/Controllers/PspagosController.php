@@ -144,13 +144,13 @@ class PspagosController extends Controller
 
     }
 
-    public function delete($id)
+    public function delete($id,Pspagos $pspagos)
     {
 
 
         try {
 
-            Pspagos::findOrFail($id)->delete();
+            $pspagos::findOrFail($id)->delete();
             return response(array('message' => 'Deleted Successfully') , 200);
 
         } catch (\Exception $e) {
@@ -161,6 +161,8 @@ class PspagosController extends Controller
 
 
     }
+
+    
 	
 	
 }
