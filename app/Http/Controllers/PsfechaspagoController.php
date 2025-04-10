@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Traits\General\calculadoraCuotasPrestamosTrait;
 use App\Psfechaspago;
-
+use App\Psclientes;
 
 use Illuminate\Http\Request;
 
@@ -21,10 +21,10 @@ class PsfechaspagoController extends Controller
 	 
 	// Generic for tables, make repaces Psfechaspago  and Psfechaspago for  your tables  names 
 
-    public function showAllPsfechaspago($id_prestamo) {
+    public function showAllPsfechaspago($id_prestamo,PsFechasPago $psfechaspago) {
         try {
             // Obtener las fechas de pago con su respectivo préstamo
-            $fechasPago = PsFechasPago::where('id_prestamo', $id_prestamo)
+            $fechasPago = $psfechaspago::where('id_prestamo', $id_prestamo)
                 ->with(['prestamo.cliente', 'pagos' => function ($query) {
                     $query->where('ind_abonocapital', 0);
                 }])
@@ -56,13 +56,13 @@ class PsfechaspagoController extends Controller
         }
     }
 
-    public function showOnePsfechaspago($id)
+    public function showOnePsfechaspago($id, Psfechaspago $psfechaspago)
     {
 
 
         try {
 
-            return response()->json(Psfechaspago::find($id));
+            return response()->json($psfechaspago::find($id));
 
 
         } catch (\Exception $e) {
@@ -76,13 +76,13 @@ class PsfechaspagoController extends Controller
 	
 	
 
-    public function create(Request $request)
+    public function create(Request $request,Psfechaspago $psfechaspago)
     {
 
 
         try {
 
-            $data = Psfechaspago::create($request->all());
+            $data = $psfechaspago::create($request->all());
 
             return response()->json($data, 201);
 
@@ -95,13 +95,13 @@ class PsfechaspagoController extends Controller
 
     }
 
-    public function update($id,Request $request)
+    public function update($id,Request $request,Psfechaspago $psfechaspago)
     {
 
 
         try {
 
-            $data = Psfechaspago::findOrFail($id);
+            $data = $psfechaspago::findOrFail($id);
             $data->update($request->all());
 
             return response()->json($data, 200);
@@ -116,13 +116,13 @@ class PsfechaspagoController extends Controller
 
     }
 
-    public function delete($id)
+    public function delete($id,Psfechaspago $psfechaspago)
     {
 
 
         try {
 
-            Psfechaspago::findOrFail($id)->delete();
+            $psfechaspago::findOrFail($id)->delete();
             return response(array('message' => 'Deleted Successfully') , 200);
 
         } catch (\Exception $e) {
