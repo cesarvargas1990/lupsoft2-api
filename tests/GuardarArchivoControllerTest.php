@@ -33,7 +33,6 @@ class GuardarArchivoControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('error', json_decode($response->getContent(), true)['status']);
     }
-
     
 
     

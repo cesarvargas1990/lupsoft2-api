@@ -22,7 +22,7 @@ class PsclientesController extends Controller
     {
         try {
             
-            $data = Psclientes::where('id_empresa', $id_empresa)
+            $data = $psclientes::where('id_empresa', $id_empresa)
                             ->where('ind_estado', 1)
                             ->get();
                             
@@ -43,7 +43,7 @@ class PsclientesController extends Controller
     public function showOnePsclientes($id, Psclientes $psclientes)
     {
         try {
-            $data = Psclientes::find($id);
+            $data = $psclientes::find($id);
     
             if (!$data) {
                 return response()->json(['message' => 'Cliente no encontrado'], 404);
@@ -65,7 +65,7 @@ class PsclientesController extends Controller
 	public function ShowPsclientes (Psclientes $psclientes, $id_empresa) {
         try {
           
-            $data = Psclientes::select('id as value', 'nomcliente as label')
+            $data = $psclientes::select('id as value', 'nomcliente as label')
                              ->where('id_empresa', $id_empresa)
                              ->where('ind_estado', 1)
                              ->get();
@@ -86,81 +86,56 @@ class PsclientesController extends Controller
 
     public function create(Request $request, Psclientes $psclientes)
     {
-
- 
         try {
-
             if ($request->has('fch_expdocumento')) {
                 $fch_expdocumento = $request->get('fch_expdocumento');
                 $request->request->remove('fch_expdocumento');
-
-                
                 $request->request->add(['fch_expdocumento' => substr($fch_expdocumento,0,10) ]);
             }
- 
             if ($request->has('fch_nacimiento')) {
                 $fch_nacimiento = $request->get('fch_nacimiento');
                 $request->request->remove('fch_nacimiento');
-                
                 $request->request->add(['fch_nacimiento' => substr($fch_nacimiento,0,10)  ]);
             }
             $request->request->add(['ind_estado'=> 1] );
-            $data = Psclientes::create($request->all());
-
+            $data = $psclientes::create($request->all());
             return response()->json($data, 201);
-
         } catch (\Exception $e) {
-
             return response()->json([
                 "message" => $e->getMessage(),
                 'errorCode' => $e->getCode(),
                 'lineError' => $e->getLine(),
                 'file' => $e->getFile()
             ], 404);
-
         }
-
-
     }
 
     public function update($id,Request $request, Psclientes $psclientes)
     {
-
-
         if ($request->has('fch_expdocumento')) {
             $fch_expdocumento = $request->get('fch_expdocumento');
             $request->request->remove('fch_expdocumento');
-
-            
             $request->request->add(['fch_expdocumento' => substr($fch_expdocumento,0,10) ]);
         }
-
         if ($request->has('fch_nacimiento')) {
             $fch_nacimiento = $request->get('fch_nacimiento');
             $request->request->remove('fch_nacimiento');
             $request->request->add(['fch_nacimiento' => substr($fch_nacimiento,0,10)  ]);
         }
-
         try {
 
-            $data = Psclientes::findOrFail($id);
+            $data = $psclientes::findOrFail($id);
             $data->update($request->all());
-
             return response()->json($data, 200);
 
-
         } catch (\Exception $e) {
-
             return response()->json([
                 "message" => $e->getMessage(),
                 'errorCode' => $e->getCode(),
                 'lineError' => $e->getLine(),
                 'file' => $e->getFile()
             ], 404);
-
         }
-
-
     }
 
     public function delete($id, Psclientes $psclientes, Psprestamos $psprestamos, Pspagos $pspagos, Psfechaspago $psfechaspago)
