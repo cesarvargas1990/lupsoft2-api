@@ -18,14 +18,14 @@
 </tr>
 <tr>
 <td>Interest Rate:*</td>
-<td><label>
+<td><label for="rate">
 <input type="irate" name="rate"/>
 </label> </td>
 <td>%</td>
 </tr>
 <tr>
 <td>Down payment:</td>
-<td><label>
+<td><label for="payment">
 <input type="downpayment" name="payment" />
 </label> </td>
 </tr>

@@ -145,7 +145,6 @@ trait prestamosTrait
             $end_tag = 'QRT-->';
             if (preg_match_all('/' . preg_quote($start_tag) . '(.*?)' . preg_quote($end_tag) . '/s', $renderTemplate, $matches)) {
                 $matches = ($matches[1]);
-                $id_empresa = $id_empresa;
                 $renderTemplate = $this->renderTemplate2($matches,$psQueryTabla,$id_empresa,$idprestamo,$renderTemplate);
             }
             $html_templates[] = array(
