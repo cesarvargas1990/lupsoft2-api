@@ -66,7 +66,7 @@ class GuardarArchivoController extends Controller
 	/**
 	 * Obtiene la extensión del archivo a partir del contenido en base64.
 	 */
-	private function obtenerExtensionArchivo($imageData)
+	public function obtenerExtensionArchivo($imageData)
 	{
 	    try {
 	        $mimeType = mime_content_type($imageData);
@@ -152,7 +152,7 @@ class GuardarArchivoController extends Controller
 	/**
 	 * Decodifica el archivo base64 dependiendo de su tipo.
 	 */
-	private function decodificarArchivoBase64($imageData, $extension)
+	public function decodificarArchivoBase64($imageData, $extension)
 	{
 	    $pattern = ($extension === "pdf") ? '#^data:application/\w+;base64,#i' : '#^data:image/\w+;base64,#i';
 	    return base64_decode(preg_replace($pattern, '', $imageData));
@@ -167,14 +167,14 @@ class GuardarArchivoController extends Controller
     
     
 
-    protected function responseRequestSuccess($ret)
+    public function responseRequestSuccess($ret)
     {
         return response()->json(['status' => 'success', 'data' => $ret], 200)
             ->header('Access-Control-Allow-Origin', '*')
             ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     }
 
-    protected function responseRequestError($message = 'Bad request', $statusCode = 200)
+    public function responseRequestError($message = 'Bad request', $statusCode = 200)
     {
         return response()->json(['status' => 'error', 'error' => $message], $statusCode)
             ->header('Access-Control-Allow-Origin', '*')

@@ -46,8 +46,7 @@ class PrestamosController extends Controller
 
         } catch (\Exception $e) {
 
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', APPLICATION_JSON);
+            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
 
         }
 
@@ -56,53 +55,30 @@ class PrestamosController extends Controller
 
     public function listadoPrestamos (Request $request) {
 
-
-
-
         try {
 
-
             $id_empresa = $request->get('id_empresa'); 
-
             $data = $this->consultaListadoPrestamos($id_empresa);
-
-        
             return response()->json($data);
-
-
         } catch (\Exception $e) {
 
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', APPLICATION_JSON);
+            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
 
         }
-
-
 
     }
 
     public function test(Request $request)
     {
-
-
         try {
-
             $datos = $this->calcularCuota($request);
             return response()->json($datos);
-
-
         } catch (\Exception $e) {
-
-            echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-                ->header('Content-Type', APPLICATION_JSON);
-
+            return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
         }
-
-
     }
 
     public function generarVariablesPlantillas($id_empresa) {
- 
         $qry = $this->obtenerQryListadoPrestamos($id_empresa);
         $qry .= ' limit 1';
         $binds = [
@@ -122,8 +98,6 @@ class PrestamosController extends Controller
         } else {
             return null;
         }
-        
-
     }
 
         
@@ -166,24 +140,18 @@ class PrestamosController extends Controller
 	        $datos = $this->renderTemplate($request, $psQueryTabla ,$pstdocplant);
 	        return response()->json($datos);
 	    } catch (\Exception $e) {
-	        echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-	            ->header('Content-Type', APPLICATION_JSON);
+	        return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
 	    }
 	}
   
 
 
     public function eliminarPrestamo ($id_prestamo) {
-
         if ($id_prestamo != "") {
-            
             DB::table('psprestamos')->where('id' ,'=',$id_prestamo)->update(['ind_estado'=>0]);
             DB::table('psfechaspago')->where('id_prestamo' ,'=',$id_prestamo)->update(['ind_estado'=>0]);
             DB::table('pspagos')->where('id_prestamo' ,'=',$id_prestamo)->update(['ind_estado'=>0]);
         }
-        
-        
-        
     }
   
     public function totalprestado($id_empresa)
@@ -198,8 +166,7 @@ class PrestamosController extends Controller
 
       } catch (\Exception $e) {
 
-          echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-              ->header('Content-Type', APPLICATION_JSON);
+        return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
 
       }
     }
@@ -218,8 +185,7 @@ class PrestamosController extends Controller
 
       } catch (\Exception $e) {
 
-          echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-              ->header('Content-Type', APPLICATION_JSON);
+        return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
 
       }
     }
@@ -234,8 +200,7 @@ class PrestamosController extends Controller
 
       } catch (\Exception $e) {
 
-          echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-              ->header('Content-Type', APPLICATION_JSON);
+        return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
 
       }
     }
@@ -249,8 +214,7 @@ class PrestamosController extends Controller
 
       } catch (\Exception $e) {
 
-          echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-              ->header('Content-Type', APPLICATION_JSON);
+        return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
 
       }
     }
@@ -268,8 +232,7 @@ class PrestamosController extends Controller
 
       } catch (\Exception $e) {
 
-          echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-              ->header('Content-Type', APPLICATION_JSON);
+        return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
 
       }
     }
@@ -287,8 +250,7 @@ class PrestamosController extends Controller
         ];
         return response()->json($data);
       } catch (\Exception $e) {
-        echo response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404)
-          ->header('Content-Type', APPLICATION_JSON);
+        return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
       }
     }
 
