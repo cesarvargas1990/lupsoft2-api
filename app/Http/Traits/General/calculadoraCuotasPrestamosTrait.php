@@ -30,14 +30,14 @@ trait calculadoraCuotasPrestamosTrait
     }
     
 
-    function SpanishDate($FechaStamp)
+    function spanishDate($fechaStamp)
     {
-        $ano = date('Y',$FechaStamp);
-        $mes = date('n',$FechaStamp);
-        $dia = date('d',$FechaStamp);
+        $ano = date('Y',$fechaStamp);
+        $mes = date('n',$fechaStamp);
+        $dia = date('d',$fechaStamp);
 
         $interes =
-        $diasemana = date('w',$FechaStamp);
+        $diasemana = date('w',$fechaStamp);
         $diassemanaN= array("Domingo","Lunes","Martes","Miércoles",
             "Jueves","Viernes","Sábado");
         $mesesN=array(1=>"Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio",

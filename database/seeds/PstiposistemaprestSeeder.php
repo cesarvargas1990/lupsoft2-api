@@ -61,7 +61,7 @@ for (\$x = 1; \$x <= \$numcuotas; \$x++) {
     // Agregar fila a la tabla
     \$tabla['tabla'][] = array(
         'indice' => \$x,
-        'fecha_cuota_descrpcion' => \$this->SpanishDate(strtotime(\$fechas[\$x])),
+        'fecha_cuota_descrpcion' => \$this->spanishDate(strtotime(\$fechas[\$x])),
         'fecha' => \$fechas[\$x],
         'interes' => \$int,
         'amortizacion' => \$amort,
@@ -129,7 +129,7 @@ for (\$x = 1; \$x <= \$numcuotas; \$x++) {
         // Cuotas intermedias: solo intereses
         \$tabla['tabla'][] = [
             'indice' => \$x,
-            'fecha_cuota_descrpcion' => \$this->SpanishDate(strtotime(\$fechas[\$x])),
+            'fecha_cuota_descrpcion' => \$this->spanishDate(strtotime(\$fechas[\$x])),
             'fecha' => \$fechas[\$x],
             'interes' => \$interesFijo,
             'amortizacion' => 0,
@@ -141,7 +141,7 @@ for (\$x = 1; \$x <= \$numcuotas; \$x++) {
         // Última cuota: intereses + capital
         \$tabla['tabla'][] = [
             'indice' => \$x,
-            'fecha_cuota_descrpcion' => \$this->SpanishDate(strtotime(\$fechas[\$x])),
+            'fecha_cuota_descrpcion' => \$this->spanishDate(strtotime(\$fechas[\$x])),
             'fecha' => \$fechas[\$x],
             'interes' => \$interesFijo,
             'amortizacion' => \$valorpres,

@@ -34,12 +34,12 @@ class PsfechaspagoController extends Controller
                         'id' => $fp->id,
                         'id_cliente' => $fp->prestamo->id_cliente,
                         'id_prestamo' => $fp->prestamo->id,
-                        'fecha_pago' => $this->SpanishDate(strtotime($fp->fecha_pago)),
+                        'fecha_pago' => $this->spanishDate(strtotime($fp->fecha_pago)),
                         'valcuota' => number_format($fp->valor_cuota, 2),
                         'valtotal' => number_format($fp->valor_pagar, 2),
                         'id_fecha_pago' => optional($fp->pagos->first())->id_fecha_pago ?? null,
                         'fecha_realpago' => optional($fp->pagos->first())->fecha_realpago 
-                            ? $this->SpanishDate(strtotime($fp->pagos->first()->fecha_realpago)) 
+                            ? $this->spanishDate(strtotime($fp->pagos->first()->fecha_realpago)) 
                             : 'Pendiente de pago',
                     ];
                 });

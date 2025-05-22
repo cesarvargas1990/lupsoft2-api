@@ -30,7 +30,7 @@ class PsfechaspagoControllerTest extends TestCase
 
         $controller = Mockery::mock(PsfechaspagoController::class)->makePartial();
         $controller->shouldAllowMockingProtectedMethods();
-        $controller->shouldReceive('SpanishDate')->andReturn('01 Enero 2024');
+        $controller->shouldReceive('spanishDate')->andReturn('01 Enero 2024');
 
         $response = $controller->showAllPsfechaspago(1, $mockModel);
 
