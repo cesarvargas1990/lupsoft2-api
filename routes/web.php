@@ -25,7 +25,7 @@ define('PSPAGOS_ROUTE', 'pspagos/{id}');
 define('PSFECHASPAGO_ROUTE', 'psfechaspago/{id}');
 define('PSTDOCPLANT_ID', 'pstdocplant/{id}');
 define('PSTDOCADJUNTOS_ID', 'pstdocadjuntos/{id}');
-$router->get('/upload/documentosAdjuntos/{filepath:.*}', function (Request $request, $filepath) use ($router) {
+$router->get('/upload/documentosAdjuntos/{filepath:.*}', function ($filepath) {
     dd("Ruta alcanzada: $filepath");
     $file = storage_path("app/$filepath");
 
