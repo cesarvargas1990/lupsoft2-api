@@ -47,25 +47,14 @@ trait calculadoraCuotasPrestamosTrait
     }
 
     function adicionarFechas ($date,$id_periodo_pago) {
-        switch ($id_periodo_pago) {
-            case 1:
-                return $date->add(new \DateInterval('P1D'))->format('Y-m-d');
-                break;
-            case 2:
-                return $date->add(new \DateInterval('P7D'))->format('Y-m-d');
-                break;
-            case 3:
-                return $date->add(new \DateInterval('P15D'))->format('Y-m-d');
-                break;
-            case 4:
-                return $date->add(new \DateInterval('P1M'))->format('Y-m-d');
-                break;
-            case 5:
-                return $date->add(new \DateInterval('P1Y'))->format('Y-m-d');
-                break;
-            default:
-                break;
-        }
+        $array = [
+            1 => 'P1D',
+            2 => 'P7D',
+            3 => 'P15D',
+            4 => 'P1M',
+            5 => 'P1Y'
+        ];
+        return $date->add(new \DateInterval($array[$id_periodo_pago]))->format('Y-m-d');
     }
 
 }
