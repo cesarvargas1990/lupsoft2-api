@@ -81,7 +81,6 @@ class PspagosController extends Controller
             }
             // Obtener valores necesarios
             $valorCuota = $fechaPago->valor_pagar;
-            $valorPago = $request->get('valor_pago', 0);
 
             // Validar que el valor de la cuota sea correcto
             if (empty($valorCuota) || $valorCuota <= 0) {

@@ -78,29 +78,29 @@ class PrestamosController extends Controller
         }
     }
 
-    public function generarVariablesPlantillas($id_empresa) {
-        $qry = $this->obtenerQryListadoPrestamos($id_empresa);
-        $qry .= ' limit 1';
-        $binds = [
-            'id_empresa' => $id_empresa
-        ];
-        $data = DB::select($qry,$binds);
-        if (count($data)> 0) {
-            $array = json_decode(json_encode($data[0]), true);
-            $data = [];
-            foreach (array_keys($array) as $key=>$value) {
-                    $data[] = [
-                        'title' => $value,
-                        'content' => '{'.$value.'}'
-                    ];
-            }
-            return $data;
-        } else {
-            return null;
-        }
-    }
+    public function generarVariablesPlantillas($id_empresa)
+    {
+        $qry = $this->obtenerQryListadoPrestamos($id_empresa) . ' LIMIT 1';
+        $binds = ['id_empresa' => $id_empresa];
+        $data = DB::select($qry, $binds);
 
-        
+        if (!empty($data)) {
+            // Convertimos el primer registro a array asociativo
+            $array = json_decode(json_encode($data[0]), true);
+            $variables = [];
+
+            foreach (array_keys($array) as $campo) {
+                $variables[] = [
+                    'title' => $campo,
+                    'content' => '{' . $campo . '}'
+                ];
+            }
+
+            return $variables;
+        }
+
+        return null;
+    }
 
     public function prestamosCliente(Request $request) {
       $id_empresa = $request->get('id_empresa');
