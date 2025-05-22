@@ -182,18 +182,21 @@ trait prestamosTrait
         return $pstdocplant::where('id_empresa', $id_empresa)->get();
     }
   
-    public function setVars($query,$variables,$str,$str2){
-        foreach ($query as $val1) {
-            $cadenaReemplazada = '';
-            $cadenaSubstituir = $str;
-            foreach ($variables as $key => $val2) {
-                $valorAsubstituir = $val1->{$val2};
-                $queSeVaASubstituir = '[' . $val2 . ']';
-                $cadenaSubstituir = str_replace($queSeVaASubstituir, (string) $valorAsubstituir, $cadenaSubstituir);
+    public function setVars($query, $variables, $template, $acumulador)
+    {
+        foreach ($query as $objeto) {
+            $cadenaReemplazada = $template;
+
+            foreach ($variables as $variable) {
+                $valor = $objeto->{$variable};
+                $placeholder = '[' . $variable . ']';
+                $cadenaReemplazada = str_replace($placeholder, (string) $valor, $cadenaReemplazada);
             }
-            $str2 .= $cadenaSubstituir;
+
+            $acumulador .= $cadenaReemplazada;
         }
-        return $str2;
+
+        return $acumulador;
     }
     public function getCapitalPrestado($id_empresa, Psprestamos $psPrestamos)
     {

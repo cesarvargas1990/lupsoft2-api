@@ -38,15 +38,14 @@ trait menuPrincipalTrait
     {
         try {
         
-            $acciones = $psusuperfil::where('id_user', $idUser)
+            return $psusuperfil::where('id_user', $idUser)
                                 ->join('psperfilaccion as p', 'psusperfil.id_perfil', '=', 'p.id_perfil')
                                 ->select('p.nom_accion')
                                 ->get()
                                 ->pluck('nom_accion')
                                 ->toArray();
 
-        
-            return $acciones;
+    
 
         } catch (\Exception $e) {
             return response()->json([
