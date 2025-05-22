@@ -15,7 +15,7 @@ class Controller extends BaseController
     protected function respondWithToken($token, Psempresa $psempresa, Psusuperfil $psusuperfil)
     {
 
-		$empresa = $psempresa::where('id',Auth::user()->id_empresa);
+        $empresa = $psempresa::where('id', Auth::user()->id_empresa);
         return response()->json([
             'id' => Auth::user()->id,
             'name' => Auth::user()->name,
@@ -24,10 +24,10 @@ class Controller extends BaseController
             'token_type' => 'bearer',
             'user' => Auth::user(),
             'status' => 'success',
-            'menu_usuario' => $this->hacerMenuUsuario( $this->getDatosMenu(Auth::user()->id)),
-            'permisos'=> $this->perfilAccion(Auth::user()->id, $psusuperfil),
+            'menu_usuario' => $this->hacerMenuUsuario($this->getDatosMenu(Auth::user()->id)),
+            'permisos' => $this->perfilAccion(Auth::user()->id, $psusuperfil),
             'expires_in' => Auth::factory()->getTTL() * 60,
-            'time'=> time(),
+            'time' => time(),
             'is_admin' => Auth::user()->is_admin,
             'id_empresa' => Auth::user()->id_empresa,
             'id_empresa' => $empresa->first()->id
