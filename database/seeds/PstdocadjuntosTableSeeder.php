@@ -11,26 +11,24 @@ class PstdocadjuntosTableSeeder extends Seeder
      */
     public function run()
     {
-		
-		
 
 
-         DB::table('pstdocadjuntos')->insert([
-            
-           
-			'nombre' => 'Cedula ciudadania',
+
+
+        DB::table('pstdocadjuntos')->insert([
+
+
+            'nombre' => 'Cedula ciudadania',
             'id_empresa' => '1'
-            
+
         ]);
 
         DB::table('pstdocadjuntos')->insert([
-            
-           
-			'nombre' => 'Foto',
+
+
+            'nombre' => 'Foto',
             'id_empresa' => '1'
-            
+
         ]);
-		
-	
     }
 }

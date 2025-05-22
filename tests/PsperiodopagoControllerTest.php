@@ -49,7 +49,7 @@ class PsperiodopagoControllerTest extends TestCase
     public function test_show_one_returns_data()
     {
         $mock = Mockery::mock(Psperiodopago::class);
-        $mock->shouldReceive('find')->with(1)->andReturn((object)['id' => 1]);
+        $mock->shouldReceive('find')->with(1)->andReturn((object) ['id' => 1]);
 
         $controller = new PsperiodopagoController();
         $response = $controller->showOnePsperiodopago(1, $mock);
@@ -98,7 +98,7 @@ class PsperiodopagoControllerTest extends TestCase
         $request = new Request(['nombre' => 'Trimestral']);
 
         $mock = Mockery::mock(Psperiodopago::class);
-        $mock->shouldReceive('create')->with($request->all())->andReturn((object)['id' => 3]);
+        $mock->shouldReceive('create')->with($request->all())->andReturn((object) ['id' => 3]);
 
         $controller = new PsperiodopagoController();
         $response = $controller->create($request, $mock);

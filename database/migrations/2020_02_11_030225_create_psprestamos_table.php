@@ -13,7 +13,7 @@ class CreatePsprestamosTable extends Migration
      */
     public function up()
     {
-		
+
 
         Schema::create('psprestamos', function (Blueprint $table) {
             $table->increments('id');
@@ -21,13 +21,13 @@ class CreatePsprestamosTable extends Migration
             $table->foreign('id_cliente')->references('id')->on('psclientes');
             $table->unsignedInteger('id_tipo_sistema_prest');
             $table->foreign('id_tipo_sistema_prest')->references('id')->on('pstiposistemaprest');
-			$table->double('valorpres', 13,2)->nullable();
-			$table->integer('numcuotas')->nullable();
-			$table->unsignedInteger('id_periodo_pago')->nullable();
-			$table->double('valcuota', 13,2)->nullable();
-			$table->double('porcint', 10,2)->nullable();
-			$table->date('fec_inicial')->nullable();
-			$table->unsignedInteger('id_cobrador');
+            $table->double('valorpres', 13, 2)->nullable();
+            $table->integer('numcuotas')->nullable();
+            $table->unsignedInteger('id_periodo_pago')->nullable();
+            $table->double('valcuota', 13, 2)->nullable();
+            $table->double('porcint', 10, 2)->nullable();
+            $table->date('fec_inicial')->nullable();
+            $table->unsignedInteger('id_cobrador');
             $table->foreign('id_cobrador')->references('id')->on('users');
             $table->unsignedInteger('id_usureg');
             $table->foreign('id_usureg')->references('id')->on('users');

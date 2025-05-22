@@ -17,7 +17,7 @@ class CreatePsquerytablaTable extends Migration
 
         Schema::create('psquerytabla', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('codigo');            
+            $table->integer('codigo');
             $table->text('sql');
             $table->unsignedInteger('id_empresa');
             $table->foreign('id_empresa')->references('id')->on('psempresa');

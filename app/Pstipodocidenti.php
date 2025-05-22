@@ -17,16 +17,13 @@ class Pstipodocidenti extends Model
      *
      * @var array
      */
-	 
-	 protected $table = 'pstipodocidenti';
-	 
-    protected $hidden = [
 
-    ];
+    protected $table = 'pstipodocidenti';
+
+    protected $hidden = [];
 
     public function clientes()
     {
         return $this->hasMany(Psclientes::class, 'id_tipo_docid');
     }
-
 }

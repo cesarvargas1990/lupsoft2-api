@@ -69,7 +69,7 @@ class CuotasControllerTest extends TestCase
 
         // Verificar que la respuesta sea un JsonResponse
         $this->assertInstanceOf(JsonResponse::class, $response);
-        
+
         // Decodificar la respuesta JSON
         $responseData = json_decode($response->getContent(), true);
 
@@ -95,13 +95,13 @@ class CuotasControllerTest extends TestCase
             ->andThrow(new \Exception('Error en la base de datos', 500));
 
         $response = $mockController->calcularCuotas($request, $mockPsperiodopago, $mockPspstiposistemaprest);
-        
+
         // Asegurar que la respuesta es un JsonResponse
         $this->assertInstanceOf(JsonResponse::class, $response);
-        
+
         // Decodificar la respuesta JSON
         $responseData = json_decode($response->getContent(), true);
-        
+
         // Verificar los datos de error
         $this->assertEquals('Error en la base de datos', $responseData['message']);
         $this->assertEquals(500, $responseData['errorCode']);
@@ -122,22 +122,22 @@ class CuotasControllerTest extends TestCase
 
         // Simular el modelo Psperiodopago
         $mockPsperiodopago = Mockery::mock(Psperiodopago::class);
-        $mockPsperiodopago->shouldReceive('find')->with(1)->andReturn((object)['id' => 1]);
+        $mockPsperiodopago->shouldReceive('find')->with(1)->andReturn((object) ['id' => 1]);
 
         // Simular el modelo Pspstiposistemaprest
         $mockPspstiposistemaprest = Mockery::mock(Pspstiposistemaprest::class);
         $mockPspstiposistemaprest->shouldReceive('where')->with('codtipsistemap', 'SIS01')->andReturnSelf();
-        $mockPspstiposistemaprest->shouldReceive('first')->andReturn((object)['formula' => 'return ["cuota" => 10000, "tabla_formato" => []];']);
+        $mockPspstiposistemaprest->shouldReceive('first')->andReturn((object) ['formula' => 'return ["cuota" => 10000, "tabla_formato" => []];']);
 
         // Simular el comportamiento del controlador
         $mockController = Mockery::mock(CuotasController::class)->makePartial();
-        
+
         // Ejecutar la función
         $response = $mockController->calcularCuotas2($request, $mockPsperiodopago, $mockPspstiposistemaprest);
 
         // Verificar que la respuesta sea un JsonResponse
         $this->assertInstanceOf(JsonResponse::class, $response);
-        
+
         // Decodificar la respuesta JSON
         $responseData = json_decode($response->getContent(), true);
 
@@ -163,13 +163,13 @@ class CuotasControllerTest extends TestCase
             ->andThrow(new \Exception('Error en la base de datos', 500));
 
         $response = $mockController->calcularCuotas2($request, $mockPsperiodopago, $mockPspstiposistemaprest);
-        
+
         // Asegurar que la respuesta es un JsonResponse
         $this->assertInstanceOf(JsonResponse::class, $response);
-        
+
         // Decodificar la respuesta JSON
         $responseData = json_decode($response->getContent(), true);
-        
+
         // Verificar los datos de error
         $this->assertEquals(404, $response->getStatusCode());
         $this->assertEquals('Error en la base de datos', $responseData['message']);
@@ -177,6 +177,4 @@ class CuotasControllerTest extends TestCase
         $this->assertArrayHasKey('lineError', $responseData);
         $this->assertArrayHasKey('file', $responseData);
     }
-
-    
 }

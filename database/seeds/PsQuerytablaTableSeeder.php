@@ -27,7 +27,7 @@ class PsQuerytablaTableSeeder extends Seeder
             ORDER BY 
                 numero_cuota ASC",
             'id_empresa' => '1'
-          
+
         ]);
     }
 }

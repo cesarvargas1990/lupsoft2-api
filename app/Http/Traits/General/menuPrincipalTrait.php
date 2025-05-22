@@ -31,22 +31,18 @@ trait menuPrincipalTrait
             'id' => $idUser
 
         ));
-
     }
 
     public function perfilAccion($idUser, Psusuperfil $psusuperfil)
     {
         try {
-        
+
             return $psusuperfil::where('id_user', $idUser)
-                                ->join('psperfilaccion as p', 'psusperfil.id_perfil', '=', 'p.id_perfil')
-                                ->select('p.nom_accion')
-                                ->get()
-                                ->pluck('nom_accion')
-                                ->toArray();
-
-    
-
+                ->join('psperfilaccion as p', 'psusperfil.id_perfil', '=', 'p.id_perfil')
+                ->select('p.nom_accion')
+                ->get()
+                ->pluck('nom_accion')
+                ->toArray();
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -73,7 +69,6 @@ trait menuPrincipalTrait
                         'route' => $element->ruta,
                         'children' => $this->hacerMenuUsuario($datosMenu, $element->id)
                     );
-
                 } else {
                     $menuItem = array(
                         'id' => $element->id,
@@ -87,8 +82,4 @@ trait menuPrincipalTrait
         }
         return $temp_array;
     }
-
-    
-
-
 }

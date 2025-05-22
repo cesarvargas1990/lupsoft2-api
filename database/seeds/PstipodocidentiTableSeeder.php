@@ -11,23 +11,21 @@ class PstipodocidentiTableSeeder extends Seeder
      */
     public function run()
     {
-		
-		
 
-         DB::table('pstipodocidenti')->insert([
-		 
+
+
+        DB::table('pstipodocidenti')->insert([
+
             'codtipdocid' => 1,
             'nomtipodocumento' => 'Cédula',
-			
+
         ]);
-		
-		  DB::table('pstipodocidenti')->insert([
-		 
+
+        DB::table('pstipodocidenti')->insert([
+
             'codtipdocid' => 2,
             'nomtipodocumento' => 'Nit',
-			
+
         ]);
-		
-		
     }
 }

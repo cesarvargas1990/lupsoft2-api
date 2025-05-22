@@ -13,11 +13,11 @@ use DB;
 class PspagosController extends Controller
 {
     public function __construct()
-    { 
+    {
         $this->middleware('auth');
     }
-	 
-	// Generic for tables, make repaces Pspagos  and Pspagos for  your tables  names 
+
+    // Generic for tables, make repaces Pspagos  and Pspagos for  your tables  names 
 
     public function showAllPspagos(Pspagos $pspagos)
     {
@@ -26,8 +26,6 @@ class PspagosController extends Controller
         try {
 
             return response()->json($pspagos::all());
-
-
         } catch (\Exception $e) {
 
             return response()->json([
@@ -36,10 +34,7 @@ class PspagosController extends Controller
                 'lineError' => $e->getLine(),
                 'file' => $e->getFile()
             ], 404);
-
         }
-
-
     }
 
     public function showOnePspagos(Pspagos $pspagos, $id)
@@ -49,8 +44,6 @@ class PspagosController extends Controller
         try {
 
             return response()->json($pspagos::find($id));
-
-
         } catch (\Exception $e) {
 
             return response()->json([
@@ -59,13 +52,10 @@ class PspagosController extends Controller
                 'lineError' => $e->getLine(),
                 'file' => $e->getFile()
             ], 404);
-
         }
-
-
     }
-	
-	
+
+
 
     public function create(Request $request, Psfechaspago $psfechaspago, Pspagos $pspagos)
     {
@@ -87,7 +77,7 @@ class PspagosController extends Controller
                 return response()->json(['error' => 'Valor de cuota inválido'], 400);
             }
             // Obtener la fecha actual
-           
+
             $fechaHora = Carbon::parse($request->get('fecha'));
 
             // Verificar si ya existe un pago registrado para esta fecha y préstamo
@@ -100,15 +90,15 @@ class PspagosController extends Controller
 
             // Registrar el pago de la cuota
             $pspagos::create([
-                'fecha_pago'      => $fechaPago->fecha_pago,
-                'id_cliente'      => $request->get('id_cliente'),
-                'id_usureg'       => $request->get('id_user'),
-                'id_empresa'      => $request->get('id_empresa'),
-                'fecha_realpago'  => $fechaHora,
-                'id_prestamo'     => $request->get('id_prestamo'),
-                'id_fecha_pago'   => $request->get('id'),
-                'valcuota'        => $valorCuota,
-                'ind_estado'      => 1,
+                'fecha_pago' => $fechaPago->fecha_pago,
+                'id_cliente' => $request->get('id_cliente'),
+                'id_usureg' => $request->get('id_user'),
+                'id_empresa' => $request->get('id_empresa'),
+                'fecha_realpago' => $fechaHora,
+                'id_prestamo' => $request->get('id_prestamo'),
+                'id_fecha_pago' => $request->get('id'),
+                'valcuota' => $valorCuota,
+                'ind_estado' => 1,
                 'ind_abonocapital' => 0
             ]);
             return response()->json(['success' => 'Pago registrado correctamente'], 201);
@@ -117,7 +107,7 @@ class PspagosController extends Controller
         }
     }
 
-    public function update($id,Request $request, Pspagos $pspagos)
+    public function update($id, Request $request, Pspagos $pspagos)
     {
 
 
@@ -127,36 +117,23 @@ class PspagosController extends Controller
             $data->update($request->all());
 
             return response()->json($data, 200);
-
-
         } catch (\Exception $e) {
 
             return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
-
         }
-
-
     }
 
-    public function delete($id,Pspagos $pspagos)
+    public function delete($id, Pspagos $pspagos)
     {
 
 
         try {
 
             $pspagos::findOrFail($id)->delete();
-            return response(array('message' => 'Deleted Successfully') , 200);
-
+            return response(array('message' => 'Deleted Successfully'), 200);
         } catch (\Exception $e) {
 
             return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
-
         }
-
-
     }
-
-    
-	
-	
 }

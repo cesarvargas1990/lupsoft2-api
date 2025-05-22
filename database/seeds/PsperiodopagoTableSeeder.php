@@ -11,48 +11,48 @@ class PsperiodopagoTableSeeder extends Seeder
      */
     public function run()
     {
-		
-		
 
-         DB::table('psperiodopago')->insert([
-            
-			'nomperiodopago' => 'Diario',
+
+
+        DB::table('psperiodopago')->insert([
+
+            'nomperiodopago' => 'Diario',
             'id_empresa' => '1'
-          
+
 
         ]);
-		
-		
-		DB::table('psperiodopago')->insert([
-          
-			'nomperiodopago' => 'Semanal',
+
+
+        DB::table('psperiodopago')->insert([
+
+            'nomperiodopago' => 'Semanal',
             'id_empresa' => '1'
-          
+
 
         ]);
-		
-		
-		DB::table('psperiodopago')->insert([
-           
-			'nomperiodopago' => 'Quincenal',
+
+
+        DB::table('psperiodopago')->insert([
+
+            'nomperiodopago' => 'Quincenal',
             'id_empresa' => '1'
-            
+
 
         ]);
-		
-		
-		DB::table('psperiodopago')->insert([
+
+
+        DB::table('psperiodopago')->insert([
             'nomperiodopago' => 'Mensual',
             'id_empresa' => '1'
-		
+
 
         ]);
-		
-		DB::table('psperiodopago')->insert([
-          
-			'nomperiodopago' => 'Anual',
+
+        DB::table('psperiodopago')->insert([
+
+            'nomperiodopago' => 'Anual',
             'id_empresa' => '1'
-           
+
 
 
         ]);

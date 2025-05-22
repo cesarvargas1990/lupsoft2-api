@@ -11,7 +11,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Psperiodopago extends Model
 {
-  
+
 
     /**
      * The attributes that are mass assignable.
@@ -20,19 +20,17 @@ class Psperiodopago extends Model
      */
 
 
-  
+
 
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
-	 
-	 protected $table = 'psperiodopago';
-	 
-    protected $hidden = [
 
-    ];
+    protected $table = 'psperiodopago';
+
+    protected $hidden = [];
 
     public function empresa()
     {
@@ -43,7 +41,4 @@ class Psperiodopago extends Model
     {
         return $this->hasMany(Psprestamos::class, 'id_periodo_pago');
     }
-
-
-
 }

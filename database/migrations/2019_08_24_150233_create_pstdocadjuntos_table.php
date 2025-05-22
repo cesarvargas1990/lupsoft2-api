@@ -15,10 +15,10 @@ class CreatePstdocadjuntosTable extends Migration
     {
         Schema::create('pstdocadjuntos', function (Blueprint $table) {
             $table->increments('id');
-			$table->string('nombre',100)->nullable();
-			$table->unsignedInteger('id_empresa');
+            $table->string('nombre', 100)->nullable();
+            $table->unsignedInteger('id_empresa');
             $table->foreign('id_empresa')->references('id')->on('psempresa');
-			
+
             $table->timestamps();
         });
     }

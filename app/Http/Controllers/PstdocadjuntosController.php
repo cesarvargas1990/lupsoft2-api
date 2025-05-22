@@ -27,7 +27,7 @@ class PstdocadjuntosController extends Controller
         }
     }
 
-    public function showOnePstdocadjuntos($id,Pstdocadjuntos $pstdocadjuntos)
+    public function showOnePstdocadjuntos($id, Pstdocadjuntos $pstdocadjuntos)
     {
         try {
             return response()->json($pstdocadjuntos::find($id));
@@ -40,8 +40,8 @@ class PstdocadjuntosController extends Controller
             ], 404);
         }
     }
-	
-	public function ShowPstdocadjuntos($id_empresa,Pstdocadjuntos $pstdocadjuntos)
+
+    public function ShowPstdocadjuntos($id_empresa, Pstdocadjuntos $pstdocadjuntos)
     {
         try {
             $data = $pstdocadjuntos::where('id_empresa', $id_empresa)
@@ -58,7 +58,7 @@ class PstdocadjuntosController extends Controller
         }
     }
 
-    public function create(Request $request,Pstdocadjuntos $pstdocadjuntos)
+    public function create(Request $request, Pstdocadjuntos $pstdocadjuntos)
     {
         try {
             $data = Pstdocadjuntos::create($request->all());
@@ -73,7 +73,7 @@ class PstdocadjuntosController extends Controller
         }
     }
 
-    public function update($id,Request $request,Pstdocadjuntos $pstdocadjuntos)
+    public function update($id, Request $request, Pstdocadjuntos $pstdocadjuntos)
     {
         try {
             $data = $pstdocadjuntos::findOrFail($id);
@@ -89,12 +89,11 @@ class PstdocadjuntosController extends Controller
         }
     }
 
-    public function delete($i,Pstdocadjuntos $pstdocadjuntos)
+    public function delete($i, Pstdocadjuntos $pstdocadjuntos)
     {
         try {
             $pstdocadjuntos::findOrFail($id)->delete();
-            return response(array('message' => 'Deleted Successfully') , 200);
-
+            return response(array('message' => 'Deleted Successfully'), 200);
         } catch (\Exception $e) {
             return response()->json([
                 "message" => $e->getMessage(),
@@ -104,5 +103,4 @@ class PstdocadjuntosController extends Controller
             ], 404);
         }
     }
-	
 }

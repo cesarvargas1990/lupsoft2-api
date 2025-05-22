@@ -49,7 +49,7 @@ class PstdocplantControllerTest extends TestCase
     public function test_show_one_pstdocplant_returns_data()
     {
         $mock = Mockery::mock(Pstdocplant::class);
-        $mock->shouldReceive('find')->with(1)->andReturn((object)['id' => 1]);
+        $mock->shouldReceive('find')->with(1)->andReturn((object) ['id' => 1]);
 
         $controller = new PstdocplantController();
         $response = $controller->showOnePstdocplant(1, $mock);
@@ -98,7 +98,7 @@ class PstdocplantControllerTest extends TestCase
         $request = new Request(['campo' => 'valor']);
 
         $mock = Mockery::mock(Pstdocplant::class);
-        $mock->shouldReceive('create')->with($request->all())->andReturn((object)['id' => 1]);
+        $mock->shouldReceive('create')->with($request->all())->andReturn((object) ['id' => 1]);
 
         $controller = new PstdocplantController();
         $response = $controller->create($request, $mock);

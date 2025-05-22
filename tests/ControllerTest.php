@@ -37,14 +37,14 @@ class ControllerTest extends TestCase
         // Simular el modelo PsEmpresa
         $mockPsempresa = Mockery::mock(PsEmpresa::class);
         $mockPsempresa->shouldReceive('where')->with('id', '1')->andReturnSelf();
-        $mockPsempresa->shouldReceive('first')->andReturn((object)['id' => 1]);
+        $mockPsempresa->shouldReceive('first')->andReturn((object) ['id' => 1]);
 
         // Simular el modelo Psusuperfil
         $mockPsusuperfil = Mockery::mock(Psusuperfil::class);
 
         // Simular los métodos del trait menuPrincipalTrait
         $mockController = Mockery::mock(Controller::class)->makePartial();
-        $mockController->shouldReceive('getDatosMenu')->with(1)->andReturn([(object)['id' => 1, 'nombre' => 'Dashboard', 'icono' => 'home', 'ruta' => '/dashboard', 'id_mpadre' => 0]]);
+        $mockController->shouldReceive('getDatosMenu')->with(1)->andReturn([(object) ['id' => 1, 'nombre' => 'Dashboard', 'icono' => 'home', 'ruta' => '/dashboard', 'id_mpadre' => 0]]);
         $mockController->shouldReceive('hacerMenuUsuario')->andReturn([
             [
                 'id' => 1,

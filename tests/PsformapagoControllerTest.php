@@ -49,7 +49,7 @@ class PsformapagoControllerTest extends TestCase
         $this->assertEquals('DB Error', $data['message']);
         $this->assertEquals(500, $data['errorCode']);
     }
- 
+
 
     public function test_consulta_tipo_doc_plantilla_returns_data()
     {
@@ -79,6 +79,4 @@ class PsformapagoControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
     }
-
-    
 }

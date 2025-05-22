@@ -17,7 +17,7 @@ class CreatePsperfilTable extends Migration
             $table->increments('id');
             $table->string('nombre');
             $table->string('ind_activo')->notNullable();
-			$table->unsignedInteger('id_empresa');
+            $table->unsignedInteger('id_empresa');
             $table->foreign('id_empresa')->references('id')->on('psempresa');
             $table->timestamps();
         });

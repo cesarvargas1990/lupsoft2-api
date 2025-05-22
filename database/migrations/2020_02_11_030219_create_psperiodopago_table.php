@@ -14,7 +14,7 @@ class CreatePsperiodopagoTable extends Migration
     public function up()
     {
 
-        
+
 
         Schema::create('psperiodopago', function (Blueprint $table) {
             $table->increments('id');

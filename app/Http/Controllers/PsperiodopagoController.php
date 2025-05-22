@@ -29,11 +29,9 @@ class PsperiodopagoController extends Controller
                 'file' => $e->getFile()
             ], 404);
         }
-
-
     }
 
-    public function showOnePsperiodopago($id,Psperiodopago $psperiodopago)
+    public function showOnePsperiodopago($id, Psperiodopago $psperiodopago)
     {
 
         try {
@@ -46,10 +44,9 @@ class PsperiodopagoController extends Controller
                 'file' => $e->getFile()
             ], 404);
         }
-
     }
-	
-	public function ShowPsperiodopago(Psperiodopago $psperiodopago)
+
+    public function ShowPsperiodopago(Psperiodopago $psperiodopago)
     {
         try {
             $data = $psperiodopago::select('id as value', 'nomperiodopago as label')->get();
@@ -64,7 +61,7 @@ class PsperiodopagoController extends Controller
         }
     }
 
-    public function create(Request $request,Psperiodopago $psperiodopago)
+    public function create(Request $request, Psperiodopago $psperiodopago)
     {
 
 
@@ -79,16 +76,14 @@ class PsperiodopagoController extends Controller
                 'file' => $e->getFile()
             ], 404);
         }
-
     }
 
-    public function update($id,Request $request,Psperiodopago $psperiodopago)
+    public function update($id, Request $request, Psperiodopago $psperiodopago)
     {
         try {
             $data = $psperiodopago::findOrFail($id);
             $data->update($request->all());
             return response()->json($data, 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 "message" => $e->getMessage(),
@@ -97,14 +92,13 @@ class PsperiodopagoController extends Controller
                 'file' => $e->getFile()
             ], 404);
         }
-
     }
 
-    public function delete($id,Psperiodopago $psperiodopago)
+    public function delete($id, Psperiodopago $psperiodopago)
     {
         try {
             $psperiodopago::findOrFail($id)->delete();
-            return response(array('message' => 'Deleted Successfully') , 200);
+            return response(array('message' => 'Deleted Successfully'), 200);
         } catch (\Exception $e) {
             return response()->json([
                 "message" => $e->getMessage(),
@@ -113,6 +107,5 @@ class PsperiodopagoController extends Controller
                 'file' => $e->getFile()
             ], 404);
         }
-
     }
 }

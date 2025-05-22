@@ -17,8 +17,8 @@ class CreatePsfechaspagoTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('id_prestamo');
             $table->foreign('id_prestamo')->references('id')->on('psprestamos');
-			$table->double('valor_cuota',13,2);
-			$table->double('valor_pagar',13,2);
+            $table->double('valor_cuota', 13, 2);
+            $table->double('valor_pagar', 13, 2);
             $table->date('fecha_pago');
             $table->integer('ind_renovar');
             $table->integer('ind_estado');

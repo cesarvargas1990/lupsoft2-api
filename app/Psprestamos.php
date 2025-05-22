@@ -19,29 +19,30 @@ class Psprestamos extends Model
      * @var array
      */
 
-  
+
 
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
-	 
-	 protected $table = 'psprestamos';
-	 
-    protected $hidden = [
 
-    ];
+    protected $table = 'psprestamos';
 
-    public function cliente() {
+    protected $hidden = [];
+
+    public function cliente()
+    {
         return $this->belongsTo(PsClientes::class, 'id_cliente', 'id');
     }
-    
-    public function fechasPago() {
+
+    public function fechasPago()
+    {
         return $this->hasMany(PsFechasPago::class, 'id_prestamo', 'id');
     }
-    
-    public function pagos() {
+
+    public function pagos()
+    {
         return $this->hasMany(PsPagos::class, 'id_prestamo', 'id');
     }
 
@@ -69,7 +70,4 @@ class Psprestamos extends Model
     {
         return $this->belongsTo(Pspstiposistemaprest::class, 'id_tiposistemaprest');
     }
-
-
-
 }

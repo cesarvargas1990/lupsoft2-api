@@ -6,16 +6,16 @@ use App\PsEmpresa;
 use App\Psusuperfil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use  App\User;
+use App\User;
 
 define('VALIDATE_REQUIRE', 'required|string');
 class AuthController extends Controller
 {
-    
-    
+
+
     public function register(Request $request)
     {
-        
+
         //validate incoming request
         $this->validate($request, [
             'name' => VALIDATE_REQUIRE,
@@ -34,7 +34,6 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => 'User Registration Failed!'], 409);
         }
-
     }
 
     public function login(Request $request, PsEmpresa $psempresa, Psusuperfil $psusuperfil)
@@ -44,10 +43,10 @@ class AuthController extends Controller
             'password' => VALIDATE_REQUIRE,
         ]);
         $credentials = $request->only(['email', 'password']);
-        if (! $token = Auth::attempt($credentials)) {
+        if (!$token = Auth::attempt($credentials)) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
-        return $this->respondWithToken($token,$psempresa,$psusuperfil);
+        return $this->respondWithToken($token, $psempresa, $psusuperfil);
     }
 
     public function logout(Request $request)
@@ -55,5 +54,4 @@ class AuthController extends Controller
         Auth::logout();
         return response()->json(['message' => 'Sesión cerrada correctamente'], 200);
     }
-    
 }

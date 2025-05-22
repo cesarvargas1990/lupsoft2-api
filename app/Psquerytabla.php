@@ -21,28 +21,22 @@ class Psquerytabla extends Model
 
 
 
-   
 
-    
+
+
 
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
-	 
-	 protected $table = 'psquerytabla';
-	 
-    protected $hidden = [
 
-    ];
+    protected $table = 'psquerytabla';
+
+    protected $hidden = [];
 
     public function empresa()
     {
         return $this->belongsTo(Psempresa::class, 'id_empresa');
     }
-
-
-
-
 }

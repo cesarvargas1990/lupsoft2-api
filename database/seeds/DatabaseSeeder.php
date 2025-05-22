@@ -11,21 +11,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-		
-		$this->call('PsempresaTableSeeder');
-		$this->call('UsersTableSeeder');
-		$this->call('PstipodocidentiTableSeeder');
-		$this->call('PsclientesTableSeeder');
-		$this->call('PsperfilTableSeeder');
-		$this->call('PsmenuTableSeeder');
-		$this->call('PsusperfilTableSeeder');
-		$this->call('PsperiodopagoTableSeeder');
-		$this->call('PstdocadjuntosTableSeeder');
-		$this->call('PstdocplantTableSeeder');
-		$this->call('PstiposistemaprestSeeder');
-		$this->call('PsperfilaccionTableSeeder');
-		$this->call('PsQuerytablaTableSeeder');
 
-
+        $this->call('PsempresaTableSeeder');
+        $this->call('UsersTableSeeder');
+        $this->call('PstipodocidentiTableSeeder');
+        $this->call('PsclientesTableSeeder');
+        $this->call('PsperfilTableSeeder');
+        $this->call('PsmenuTableSeeder');
+        $this->call('PsusperfilTableSeeder');
+        $this->call('PsperiodopagoTableSeeder');
+        $this->call('PstdocadjuntosTableSeeder');
+        $this->call('PstdocplantTableSeeder');
+        $this->call('PstiposistemaprestSeeder');
+        $this->call('PsperfilaccionTableSeeder');
+        $this->call('PsQuerytablaTableSeeder');
     }
 }

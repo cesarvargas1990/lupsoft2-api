@@ -18,18 +18,13 @@ class Pstdocadjuntos extends Model
      *
      * @var array
      */
-	 
-	protected $table = 'pstdocadjuntos';
-	 
-    protected $hidden = [
 
-    ];
+    protected $table = 'pstdocadjuntos';
+
+    protected $hidden = [];
 
     public function empresa()
     {
         return $this->belongsTo(Psempresa::class, 'id_empresa');
     }
-
-
-
 }

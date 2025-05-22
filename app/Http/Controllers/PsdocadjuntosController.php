@@ -9,13 +9,13 @@ use DB;
 class PsdocadjuntosController extends Controller
 {
     public function __construct()
-    { 
+    {
         $this->middleware('auth');
     }
-	
+
     public function showAllPstdocadjuntos(Psdocadjuntos $psdocadjuntos)
     {
-        try { 
+        try {
             return response()->json($psdocadjuntos::all());
         } catch (\Exception $e) {
             return response([
@@ -27,7 +27,7 @@ class PsdocadjuntosController extends Controller
         }
     }
 
-    public function showOnePsdocadjuntos($id,Psdocadjuntos $psdocadjuntos)
+    public function showOnePsdocadjuntos($id, Psdocadjuntos $psdocadjuntos)
     {
         try {
             $data = $psdocadjuntos::where('id_cliente', $id)->get();
@@ -41,7 +41,7 @@ class PsdocadjuntosController extends Controller
             ], 404);
         }
     }
-	
+
 
     public function create(Request $request, Psdocadjuntos $psdocadjuntos)
     {
@@ -58,7 +58,7 @@ class PsdocadjuntosController extends Controller
         }
     }
 
-    public function update($id,Request $request, Psdocadjuntos $psdocadjuntos)
+    public function update($id, Request $request, Psdocadjuntos $psdocadjuntos)
     {
         try {
             $data = $psdocadjuntos::findOrFail($id);
@@ -78,7 +78,7 @@ class PsdocadjuntosController extends Controller
     {
         try {
             $psdocadjuntos::findOrFail($id)->delete();
-            return response(array('message' => 'Deleted Successfully') , 200);
+            return response(array('message' => 'Deleted Successfully'), 200);
         } catch (\Exception $e) {
             return response([
                 "message" => $e->getMessage(),
@@ -88,5 +88,4 @@ class PsdocadjuntosController extends Controller
             ], 404);
         }
     }
-	
 }

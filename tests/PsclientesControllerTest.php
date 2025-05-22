@@ -44,7 +44,7 @@ class PsclientesControllerTest extends TestCase
         $mock->shouldReceive('where')->with('id_empresa', 1)->andReturnSelf();
         $mock->shouldReceive('where')->with('ind_estado', 1)->andReturnSelf();
         $mock->shouldReceive('get')->andReturn([['id' => 1]])
-        ->andThrow(new \Exception('DB failure', 500));
+            ->andThrow(new \Exception('DB failure', 500));
 
         $controller = new PsclientesController();
         $response = $controller->showAllPsclientes(1, $mock);
@@ -59,7 +59,7 @@ class PsclientesControllerTest extends TestCase
     public function test_show_one_psclientes_successfully()
     {
         $mock = Mockery::mock(Psclientes::class);
-        $mock->shouldReceive('find')->with(1)->andReturn((object)['id' => 1]);
+        $mock->shouldReceive('find')->with(1)->andReturn((object) ['id' => 1]);
 
         $controller = new PsclientesController();
         $response = $controller->showOnePsclientes(1, $mock);
@@ -98,7 +98,7 @@ class PsclientesControllerTest extends TestCase
         $mock->shouldReceive('select')->with('id as value', 'nomcliente as label')->andReturnSelf();
         $mock->shouldReceive('where')->with('id_empresa', 1)->andReturnSelf();
         $mock->shouldReceive('where')->with('ind_estado', 1)->andReturnSelf()
-        ->andThrow(new \Exception('DB failure', 500));
+            ->andThrow(new \Exception('DB failure', 500));
 
         $controller = new PsclientesController();
         $response = $controller->ShowPsclientes($mock, 1);
@@ -115,10 +115,10 @@ class PsclientesControllerTest extends TestCase
     {
         $mock = Mockery::mock(Psclientes::class);
         $mock->shouldReceive('find')
-        ->andThrow(new \Exception('DB failure', 500));
+            ->andThrow(new \Exception('DB failure', 500));
 
         $controller = new PsclientesController();
-        $response = $controller->showOnePsclientes(1,$mock);
+        $response = $controller->showOnePsclientes(1, $mock);
 
         $this->assertEquals(500, $response->getStatusCode());
 
@@ -215,7 +215,7 @@ class PsclientesControllerTest extends TestCase
         $this->assertEquals(500, $data['errorCode']);
     }
 
-   
+
 
     public function test_create_psclientes_exception()
     {
@@ -235,5 +235,4 @@ class PsclientesControllerTest extends TestCase
         $this->assertEquals('DB Error', $data['message']);
         $this->assertEquals(123, $data['errorCode']);
     }
-    
 }

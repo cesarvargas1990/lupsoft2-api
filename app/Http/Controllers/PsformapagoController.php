@@ -12,13 +12,13 @@ use DB;
 class PsformapagoController extends Controller
 {
 
-    
+
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    public function ShowPsformapago($id_empresa,Psperiodopago $psperiodopago)
+    public function ShowPsformapago($id_empresa, Psperiodopago $psperiodopago)
     {
         try {
             $data = $psperiodopago::get(['id as value', 'nomperiodopago as label']);
@@ -34,7 +34,7 @@ class PsformapagoController extends Controller
         }
     }
 
-    public function consultaTipoDocPlantilla(Request $request,Pstdocplant $psdocplant)
+    public function consultaTipoDocPlantilla(Request $request, Pstdocplant $psdocplant)
     {
         try {
             $id_empresa = $request->get('id_empresa');
@@ -51,5 +51,4 @@ class PsformapagoController extends Controller
             ], 404);
         }
     }
-	
 }

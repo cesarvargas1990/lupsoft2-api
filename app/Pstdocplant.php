@@ -20,30 +20,25 @@ class Pstdocplant extends Model
      */
 
     protected $fillable = [
-        
+
         'nombre',
         'plantilla_html',
         'id_empresa'
     ];
-  
+
 
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
-	 
-	 protected $table = 'pstdocplant';
-	 
-    protected $hidden = [
 
-    ];
+    protected $table = 'pstdocplant';
+
+    protected $hidden = [];
 
     public function empresa()
     {
         return $this->belongsTo(Psempresa::class, 'id_empresa');
     }
-
-
-
 }

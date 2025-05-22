@@ -11,14 +11,14 @@ class PsperfilTableSeeder extends Seeder
      */
     public function run()
     {
-         DB::table('psperfil')->insert([
+        DB::table('psperfil')->insert([
             'nombre' => 'Administrador',
-            'id_empresa'=>1,
+            'id_empresa' => 1,
             'ind_activo' => 1
         ]);
         DB::table('psperfil')->insert([
             'nombre' => 'Cobrador',
-            'id_empresa'=>1,
+            'id_empresa' => 1,
             'ind_activo' => 1
         ]);
     }

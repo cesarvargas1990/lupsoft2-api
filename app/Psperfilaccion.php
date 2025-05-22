@@ -1,7 +1,7 @@
 <?php
 
 namespace App;
- 
+
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,18 +23,14 @@ class Psperfilaccion extends Model
      */
 
 
-    protected $fillable = [
-	
-    ];
+    protected $fillable = [];
 
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
-    protected $hidden = [
-
-	];
+    protected $hidden = [];
 
     public function perfil()
     {
@@ -45,8 +41,4 @@ class Psperfilaccion extends Model
     {
         return $this->belongsTo(Psempresa::class, 'id_empresa');
     }
-
-
-
-
 }

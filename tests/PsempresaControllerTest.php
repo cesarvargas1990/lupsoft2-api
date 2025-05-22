@@ -32,7 +32,7 @@ class PsempresaControllerTest extends TestCase
 
     public function test_show_one_psempresa_returns_data_correctly()
     {
-        $empresa = (object)['id' => 1, 'nombre' => 'Empresa Demo'];
+        $empresa = (object) ['id' => 1, 'nombre' => 'Empresa Demo'];
 
         $psempresaMock = Mockery::mock(PsEmpresa::class);
         $psempresaMock->shouldReceive('where')
@@ -44,7 +44,7 @@ class PsempresaControllerTest extends TestCase
             ->andReturn($empresa);
 
         $controller = new PsempresaController();
-        $response = $controller->showOnePsempresa( $psempresaMock, 1);
+        $response = $controller->showOnePsempresa($psempresaMock, 1);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
@@ -61,7 +61,7 @@ class PsempresaControllerTest extends TestCase
             ->andThrow(new \Exception('Fallo en la base de datos', 500));
 
         $controller = new PsempresaController();
-        $response = $controller->showOnePsempresa($psempresaMock,1);
+        $response = $controller->showOnePsempresa($psempresaMock, 1);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);

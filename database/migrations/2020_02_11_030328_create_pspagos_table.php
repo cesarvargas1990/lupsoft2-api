@@ -13,7 +13,7 @@ class CreatePspagosTable extends Migration
      */
     public function up()
     {
-		
+
 
         Schema::create('pspagos', function (Blueprint $table) {
             $table->increments('id');
@@ -21,7 +21,7 @@ class CreatePspagosTable extends Migration
             $table->foreign('id_cliente')->references('id')->on('psclientes');
             $table->unsignedInteger('id_prestamo')->nullable();
             $table->foreign('id_prestamo')->references('id')->on('psprestamos');
-			$table->double('valcuota', 13,2)->nullable();
+            $table->double('valcuota', 13, 2)->nullable();
             $table->date('fecha_realpago')->nullable(); // fecha en que se realiza el pago
             $table->date('fecha_pago')->nullable(); // fecha que corresponde al pago (la fecha en la que debio haberse pagado)
             $table->unsignedInteger('id_usureg');
@@ -31,7 +31,7 @@ class CreatePspagosTable extends Migration
             $table->unsignedInteger('id_empresa');
             $table->foreign('id_empresa')->references('id')->on('psempresa');
             $table->integer('ind_estado')->nullable();
-			$table->integer('ind_abonocapital')->nullable();
+            $table->integer('ind_abonocapital')->nullable();
             $table->timestamps();
         });
     }

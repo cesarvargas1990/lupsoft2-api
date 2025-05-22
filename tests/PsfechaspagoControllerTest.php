@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Laravel\Lumen\Testing\TestCase;
 use Mockery;
 use Carbon\Carbon;
+
 class PsfechaspagoControllerTest extends TestCase
 {
     public function createApplication()
@@ -51,7 +52,7 @@ class PsfechaspagoControllerTest extends TestCase
     public function test_show_one_psfechaspago_successfully()
     {
         $mock = Mockery::mock(Psfechaspago::class);
-        $mock->shouldReceive('find')->with(1)->andReturn((object)['id' => 1]);
+        $mock->shouldReceive('find')->with(1)->andReturn((object) ['id' => 1]);
 
         $controller = new PsfechaspagoController();
         $response = $controller->showOnePsfechaspago(1, $mock);
@@ -74,7 +75,7 @@ class PsfechaspagoControllerTest extends TestCase
     {
         $request = new Request(['campo' => 'valor']);
         $mock = Mockery::mock(Psfechaspago::class);
-        $mock->shouldReceive('create')->with($request->all())->andReturn((object)['id' => 1]);
+        $mock->shouldReceive('create')->with($request->all())->andReturn((object) ['id' => 1]);
 
         $controller = new PsfechaspagoController();
         $response = $controller->create($request, $mock);
@@ -147,6 +148,4 @@ class PsfechaspagoControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
     }
-
-    
 }

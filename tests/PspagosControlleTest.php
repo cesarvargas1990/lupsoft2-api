@@ -46,7 +46,7 @@ class PspagosControllerTest extends TestCase
     public function test_show_one_pspago_successfully()
     {
         $mock = Mockery::mock(Pspagos::class);
-        $mock->shouldReceive('find')->with(1)->once()->andReturn((object)['id' => 1]);
+        $mock->shouldReceive('find')->with(1)->once()->andReturn((object) ['id' => 1]);
 
         $controller = new PspagosController();
         $response = $controller->showOnePspagos($mock, 1);
@@ -60,7 +60,7 @@ class PspagosControllerTest extends TestCase
         $mockFecha = Mockery::mock(Psfechaspago::class);
         $mockPagos = Mockery::mock(Pspagos::class);
 
-        $fechaPago = (object)[
+        $fechaPago = (object) [
             'valor_pagar' => 150000,
             'fecha_pago' => '2025-03-31'
         ];
@@ -88,14 +88,14 @@ class PspagosControllerTest extends TestCase
         $this->assertEquals(201, $response->getStatusCode());
         $this->assertEquals('Pago registrado correctamente', json_decode($response->getContent(), true)['success']);
     }
-    
+
 
     public function test_create_pspago_fails_if_exists()
     {
         $mockFecha = Mockery::mock(Psfechaspago::class);
         $mockPagos = Mockery::mock(Pspagos::class);
 
-        $mockFecha->shouldReceive('find')->with(10)->andReturn((object)[
+        $mockFecha->shouldReceive('find')->with(10)->andReturn((object) [
             'valor_pagar' => 100000,
             'fecha_pago' => '2025-03-31'
         ]);
@@ -140,7 +140,7 @@ class PspagosControllerTest extends TestCase
         $mock = Mockery::mock(Pspagos::class);
         $mock->shouldReceive('findOrFail')->with(1)->once()->andReturn($mockEntity);
         $controller = new PspagosController();
-        $response = $controller->delete(1,$mock);
+        $response = $controller->delete(1, $mock);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('Deleted Successfully', json_decode($response->getContent(), true)['message']);
     }
@@ -319,7 +319,7 @@ class PspagosControllerTest extends TestCase
             'id_prestamo' => 5
         ]);
 
-        $fechaPago = (object)['valor_pagar' => 0];
+        $fechaPago = (object) ['valor_pagar' => 0];
 
         $psfechaspagoMock = Mockery::mock(\App\Psfechaspago::class);
         $psfechaspagoMock->shouldReceive('find')->with(1)->andReturn($fechaPago);
@@ -334,6 +334,4 @@ class PspagosControllerTest extends TestCase
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('Valor de cuota inválido', $data['error']);
     }
-
-    
 }

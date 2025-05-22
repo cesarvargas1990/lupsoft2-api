@@ -11,10 +11,10 @@ class CreatePstdocplantTable extends Migration
      *
      * @return void
      */
-	 
-	 // pstdocplant
-	 // Pstdocplant
-	 
+
+    // pstdocplant
+    // Pstdocplant
+
     public function up()
     {
         Schema::create('pstdocplant', function (Blueprint $table) {

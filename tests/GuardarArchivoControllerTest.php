@@ -40,7 +40,7 @@ class GuardarArchivoControllerTest extends TestCase
         // For mime type detection and file write
         $controller->shouldReceive('obtenerExtensionArchivo')->andReturn('jpeg');
         $controller->shouldReceive('decodificarArchivoBase64')->andReturn('decoded-data');
-        
+
         // File write simulation
         file_put_contents('/tmp/DOC01-test.jpg', 'decoded-data');
 
@@ -250,6 +250,4 @@ class GuardarArchivoControllerTest extends TestCase
 
         $this->assertNull($response); // Método no devuelve nada explícito
     }
-
-   
 }

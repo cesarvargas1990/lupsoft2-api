@@ -9,7 +9,7 @@ use DB;
 class PstdocplantController extends Controller
 {
     public function __construct()
-    { 
+    {
         $this->middleware('auth');
     }
 
@@ -28,7 +28,7 @@ class PstdocplantController extends Controller
         }
     }
 
-    public function showOnePstdocplant($id,Pstdocplant $pstdocplant)
+    public function showOnePstdocplant($id, Pstdocplant $pstdocplant)
     {
         try {
             return response()->json($pstdocplant::find($id));
@@ -41,8 +41,8 @@ class PstdocplantController extends Controller
             ], 404);
         }
     }
-	
-	public function ShowPstdocplant(Pstdocplant $pstdocplant)
+
+    public function ShowPstdocplant(Pstdocplant $pstdocplant)
     {
         try {
             $data = $pstdocplant::select('codtipdocid as value', 'nomtipodocumento as label')->get();
@@ -72,7 +72,7 @@ class PstdocplantController extends Controller
         }
     }
 
-    public function update($id,Request $request, Pstdocplant $pstdocplant)
+    public function update($id, Request $request, Pstdocplant $pstdocplant)
     {
         try {
             $data = $pstdocplant::findOrFail($id);
@@ -86,15 +86,14 @@ class PstdocplantController extends Controller
                 'file' => $e->getFile()
             ], 404);
         }
-
     }
 
-    public function delete($id,Pstdocplant $pstdocplant)
+    public function delete($id, Pstdocplant $pstdocplant)
     {
 
         try {
             $pstdocplant::findOrFail($id)->delete();
-            return response(array('message' => 'Deleted Successfully') , 200);
+            return response(array('message' => 'Deleted Successfully'), 200);
         } catch (\Exception $e) {
 
             return response([
@@ -104,5 +103,5 @@ class PstdocplantController extends Controller
                 'file' => $e->getFile()
             ], 404);
         }
-    }	
+    }
 }

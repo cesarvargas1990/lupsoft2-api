@@ -48,7 +48,7 @@ class PstdocadjuntosControllerTest extends TestCase
     public function test_show_one_returns_data()
     {
         $mock = Mockery::mock(Pstdocadjuntos::class);
-        $mock->shouldReceive('find')->with(1)->andReturn((object)['id' => 1]);
+        $mock->shouldReceive('find')->with(1)->andReturn((object) ['id' => 1]);
 
         $controller = new PstdocadjuntosController();
         $response = $controller->showOnePstdocadjuntos(1, $mock);

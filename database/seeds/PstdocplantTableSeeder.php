@@ -11,13 +11,13 @@ class PstdocplantTableSeeder extends Seeder
      */
     public function run()
     {
-		
-		
 
 
-         DB::table('pstdocplant')->insert([
-            
-            
+
+
+        DB::table('pstdocplant')->insert([
+
+
             'nombre' => 'Pagare',
             'plantilla_html' => '<!DOCTYPE html>
 <html lang="es">
@@ -116,17 +116,17 @@ class PstdocplantTableSeeder extends Seeder
             'id_empresa' => '1'
 
         ]);
-		
-		
-	
-		
-		
-	
 
-    
+
+
+
+
+
+
+
 
         DB::table('pstdocplant')->insert([
-            
+
             'nombre' => 'Resumen del prestamo',
             'plantilla_html' => '<!DOCTYPE html>
 <html lang=\"es\">
@@ -184,9 +184,5 @@ class PstdocplantTableSeeder extends Seeder
 
 
         ]);
-
-
-
-		
     }
 }

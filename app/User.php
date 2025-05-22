@@ -20,7 +20,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @var array
      */
-   
+
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -98,6 +98,4 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->hasMany(Psclientes::class, 'id_cobrador');
     }
-
-    
 }

@@ -15,7 +15,7 @@ use App\Pspstiposistemaprest;
 
 class CuotasController extends Controller
 {
- 
+
     use calculadoraCuotasPrestamosTrait;
     use prestamosTrait;
 
@@ -28,9 +28,8 @@ class CuotasController extends Controller
     {
         try {
 
-            $datos = $this->generarTablaAmortizacion($request,$psperiodopago,$pspstiposistemaprest);
+            $datos = $this->generarTablaAmortizacion($request, $psperiodopago, $pspstiposistemaprest);
             return response()->json($datos);
-
         } catch (\Exception $e) {
             return response()->json([
                 "message" => $e->getMessage(),
@@ -39,13 +38,12 @@ class CuotasController extends Controller
                 "file" => $e->getFile()
             ], 404);
         }
-
     }
 
-    public function calcularCuotas2(Request $request,Psperiodopago $psperiodopago,Pspstiposistemaprest $pspstiposistemaprest)
+    public function calcularCuotas2(Request $request, Psperiodopago $psperiodopago, Pspstiposistemaprest $pspstiposistemaprest)
     {
         try {
-            $datos = $this->calcularCuota($request,$psperiodopago,$pspstiposistemaprest);
+            $datos = $this->calcularCuota($request, $psperiodopago, $pspstiposistemaprest);
             return response()->json($datos);
         } catch (\Exception $e) {
             return response()->json([
@@ -55,8 +53,5 @@ class CuotasController extends Controller
                 "file" => $e->getFile()
             ], 404);
         }
-
-
     }
-
 }

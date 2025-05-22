@@ -28,20 +28,15 @@ class Pspstiposistemaprest extends Model
      *
      * @var array
      */
-	 
-	 protected $table = 'pstiposistemaprest';
-	 
 
-    protected $fillable = [ 'formula_calculo'];
-    protected $hidden = [
+    protected $table = 'pstiposistemaprest';
 
-    ];
+
+    protected $fillable = ['formula_calculo'];
+    protected $hidden = [];
 
     public function prestamos()
     {
         return $this->hasMany(Psprestamos::class, 'id_tipo_sistema_prest');
     }
-
-
-
 }

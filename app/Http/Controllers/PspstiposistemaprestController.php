@@ -22,7 +22,6 @@ class PspstiposistemaprestController extends Controller
         try {
 
             return response()->json($pspstiposistemaprest::all());
-
         } catch (\Exception $e) {
 
             return response()->json([
@@ -31,21 +30,16 @@ class PspstiposistemaprestController extends Controller
                 'lineError' => $e->getLine(),
                 'file' => $e->getFile()
             ], 404);
-
         }
-
-
     }
 
-    public function showOne($id,Pspstiposistemaprest $pspstiposistemaprest)
+    public function showOne($id, Pspstiposistemaprest $pspstiposistemaprest)
     {
 
 
         try {
 
             return response()->json($pspstiposistemaprest::find($id));
-
-
         } catch (\Exception $e) {
 
             return response()->json([
@@ -54,13 +48,10 @@ class PspstiposistemaprestController extends Controller
                 'lineError' => $e->getLine(),
                 'file' => $e->getFile()
             ], 404);
-
         }
-
-
     }
-	
-	public function Show($id_empresa,Psperiodopago $psperiodopago)
+
+    public function Show($id_empresa, Psperiodopago $psperiodopago)
     {
         try {
             $data = $psperiodopago::where('id_empresa', $id_empresa)
@@ -77,7 +68,7 @@ class PspstiposistemaprestController extends Controller
         }
     }
 
-    public function create(Request $request,Pspstiposistemaprest $pspstiposistemaprest)
+    public function create(Request $request, Pspstiposistemaprest $pspstiposistemaprest)
     {
         try {
             $data = $pspstiposistemaprest::create($request->all());
@@ -90,11 +81,9 @@ class PspstiposistemaprestController extends Controller
                 'file' => $e->getFile()
             ], 404);
         }
-
-
     }
 
-    public function update($id,Request $request, Pspstiposistemaprest $pspstiposistemaprest)
+    public function update($id, Request $request, Pspstiposistemaprest $pspstiposistemaprest)
     {
 
         try {
@@ -109,8 +98,6 @@ class PspstiposistemaprestController extends Controller
                 'file' => $e->getFile()
             ], 404);
         }
-
-
     }
 
     public function delete($id, Pspstiposistemaprest $pspstiposistemaprest)
@@ -120,8 +107,7 @@ class PspstiposistemaprestController extends Controller
         try {
 
             $pspstiposistemaprest::findOrFail($id)->delete();
-            return response(array('message' => 'Deleted Successfully') , 200);
-
+            return response(array('message' => 'Deleted Successfully'), 200);
         } catch (\Exception $e) {
 
             return response()->json([
@@ -130,13 +116,11 @@ class PspstiposistemaprestController extends Controller
                 'lineError' => $e->getLine(),
                 'file' => $e->getFile()
             ], 404);
-
         }
-
-
     }
 
-    public function list(Pspstiposistemaprest $pspstiposistemaprest) {
+    public function list(Pspstiposistemaprest $pspstiposistemaprest)
+    {
         try {
             $data = $pspstiposistemaprest::select('codtipsistemap as value', 'nomtipsistemap as label')->get();
             return response()->json($data);
@@ -149,7 +133,4 @@ class PspstiposistemaprestController extends Controller
             ], 404);
         }
     }
-
-
-	
 }

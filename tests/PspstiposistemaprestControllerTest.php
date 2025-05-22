@@ -47,7 +47,7 @@ class PspstiposistemaprestControllerTest extends TestCase
     public function test_show_one_returns_data()
     {
         $mock = Mockery::mock(Pspstiposistemaprest::class);
-        $mock->shouldReceive('find')->with(1)->andReturn((object)['id' => 1]);
+        $mock->shouldReceive('find')->with(1)->andReturn((object) ['id' => 1]);
 
         $controller = new PspstiposistemaprestController();
         $response = $controller->showOne(1, $mock);
@@ -93,7 +93,7 @@ class PspstiposistemaprestControllerTest extends TestCase
     {
         $request = new Request(['field' => 'value']);
         $mock = Mockery::mock(Pspstiposistemaprest::class);
-        $mock->shouldReceive('create')->with($request->all())->andReturn((object)['id' => 1]);
+        $mock->shouldReceive('create')->with($request->all())->andReturn((object) ['id' => 1]);
 
         $controller = new PspstiposistemaprestController();
         $response = $controller->create($request, $mock);

@@ -73,7 +73,7 @@ class UserControllerTest extends TestCase
         $this->assertEquals(['message' => 'user not found!'], json_decode($response->getContent(), true));
     }
 
-    
+
 
 
     public function test_get_users_returns_404_if_empty()

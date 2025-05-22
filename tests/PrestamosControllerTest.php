@@ -16,6 +16,7 @@ use Mockery;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\PsEmpresa;
+
 class PrestamosControllerTest extends TestCase
 {
     public function createApplication()
@@ -97,7 +98,7 @@ class PrestamosControllerTest extends TestCase
         $this->assertEquals(404, $response->getStatusCode());
     }
 
-   
+
 
     public function test_get_plantillas_documentos_exception()
     {
@@ -114,7 +115,7 @@ class PrestamosControllerTest extends TestCase
 
     public function test_total_prestado_exception()
     {
-        Auth::shouldReceive('user')->andReturn((object)['perfiles' => collect([(object)['id' => 2]])]);
+        Auth::shouldReceive('user')->andReturn((object) ['perfiles' => collect([(object) ['id' => 2]])]);
         $controller = new PrestamosController();
         $response = $controller->totalprestado(1);
         $this->assertEquals('NA', $response);
@@ -134,11 +135,13 @@ class PrestamosControllerTest extends TestCase
 
     public function test_generar_variables_plantillas_returns_data()
     {
-        $mockData = [(object)[
-            'id' => 1,
-            'nombre' => 'Juan',
-            'valor' => 1000
-        ]];
+        $mockData = [
+            (object) [
+                'id' => 1,
+                'nombre' => 'Juan',
+                'valor' => 1000
+            ]
+        ];
 
         DB::shouldReceive('select')
             ->once()
@@ -146,8 +149,8 @@ class PrestamosControllerTest extends TestCase
 
         $controller = Mockery::mock(PrestamosController::class)->makePartial();
         $controller->shouldAllowMockingProtectedMethods()
-                   ->shouldReceive('obtenerQryListadoPrestamos')
-                   ->andReturn('SELECT * FROM prestamos WHERE id_empresa = :id_empresa');
+            ->shouldReceive('obtenerQryListadoPrestamos')
+            ->andReturn('SELECT * FROM prestamos WHERE id_empresa = :id_empresa');
 
         $result = $controller->generarVariablesPlantillas(1);
 
@@ -164,8 +167,8 @@ class PrestamosControllerTest extends TestCase
 
         $controller = Mockery::mock(PrestamosController::class)->makePartial();
         $controller->shouldAllowMockingProtectedMethods()
-                   ->shouldReceive('obtenerQryListadoPrestamos')
-                   ->andReturn('SELECT * FROM prestamos WHERE id_empresa = :id_empresa');
+            ->shouldReceive('obtenerQryListadoPrestamos')
+            ->andReturn('SELECT * FROM prestamos WHERE id_empresa = :id_empresa');
 
         $result = $controller->generarVariablesPlantillas(1);
 
@@ -178,12 +181,12 @@ class PrestamosControllerTest extends TestCase
 
         $controller = Mockery::mock(PrestamosController::class)->makePartial();
         $controller->shouldAllowMockingProtectedMethods()
-                   ->shouldReceive('renderTemplate')
-                   ->with($request, Mockery::type(Psquerytabla::class), Mockery::type(Pstdocplant::class))
-                   ->once()
-                   ->andReturn([
-                       'documento' => 'Plantilla generada exitosamente'
-                   ]);
+            ->shouldReceive('renderTemplate')
+            ->with($request, Mockery::type(Psquerytabla::class), Mockery::type(Pstdocplant::class))
+            ->once()
+            ->andReturn([
+                'documento' => 'Plantilla generada exitosamente'
+            ]);
 
         $response = $controller->getPlantillasDocumentosPrestamo($request, new Psquerytabla(), new Pstdocplant());
 
@@ -198,8 +201,8 @@ class PrestamosControllerTest extends TestCase
 
         $controller = Mockery::mock(PrestamosController::class)->makePartial();
         $controller->shouldAllowMockingProtectedMethods()
-                   ->shouldReceive('renderTemplate')
-                   ->andThrow(new \Exception('Error generando plantilla', 500));
+            ->shouldReceive('renderTemplate')
+            ->andThrow(new \Exception('Error generando plantilla', 500));
 
         $response = $controller->getPlantillasDocumentosPrestamo($request, new Psquerytabla(), new Pstdocplant());
 
@@ -260,15 +263,15 @@ class PrestamosControllerTest extends TestCase
 
         //$mockAuth = Mockery::mock('alias:Illuminate\\Support\\Facades\\Auth');
         Auth::shouldReceive('user')->andReturn((object) [
-            'perfiles' => collect([(object)['id' => 1]])
+            'perfiles' => collect([(object) ['id' => 1]])
         ]);
 
         $controller = Mockery::mock(PrestamosController::class)->makePartial();
         $controller->shouldAllowMockingProtectedMethods()
-                  ->shouldReceive('getTotalPrestadoHoy')
-                  ->once()
-                  ->with($request, Mockery::type(Psprestamos::class))
-                  ->andReturn(500000);
+            ->shouldReceive('getTotalPrestadoHoy')
+            ->once()
+            ->with($request, Mockery::type(Psprestamos::class))
+            ->andReturn(500000);
 
         $response = $controller->totalprestadohoy($request, new Psprestamos());
 
@@ -279,7 +282,7 @@ class PrestamosControllerTest extends TestCase
     {
         $request = new Request();
 
-        
+
         Auth::shouldReceive('user')->andThrow(new \Exception('Fallo de autenticación', 401));
 
         $controller = new PrestamosController();
@@ -368,13 +371,13 @@ class PrestamosControllerTest extends TestCase
         $controller = Mockery::mock(PrestamosController::class)->makePartial();
 
         $controller->shouldAllowMockingProtectedMethods()
-                  ->shouldReceive('getCapitalInicial')->with(1, $empresaMock)->andReturn(5000);
+            ->shouldReceive('getCapitalInicial')->with(1, $empresaMock)->andReturn(5000);
 
         $controller->shouldReceive('getValorPrestamos')->with($request, $prestamosMock)->andReturn(2000);
         $controller->shouldReceive('getTotalintereses')->with($request, $pagosMock, Mockery::any())->andReturn(500);
 
         $userMock = Mockery::mock();
-        $userMock->perfiles = collect([(object)['id' => 1]]);
+        $userMock->perfiles = collect([(object) ['id' => 1]]);
         Auth::shouldReceive('user')->once()->andReturn($userMock);
 
         $response = $controller->totalcapital(1, $request, $empresaMock, $prestamosMock, $pagosMock, new Auth());
@@ -388,10 +391,10 @@ class PrestamosControllerTest extends TestCase
 
         $controller = Mockery::mock(PrestamosController::class)->makePartial();
         $controller->shouldAllowMockingProtectedMethods()
-                  ->shouldReceive('getCapitalInicial')->andThrow(new \Exception('Error de prueba', 500));
+            ->shouldReceive('getCapitalInicial')->andThrow(new \Exception('Error de prueba', 500));
 
         $userMock = Mockery::mock();
-        $userMock->perfiles = collect([(object)['id' => 1]]);
+        $userMock->perfiles = collect([(object) ['id' => 1]]);
         Auth::shouldReceive('user')->andReturn($userMock);
 
         $response = $controller->totalcapital(1, $request, new PsEmpresa(), new Psprestamos(), new Pspagos(), new Auth());
@@ -401,8 +404,4 @@ class PrestamosControllerTest extends TestCase
         $this->assertEquals('Error de prueba', $data['message']);
         $this->assertEquals(500, $data['errorCode']);
     }
-
-    
-
-    
 }

@@ -55,7 +55,7 @@ class PstipodocidentiControllerTest extends TestCase
     public function test_show_one_pstipodocidenti_returns_correct_data()
     {
         $mock = Mockery::mock(Pstipodocidenti::class);
-        $mock->shouldReceive('find')->with(1)->andReturn((object)['id' => 1]);
+        $mock->shouldReceive('find')->with(1)->andReturn((object) ['id' => 1]);
 
         $controller = new PstipodocidentiController();
         $response = $controller->showOnePstipodocidenti($mock, 1);
@@ -106,7 +106,7 @@ class PstipodocidentiControllerTest extends TestCase
         $request = new Request(['codtipdocid' => 'TI', 'nomtipodocumento' => 'Tarjeta Identidad']);
 
         $mock = Mockery::mock(Pstipodocidenti::class);
-        $mock->shouldReceive('create')->once()->with($request->all())->andReturn((object)['id' => 1]);
+        $mock->shouldReceive('create')->once()->with($request->all())->andReturn((object) ['id' => 1]);
 
         $controller = new PstipodocidentiController();
         $response = $controller->create($request, $mock);
@@ -114,7 +114,7 @@ class PstipodocidentiControllerTest extends TestCase
         $this->assertEquals(201, $response->getStatusCode());
     }
 
-   
+
 
     public function test_update_pstipodocidenti_successfully()
     {
@@ -219,7 +219,4 @@ class PstipodocidentiControllerTest extends TestCase
         $this->assertArrayHasKey('lineError', $data);
         $this->assertArrayHasKey('file', $data);
     }
-
-    
-
 }

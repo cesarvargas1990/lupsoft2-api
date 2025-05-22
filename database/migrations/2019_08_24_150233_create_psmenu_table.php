@@ -15,16 +15,16 @@ class CreatePsmenuTable extends Migration
     {
         Schema::create('psmenu', function (Blueprint $table) {
             $table->increments('id');
-			$table->string('nombre',100)->nullable();
-            $table->string('ruta',500)->nullable();
-			$table->string('icono',50)->nullable();
+            $table->string('nombre', 100)->nullable();
+            $table->string('ruta', 500)->nullable();
+            $table->string('icono', 50)->nullable();
             $table->integer('orden')->nullable();
-			$table->unsignedInteger('id_mpadre')->nullable();
+            $table->unsignedInteger('id_mpadre')->nullable();
             $table->foreign('id_mpadre')->references('id')->on('psmenu');
-			$table->unsignedInteger('id_perfil');
+            $table->unsignedInteger('id_perfil');
             $table->foreign('id_perfil')->references('id')->on('psperfil');
-			$table->integer('ind_activo')->nullable();
-			$table->unsignedInteger('id_empresa');
+            $table->integer('ind_activo')->nullable();
+            $table->unsignedInteger('id_empresa');
             $table->foreign('id_empresa')->references('id')->on('psempresa');
             $table->timestamps();
         });

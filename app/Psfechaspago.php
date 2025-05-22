@@ -19,26 +19,26 @@ class Psfechaspago extends Model
      * @var array
      */
 
-    
-  
+
+
 
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
-	 
-	 protected $table = 'psfechaspago';
-	 
-    protected $hidden = [
 
-    ];
+    protected $table = 'psfechaspago';
 
-    public function prestamo() {
+    protected $hidden = [];
+
+    public function prestamo()
+    {
         return $this->belongsTo(PsPrestamos::class, 'id_prestamo', 'id');
     }
 
-    public function pagos() {
+    public function pagos()
+    {
         return $this->hasMany(PsPagos::class, 'id_fecha_pago', 'id');
     }
 
@@ -51,7 +51,4 @@ class Psfechaspago extends Model
     {
         return $this->belongsTo(Psempresa::class, 'id_empresa');
     }
-
-
-
 }

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-return [ 
+return [
 
     /*
     |--------------------------------------------------------------------------
@@ -146,7 +146,7 @@ return [
     | present in the payload.
     |
     */
-  
+
     'required_claims' => [
         'iss',
         'iat',
@@ -298,6 +298,6 @@ return [
 
         'storage' => Tymon\JWTAuth\Providers\Storage\Illuminate::class,
 
-    ], 
+    ],
 
 ];

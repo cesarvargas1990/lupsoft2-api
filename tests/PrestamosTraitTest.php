@@ -19,6 +19,7 @@ use TestCase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+
 class PrestamosTraitTestDummy
 {
     use \App\Http\Traits\General\prestamosTrait;
@@ -45,9 +46,9 @@ class PrestamosTraitTest extends TestCase
             ->once()
             ->with(Mockery::type('string'), Mockery::subset(['id' => 1]))
             ->andReturn([
-                (object)['id' => 1, 'nombre' => 'Dashboard', 'icono' => 'home', 'ruta' => '/dashboard', 'id_mpadre' => 0],
-                (object)['id' => 2, 'nombre' => 'Usuarios', 'icono' => 'users', 'ruta' => '/usuarios', 'id_mpadre' => 0],
-                (object)['id' => 3, 'nombre' => 'Configuraciones', 'icono' => 'settings', 'ruta' => '/config', 'id_mpadre' => 2]
+                (object) ['id' => 1, 'nombre' => 'Dashboard', 'icono' => 'home', 'ruta' => '/dashboard', 'id_mpadre' => 0],
+                (object) ['id' => 2, 'nombre' => 'Usuarios', 'icono' => 'users', 'ruta' => '/usuarios', 'id_mpadre' => 0],
+                (object) ['id' => 3, 'nombre' => 'Configuraciones', 'icono' => 'settings', 'ruta' => '/config', 'id_mpadre' => 2]
             ]);
 
         // Crear una instancia de la clase que contiene la función con el trait
@@ -78,8 +79,8 @@ class PrestamosTraitTest extends TestCase
         // 3. Simula la respuesta de obtenerQryListadoPrestamos($id_empresa)
         //    Devolvemos un query ficticio.
         $dummy->shouldReceive('obtenerQryListadoPrestamos')
-              ->once()
-              ->andReturn('SELECT * FROM psprestamos WHERE id_empresa = :id_empresa');
+            ->once()
+            ->andReturn('SELECT * FROM psprestamos WHERE id_empresa = :id_empresa');
 
         // 4. Preparamos un array de objetos que simulará la respuesta de DB::select
         $mockData = [
@@ -103,7 +104,7 @@ class PrestamosTraitTest extends TestCase
         $this->assertEquals($mockData, $result, 'Debe retornar los resultados de DB::select');
     }
 
-     public function testObtenerQryListadoPrestamos()
+    public function testObtenerQryListadoPrestamos()
     {
         // 1. Prepara el nit_empresa de ejemplo
         $id_empresa = '123456789';
@@ -154,8 +155,8 @@ class PrestamosTraitTest extends TestCase
         $dummy = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
 
         // 2. Define valores de ejemplo
-        $id_empresa  = '1';
-        $id_prestamo  = 10;
+        $id_empresa = '1';
+        $id_prestamo = 10;
 
         // 3. Simula la respuesta de obtenerQryListadoPrestamos($id_empresa)
         //    Devuelve la parte base del query; luego se espera que el método
@@ -202,7 +203,7 @@ class PrestamosTraitTest extends TestCase
         $variables = [
             'nombre' => 'Carlos',
             'dinero' => 1500,
-            'fecha'  => '2023-03-01'
+            'fecha' => '2023-03-01'
         ];
 
         // 4. Llamamos a la función a testear
@@ -223,15 +224,15 @@ class PrestamosTraitTest extends TestCase
     {
         // Crear un mock de Psprestamos
         $mockPsprestamos = Mockery::mock(Psprestamos::class);
-        
+
         // Configurar el mock para que permita llamadas encadenadas
         $mockPsprestamos->shouldReceive('where')
-                        ->withAnyArgs()
-                        ->andReturnSelf(); // Retorna el mismo mock para permitir encadenamiento
+            ->withAnyArgs()
+            ->andReturnSelf(); // Retorna el mismo mock para permitir encadenamiento
 
         $mockPsprestamos->shouldReceive('sum')
-                        ->with('valorpres')
-                        ->andReturn(50000.00); // Simula que devuelve 50000
+            ->with('valorpres')
+            ->andReturn(50000.00); // Simula que devuelve 50000
 
         // Crear una instancia de una clase que use el trait
         $traitInstance = new class {
@@ -250,10 +251,10 @@ class PrestamosTraitTest extends TestCase
     {
         // Crear un mock de Psprestamos que lance una excepción
         $mockPsprestamos = Mockery::mock(Psprestamos::class);
-        
+
         $mockPsprestamos->shouldReceive('where')
-                        ->withAnyArgs()
-                        ->andThrow(new \Exception('Error en la base de datos', 123));
+            ->withAnyArgs()
+            ->andThrow(new \Exception('Error en la base de datos', 123));
 
         // Crear una instancia de una clase que use el trait
         $traitInstance = new class {
@@ -280,15 +281,15 @@ class PrestamosTraitTest extends TestCase
     {
         // Crear un mock de Psempresa
         $mockPsempresa = Mockery::mock(Psempresa::class);
-        
+
         // Configurar el mock para que permita llamadas encadenadas
         $mockPsempresa->shouldReceive('where')
-                      ->withAnyArgs()
-                      ->andReturnSelf();
+            ->withAnyArgs()
+            ->andReturnSelf();
 
         $mockPsempresa->shouldReceive('value')
-                      ->with('vlr_capinicial')
-                      ->andReturn(75000.00); // Simula que devuelve 75000
+            ->with('vlr_capinicial')
+            ->andReturn(75000.00); // Simula que devuelve 75000
 
         // Crear una instancia de una clase que use el trait
         $traitInstance = new class {
@@ -307,10 +308,10 @@ class PrestamosTraitTest extends TestCase
     {
         // Crear un mock de Psempresa que lance una excepción
         $mockPsempresa = Mockery::mock(PsEmpresa::class);
-        
+
         $mockPsempresa->shouldReceive('where')
-                      ->withAnyArgs()
-                      ->andThrow(new \Exception('Error en la base de datos', 500));
+            ->withAnyArgs()
+            ->andThrow(new \Exception('Error en la base de datos', 500));
 
         // Crear una instancia de una clase que use el trait
         $traitInstance = new class {
@@ -341,19 +342,19 @@ class PrestamosTraitTest extends TestCase
 
         // Configurar el mock de Psempresa
         $mockPsempresa->shouldReceive('where')
-                      ->withAnyArgs()
-                      ->andReturnSelf();
+            ->withAnyArgs()
+            ->andReturnSelf();
         $mockPsempresa->shouldReceive('value')
-                      ->with('vlr_capinicial')
-                      ->andReturn(75000.00);
+            ->with('vlr_capinicial')
+            ->andReturn(75000.00);
 
         // Configurar el mock de Psprestamos
         $mockPsprestamos->shouldReceive('where')
-                         ->withAnyArgs()
-                         ->andReturnSelf();
+            ->withAnyArgs()
+            ->andReturnSelf();
         $mockPsprestamos->shouldReceive('sum')
-                         ->with('valorpres')
-                         ->andReturn(50000.00);
+            ->with('valorpres')
+            ->andReturn(50000.00);
 
         // Crear una instancia de una clase que use el trait
         $traitInstance = new class {
@@ -375,14 +376,14 @@ class PrestamosTraitTest extends TestCase
 
         // Configurar el mock para simular la consulta
         $mockPsprestamos->shouldReceive('where')
-                         ->withAnyArgs()
-                         ->andReturnSelf();
+            ->withAnyArgs()
+            ->andReturnSelf();
         $mockPsprestamos->shouldReceive('whereBetween')
-                         ->withAnyArgs()
-                         ->andReturnSelf();
+            ->withAnyArgs()
+            ->andReturnSelf();
         $mockPsprestamos->shouldReceive('sum')
-                         ->with('valorpres')
-                         ->andReturn(15000.00);
+            ->with('valorpres')
+            ->andReturn(15000.00);
 
         // Crear una instancia de una clase que use el trait
         $traitInstance = new class {
@@ -407,13 +408,13 @@ class PrestamosTraitTest extends TestCase
     {
         // Crear un mock de Psprestamos que lance una excepción
         $mockPsprestamos = Mockery::mock(Psprestamos::class);
-        
+
         $mockPsprestamos->shouldReceive('where')
-                         ->withAnyArgs()
-                         ->andReturnSelf();
+            ->withAnyArgs()
+            ->andReturnSelf();
         $mockPsprestamos->shouldReceive('whereBetween')
-                         ->withAnyArgs()
-                         ->andThrow(new \Exception('Error en la base de datos', 500));
+            ->withAnyArgs()
+            ->andThrow(new \Exception('Error en la base de datos', 500));
 
         // Crear una instancia de una clase que use el trait
         $traitInstance = new class {
@@ -449,11 +450,11 @@ class PrestamosTraitTest extends TestCase
 
         // Configurar el mock para simular la consulta
         $mockPsprestamos->shouldReceive('where')
-                         ->withAnyArgs()
-                         ->andReturnSelf();
+            ->withAnyArgs()
+            ->andReturnSelf();
         $mockPsprestamos->shouldReceive('sum')
-                         ->with('valorpres')
-                         ->andReturn(50000.00);
+            ->with('valorpres')
+            ->andReturn(50000.00);
 
         // Crear una instancia de una clase que use el trait
         $traitInstance = new class {
@@ -477,13 +478,13 @@ class PrestamosTraitTest extends TestCase
     {
         // Crear mock de Psprestamos que lance una excepción
         $mockPsprestamos = Mockery::mock(Psprestamos::class);
-        
+
         $mockPsprestamos->shouldReceive('where')
-                         ->withAnyArgs()
-                         ->andReturnSelf();
+            ->withAnyArgs()
+            ->andReturnSelf();
         $mockPsprestamos->shouldReceive('sum')
-                         ->with('valorpres')
-                         ->andThrow(new \Exception('Error en la base de datos', 500));
+            ->with('valorpres')
+            ->andThrow(new \Exception('Error en la base de datos', 500));
 
         // Crear una instancia de una clase que use el trait
         $traitInstance = new class {
@@ -518,8 +519,8 @@ class PrestamosTraitTest extends TestCase
 
         // Crear un mock de la relación BelongsToMany
         $mockRelacion = Mockery::mock('Illuminate\Database\Eloquent\Relations\BelongsToMany');
-        $mockRelacion->shouldReceive('firstWhere')->with('id', 1)->andReturn((object)['id' => 1]);
-        $mockRelacion->shouldReceive('getResults')->andReturn(collect([(object)['id' => 1]]));
+        $mockRelacion->shouldReceive('firstWhere')->with('id', 1)->andReturn((object) ['id' => 1]);
+        $mockRelacion->shouldReceive('getResults')->andReturn(collect([(object) ['id' => 1]]));
 
         // Simular la relación perfiles correctamente
         $mockUser->shouldReceive('perfiles')->andReturn($mockRelacion);
@@ -549,15 +550,15 @@ class PrestamosTraitTest extends TestCase
         // Crear el usuario mock con perfiles simulados
         $mockUser = Mockery::mock(User::class)->makePartial();
         $mockUser->shouldReceive('getAttribute')->with('id')->andReturn(1);
-        
+
         // Crear un mock de la relación BelongsToMany
         $mockRelacion = Mockery::mock('Illuminate\Database\Eloquent\Relations\BelongsToMany');
-        $mockRelacion->shouldReceive('firstWhere')->with('id', 1)->andReturn((object)['id' => 1]);
-        $mockRelacion->shouldReceive('getResults')->andReturn(collect([(object)['id' => 1]]));
-        
+        $mockRelacion->shouldReceive('firstWhere')->with('id', 1)->andReturn((object) ['id' => 1]);
+        $mockRelacion->shouldReceive('getResults')->andReturn(collect([(object) ['id' => 1]]));
+
         // Simular la relación perfiles correctamente
         $mockUser->shouldReceive('perfiles')->andReturn($mockRelacion);
-        
+
         // Simular la autenticación
         Auth::shouldReceive('user')->andReturn($mockUser);
 
@@ -590,15 +591,15 @@ class PrestamosTraitTest extends TestCase
         // Crear el usuario mock con perfiles simulados
         $mockUser = Mockery::mock(User::class)->makePartial();
         $mockUser->shouldReceive('getAttribute')->with('id')->andReturn(1);
-        
+
         // Crear un mock de la relación BelongsToMany
         $mockRelacion = Mockery::mock('Illuminate\Database\Eloquent\Relations\BelongsToMany');
-        $mockRelacion->shouldReceive('firstWhere')->with('id', 1)->andReturn((object)['id' => 2]);
-        $mockRelacion->shouldReceive('getResults')->andReturn(collect([(object)['id' => 2]]));
-        
+        $mockRelacion->shouldReceive('firstWhere')->with('id', 1)->andReturn((object) ['id' => 2]);
+        $mockRelacion->shouldReceive('getResults')->andReturn(collect([(object) ['id' => 2]]));
+
         // Simular la relación perfiles correctamente
         $mockUser->shouldReceive('perfiles')->andReturn($mockRelacion);
-        
+
         // Simular la autenticación
         Auth::shouldReceive('user')->andReturn($mockUser);
 
@@ -620,7 +621,7 @@ class PrestamosTraitTest extends TestCase
         $this->assertIsFloat($resultado);
         $this->assertEquals(20000.00, $resultado);
     }
-   
+
     public function test_get_total_intereses3_returns_correct_value()
     {
         // Simular el request
@@ -631,15 +632,15 @@ class PrestamosTraitTest extends TestCase
         // Crear el usuario mock con perfiles simulados
         $mockUser = Mockery::mock(User::class)->makePartial();
         $mockUser->shouldReceive('getAttribute')->with('id')->andReturn(1);
-        
+
         // Crear un mock de la relación BelongsToMany
         $mockRelacion = Mockery::mock('Illuminate\Database\Eloquent\Relations\BelongsToMany');
-        $mockRelacion->shouldReceive('firstWhere')->with('id', 1)->andReturn((object)['id' => 1]);
-        $mockRelacion->shouldReceive('getResults')->andReturn(collect([(object)['id' => 1]]));
-        
+        $mockRelacion->shouldReceive('firstWhere')->with('id', 1)->andReturn((object) ['id' => 1]);
+        $mockRelacion->shouldReceive('getResults')->andReturn(collect([(object) ['id' => 1]]));
+
         // Simular la relación perfiles correctamente
         $mockUser->shouldReceive('perfiles')->andReturn($mockRelacion);
-        
+
         // Simular la autenticación
         Auth::shouldReceive('user')->andReturn($mockUser);
 
@@ -673,11 +674,11 @@ class PrestamosTraitTest extends TestCase
         // Simular el usuario autenticado
         $mockUser = Mockery::mock(User::class)->makePartial();
         $mockUser->shouldReceive('getAttribute')->with('id')->andReturn(1);
-        
+
         // Simular la relación perfiles
         $mockRelacion = Mockery::mock('Illuminate\Database\Eloquent\Relations\BelongsToMany');
-        $mockRelacion->shouldReceive('firstWhere')->with('id', 1)->andReturn((object)['id' => 1]);
-        $mockRelacion->shouldReceive('getResults')->andReturn(collect([(object)['id' => 1]]));
+        $mockRelacion->shouldReceive('firstWhere')->with('id', 1)->andReturn((object) ['id' => 1]);
+        $mockRelacion->shouldReceive('getResults')->andReturn(collect([(object) ['id' => 1]]));
         $mockUser->shouldReceive('perfiles')->andReturn($mockRelacion);
 
         Auth::shouldReceive('user')->andReturn($mockUser);
@@ -711,15 +712,15 @@ class PrestamosTraitTest extends TestCase
         // Crear el usuario mock con perfiles simulados
         $mockUser = Mockery::mock(User::class)->makePartial();
         $mockUser->shouldReceive('getAttribute')->with('id')->andReturn(1);
-        
+
         // Crear un mock de la relación BelongsToMany
         $mockRelacion = Mockery::mock('Illuminate\Database\Eloquent\Relations\BelongsToMany');
-        $mockRelacion->shouldReceive('firstWhere')->with('id', 1)->andReturn((object)['id' => 1]);
-        $mockRelacion->shouldReceive('getResults')->andReturn(collect([(object)['id' => 1]]));
-        
+        $mockRelacion->shouldReceive('firstWhere')->with('id', 1)->andReturn((object) ['id' => 1]);
+        $mockRelacion->shouldReceive('getResults')->andReturn(collect([(object) ['id' => 1]]));
+
         // Simular la relación perfiles correctamente
         $mockUser->shouldReceive('perfiles')->andReturn($mockRelacion);
-        
+
         // Simular la autenticación
         Auth::shouldReceive('user')->andReturn($mockUser);
 
@@ -821,82 +822,82 @@ class PrestamosTraitTest extends TestCase
 
 
     public function test_render_template_returns_correct_html()
-{
-    // Simular request
-    $request = new Request([
-        'id_prestamo' => 1,
-        'id_empresa' => '1'
-    ]);
-
-    // Simular consultaVariablesPrestamo
-    $mockInstance = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
-
-    $mockInstance->shouldReceive('consultaVariablesPrestamo')
-        ->with('1', 1)
-        ->andReturn([
-            (object)['cliente' => 'Juan Pérez', 'monto' => 100000]
+    {
+        // Simular request
+        $request = new Request([
+            'id_prestamo' => 1,
+            'id_empresa' => '1'
         ]);
 
-    // Simular getPlantillasDocumentos
-    $mockInstance->shouldReceive('getPlantillasDocumentos')
-        ->with($request, Mockery::type(Pstdocplant::class))
-        ->andReturn([
-            (object)[
-                'id' => 1, 
-                'nombre' => 'Contrato', 
-                'plantilla_html' => 'Cliente: {cliente}, Monto: {monto} <!--QRTquery1QRT--> 
+        // Simular consultaVariablesPrestamo
+        $mockInstance = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
+
+        $mockInstance->shouldReceive('consultaVariablesPrestamo')
+            ->with('1', 1)
+            ->andReturn([
+                (object) ['cliente' => 'Juan Pérez', 'monto' => 100000]
+            ]);
+
+        // Simular getPlantillasDocumentos
+        $mockInstance->shouldReceive('getPlantillasDocumentos')
+            ->with($request, Mockery::type(Pstdocplant::class))
+            ->andReturn([
+                (object) [
+                    'id' => 1,
+                    'nombre' => 'Contrato',
+                    'plantilla_html' => 'Cliente: {cliente}, Monto: {monto} <!--QRTquery1QRT--> 
                 <tr>
                     <td>[numero_cuota]</td>
                     <td>[fecha_pago]</td>
                     <td>$ [valor_pagar]</td>
                 </tr>
                 QRT-->'
-            ]
+                ]
+            ]);
+
+        // Simular replaceVariablesInTemplate
+        $mockInstance->shouldReceive('replaceVariablesInTemplate')
+            ->andReturnUsing(function ($template, $variables) {
+                return str_replace(['{cliente}', '{monto}'], [$variables['cliente'], $variables['monto']], $template);
+            });
+
+        // Simular Psquerytabla
+        $mockPsquerytabla = Mockery::mock(Psquerytabla::class);
+        $mockPsquerytabla->shouldReceive('where')->with('codigo', 'query1')->andReturnSelf();
+        $mockPsquerytabla->shouldReceive('where')->with('id_empresa', '1')->andReturnSelf();
+        $mockPsquerytabla->shouldReceive('first')->andReturn((object) ['sql' => 'SELECT numero_cuota, fecha_pago, valor_pagar FROM cuotas WHERE id_prestamo = 1']);
+
+        // Simular DB::select
+        DB::shouldReceive('select')->with('SELECT numero_cuota, fecha_pago, valor_pagar FROM cuotas WHERE id_prestamo = 1')->andReturn([
+            (object) ['numero_cuota' => 1, 'fecha_pago' => '2025-04-01', 'valor_pagar' => 50000],
+            (object) ['numero_cuota' => 2, 'fecha_pago' => '2025-05-01', 'valor_pagar' => 50000]
         ]);
 
-    // Simular replaceVariablesInTemplate
-    $mockInstance->shouldReceive('replaceVariablesInTemplate')
-        ->andReturnUsing(function ($template, $variables) {
-            return str_replace(['{cliente}', '{monto}'], [$variables['cliente'], $variables['monto']], $template);
-        });
+        // Simular el modelo Pstdocplant
+        $mockPstdocplant = Mockery::mock(Pstdocplant::class);
 
-    // Simular Psquerytabla
-    $mockPsquerytabla = Mockery::mock(Psquerytabla::class);
-    $mockPsquerytabla->shouldReceive('where')->with('codigo', 'query1')->andReturnSelf();
-    $mockPsquerytabla->shouldReceive('where')->with('id_empresa', '1')->andReturnSelf();
-    $mockPsquerytabla->shouldReceive('first')->andReturn((object)['sql' => 'SELECT numero_cuota, fecha_pago, valor_pagar FROM cuotas WHERE id_prestamo = 1']);
+        // Ejecutar la función
+        $resultado = $mockInstance->renderTemplate($request, $mockPsquerytabla, $mockPstdocplant);
 
-    // Simular DB::select
-    DB::shouldReceive('select')->with('SELECT numero_cuota, fecha_pago, valor_pagar FROM cuotas WHERE id_prestamo = 1')->andReturn([
-        (object)['numero_cuota' => 1, 'fecha_pago' => '2025-04-01', 'valor_pagar' => 50000],
-        (object)['numero_cuota' => 2, 'fecha_pago' => '2025-05-01', 'valor_pagar' => 50000]
-    ]);
+        // Verificaciones
+        $this->assertIsArray($resultado);
+        $this->assertCount(1, $resultado);
+        $this->assertEquals('Contrato', $resultado[0]['nombre']);
+        $this->assertStringContainsString('Cliente: Juan Pérez, Monto: 100000', $resultado[0]['plantilla_html']);
 
-    // Simular el modelo Pstdocplant
-    $mockPstdocplant = Mockery::mock(Pstdocplant::class);
+        // Validar la correcta sustitución de variables en los bloques <!--QRT ... QRT-->
+        $this->assertStringContainsString('<tr>', $resultado[0]['plantilla_html']);
+        //$this->assertStringContainsString('<td>1</td><td>[numero_cuota]</td>', $resultado[0]['plantilla_html']);
+        $this->assertStringContainsString('<td>[fecha_pago]</td>', $resultado[0]['plantilla_html']);
+        $this->assertStringContainsString('<td>$ [valor_pagar]</td>', $resultado[0]['plantilla_html']);
+        $this->assertStringContainsString('<td>[numero_cuota]</td>', $resultado[0]['plantilla_html']);
+        $this->assertStringContainsString('<td>[fecha_pago]</td>', $resultado[0]['plantilla_html']);
+    }
 
-    // Ejecutar la función
-    $resultado = $mockInstance->renderTemplate($request, $mockPsquerytabla, $mockPstdocplant);
 
-    // Verificaciones
-    $this->assertIsArray($resultado);
-    $this->assertCount(1, $resultado);
-    $this->assertEquals('Contrato', $resultado[0]['nombre']);
-    $this->assertStringContainsString('Cliente: Juan Pérez, Monto: 100000', $resultado[0]['plantilla_html']);
 
-    // Validar la correcta sustitución de variables en los bloques <!--QRT ... QRT-->
-    $this->assertStringContainsString('<tr>', $resultado[0]['plantilla_html']);
-    //$this->assertStringContainsString('<td>1</td><td>[numero_cuota]</td>', $resultado[0]['plantilla_html']);
-    $this->assertStringContainsString('<td>[fecha_pago]</td>', $resultado[0]['plantilla_html']);
-    $this->assertStringContainsString('<td>$ [valor_pagar]</td>', $resultado[0]['plantilla_html']);
-    $this->assertStringContainsString('<td>[numero_cuota]</td>', $resultado[0]['plantilla_html']);
-    $this->assertStringContainsString('<td>[fecha_pago]</td>', $resultado[0]['plantilla_html']);
-   
-}
-
-    
-
-    public function test_get_plantillas_documentos(){
+    public function test_get_plantillas_documentos()
+    {
         $mockInstance = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
         $request = new Request([
             'id_prestamo' => 1,
@@ -905,8 +906,8 @@ class PrestamosTraitTest extends TestCase
         $mockPstdocplant = Mockery::mock(Pstdocplant::class);
         $mockPstdocplant->shouldReceive('where')->with('id_empresa', '1')->andReturnSelf();
         $mockPstdocplant->shouldReceive('get')->andReturn(collect([
-            (object)['id' => 1, 'nombre' => 'Plantilla 1'],
-            (object)['id' => 2, 'nombre' => 'Plantilla 2']
+            (object) ['id' => 1, 'nombre' => 'Plantilla 1'],
+            (object) ['id' => 2, 'nombre' => 'Plantilla 2']
         ]));
         $resultado = $mockInstance->getPlantillasDocumentos($request, $mockPstdocplant);
         $this->assertCount(2, $resultado);
@@ -943,7 +944,7 @@ class PrestamosTraitTest extends TestCase
         $this->assertIsFloat($resultado);
         $this->assertEquals(120000.00, $resultado);
     }
-   
+
 
 
     public function test_guardar_prestamo_fechas()
@@ -1016,71 +1017,70 @@ class PrestamosTraitTest extends TestCase
     }
 
     public function test_render_template_correctly_processes_query_tags()
-	{
-	    // Simular request
-	    $request = new Request([
-	        'id_prestamo' => 1,
-	        'id_empresa' => '1'
-	    ]);
+    {
+        // Simular request
+        $request = new Request([
+            'id_prestamo' => 1,
+            'id_empresa' => '1'
+        ]);
 
-	    // Simular consultaVariablesPrestamo
-	    $mockInstance = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
+        // Simular consultaVariablesPrestamo
+        $mockInstance = Mockery::mock(PrestamosTraitTestDummy::class)->makePartial();
 
-	    $mockInstance->shouldReceive('consultaVariablesPrestamo')
-	        ->with('1', 1)
-	        ->andReturn([
-	            (object)['cliente' => 'Juan Pérez', 'monto' => 100000]
-	        ]);
+        $mockInstance->shouldReceive('consultaVariablesPrestamo')
+            ->with('1', 1)
+            ->andReturn([
+                (object) ['cliente' => 'Juan Pérez', 'monto' => 100000]
+            ]);
 
-	    // Simular getPlantillasDocumentos
-	    $mockInstance->shouldReceive('getPlantillasDocumentos')
-	        ->with($request, Mockery::type(Pstdocplant::class))
-	        ->andReturn([
-	            (object)[
-	                'id' => 1, 
-	                'nombre' => 'Contrato', 
-	                'plantilla_html' => 'Cliente: {cliente}, Monto: {monto} <!--QRTquery1QRT--> [campo1]'
-	            ]
-	        ]);
+        // Simular getPlantillasDocumentos
+        $mockInstance->shouldReceive('getPlantillasDocumentos')
+            ->with($request, Mockery::type(Pstdocplant::class))
+            ->andReturn([
+                (object) [
+                    'id' => 1,
+                    'nombre' => 'Contrato',
+                    'plantilla_html' => 'Cliente: {cliente}, Monto: {monto} <!--QRTquery1QRT--> [campo1]'
+                ]
+            ]);
 
-	    // Simular replaceVariablesInTemplate
-	    $mockInstance->shouldReceive('replaceVariablesInTemplate')
-	        ->andReturnUsing(function ($template, $variables) {
-	            return str_replace(['{cliente}', '{monto}'], [$variables['cliente'], $variables['monto']], $template);
-	        });
+        // Simular replaceVariablesInTemplate
+        $mockInstance->shouldReceive('replaceVariablesInTemplate')
+            ->andReturnUsing(function ($template, $variables) {
+                return str_replace(['{cliente}', '{monto}'], [$variables['cliente'], $variables['monto']], $template);
+            });
 
-	    // Simular Psquerytabla
-	    $mockPsquerytabla = Mockery::mock(Psquerytabla::class);
-	    $mockPsquerytabla->shouldReceive('where')->with('codigo', 'query1')->andReturnSelf();
-	    $mockPsquerytabla->shouldReceive('where')->with('id_empresa', '1')->andReturnSelf();
-	    $mockPsquerytabla->shouldReceive('first')->andReturn((object)['sql' => 'SELECT "Valor Query" AS campo1']);
+        // Simular Psquerytabla
+        $mockPsquerytabla = Mockery::mock(Psquerytabla::class);
+        $mockPsquerytabla->shouldReceive('where')->with('codigo', 'query1')->andReturnSelf();
+        $mockPsquerytabla->shouldReceive('where')->with('id_empresa', '1')->andReturnSelf();
+        $mockPsquerytabla->shouldReceive('first')->andReturn((object) ['sql' => 'SELECT "Valor Query" AS campo1']);
 
-	    // Simular DB::select
-	    DB::shouldReceive('select')->with('SELECT "Valor Query" AS campo1')->andReturn([
-	        (object)['campo1' => 'Valor Query']
-	    ]);
+        // Simular DB::select
+        DB::shouldReceive('select')->with('SELECT "Valor Query" AS campo1')->andReturn([
+            (object) ['campo1' => 'Valor Query']
+        ]);
 
-	    // Simular el modelo Pstdocplant
-	    $mockPstdocplant = Mockery::mock(Pstdocplant::class);
+        // Simular el modelo Pstdocplant
+        $mockPstdocplant = Mockery::mock(Pstdocplant::class);
 
-	    // Ejecutar la función
-	    $resultado = $mockInstance->renderTemplate($request, $mockPsquerytabla, $mockPstdocplant);
+        // Ejecutar la función
+        $resultado = $mockInstance->renderTemplate($request, $mockPsquerytabla, $mockPstdocplant);
 
-	    // Verificaciones
-	    $this->assertIsArray($resultado);
-	    $this->assertCount(1, $resultado);
-	    $this->assertEquals('Contrato', $resultado[0]['nombre']);
-	    $this->assertStringContainsString('Cliente: Juan Pérez, Monto: 100000', $resultado[0]['plantilla_html']);
-	    $this->assertStringContainsString('Cliente: Juan Pérez, Monto: 100000  [campo1]<br>', $resultado[0]['plantilla_html']);
+        // Verificaciones
+        $this->assertIsArray($resultado);
+        $this->assertCount(1, $resultado);
+        $this->assertEquals('Contrato', $resultado[0]['nombre']);
+        $this->assertStringContainsString('Cliente: Juan Pérez, Monto: 100000', $resultado[0]['plantilla_html']);
+        $this->assertStringContainsString('Cliente: Juan Pérez, Monto: 100000  [campo1]<br>', $resultado[0]['plantilla_html']);
 
-	    // Validar la correcta sustitución de variables en los bloques <!--QRT ... QRT--> y dentro de []
-	    //$this->assertStringContainsString('Valor Query', $resultado[0]['plantilla_html']);
-	}
+        // Validar la correcta sustitución de variables en los bloques <!--QRT ... QRT--> y dentro de []
+        //$this->assertStringContainsString('Valor Query', $resultado[0]['plantilla_html']);
+    }
 
     protected function tearDown(): void
     {
         Mockery::close();
         parent::tearDown();
     }
-
 }

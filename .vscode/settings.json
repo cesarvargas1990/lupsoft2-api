@@ -1,6 +1,15 @@
 {
     "sonarlint.connectedMode.project": {
-        "connectionId": "http-localhost-9000-",
-        "projectKey": "psoft2"
-    }
-}
+      "connectionId": "http-localhost-9000-",
+      "projectKey": "psoft2"
+    },
+  
+    "[php]": {
+      "editor.tabSize": 4,
+      "editor.insertSpaces": true,
+      "editor.detectIndentation": false,
+      "editor.formatOnSave": true
+    },
+  
+    "intelephense.format.enable": true
+  }

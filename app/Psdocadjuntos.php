@@ -14,12 +14,10 @@ class Psdocadjuntos extends Model
      *
      * @var array
      */
-	 
-	protected $table = 'psdocadjuntos';
-	 
-    protected $hidden = [
 
-    ];
+    protected $table = 'psdocadjuntos';
+
+    protected $hidden = [];
 
     public function tipoDocumento()
     {
@@ -40,5 +38,4 @@ class Psdocadjuntos extends Model
     {
         return $this->belongsTo(Psempresa::class, 'id_empresa');
     }
-
 }

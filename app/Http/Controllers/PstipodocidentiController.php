@@ -22,8 +22,6 @@ class PstipodocidentiController extends Controller
         try {
 
             return response()->json($pstipodocidenti::all());
-
-
         } catch (\Exception $e) {
 
             return response()->json([
@@ -32,10 +30,7 @@ class PstipodocidentiController extends Controller
                 'lineError' => $e->getLine(),
                 'file' => $e->getFile()
             ], 404);
-
         }
-
-
     }
 
     public function showOnePstipodocidenti(Pstipodocidenti $pstipodocidenti, $id)
@@ -45,8 +40,6 @@ class PstipodocidentiController extends Controller
         try {
 
             return response()->json($pstipodocidenti::find($id));
-
-
         } catch (\Exception $e) {
 
             return response()->json([
@@ -55,13 +48,10 @@ class PstipodocidentiController extends Controller
                 'lineError' => $e->getLine(),
                 'file' => $e->getFile()
             ], 404);
-
         }
-
-
     }
-	
-	
+
+
 
     public function ShowPstipodocidenti(Pstipodocidenti $pstipodocidenti)
     {
@@ -78,9 +68,9 @@ class PstipodocidentiController extends Controller
                 'file' => $e->getFile()
             ], 404)->header('Content-Type', 'application/json');
         }
-    }       
+    }
 
-    public function create(Request $request,Pstipodocidenti $pstipodocidenti)
+    public function create(Request $request, Pstipodocidenti $pstipodocidenti)
     {
 
 
@@ -89,7 +79,6 @@ class PstipodocidentiController extends Controller
             $data = $pstipodocidenti::create($request->all());
 
             return response()->json($data, 201);
-
         } catch (\Exception $e) {
 
             return response()->json([
@@ -98,13 +87,10 @@ class PstipodocidentiController extends Controller
                 'lineError' => $e->getLine(),
                 'file' => $e->getFile()
             ], 404);
-
         }
-
-
     }
 
-    public function update($id,Request $request,Pstipodocidenti $pstipodocidenti)
+    public function update($id, Request $request, Pstipodocidenti $pstipodocidenti)
     {
 
 
@@ -114,8 +100,6 @@ class PstipodocidentiController extends Controller
             $data->update($request->all());
 
             return response()->json($data, 200);
-
-
         } catch (\Exception $e) {
 
             return response()->json([
@@ -124,10 +108,7 @@ class PstipodocidentiController extends Controller
                 'lineError' => $e->getLine(),
                 'file' => $e->getFile()
             ], 404);
-
         }
-
-
     }
 
     public function delete($id, Psclientes $psclientes)
@@ -137,8 +118,7 @@ class PstipodocidentiController extends Controller
         try {
 
             $psclientes::findOrFail($id)->delete();
-            return response(array('message' => 'Deleted Successfully') , 200);
-
+            return response(array('message' => 'Deleted Successfully'), 200);
         } catch (\Exception $e) {
 
             return response()->json([
@@ -147,12 +127,6 @@ class PstipodocidentiController extends Controller
                 'lineError' => $e->getLine(),
                 'file' => $e->getFile()
             ], 404);
-
         }
-
-
     }
-    
-	
-	
 }
