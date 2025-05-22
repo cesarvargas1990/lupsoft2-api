@@ -118,8 +118,7 @@ class PrestamosTraitTest extends TestCase
         // 4. Construimos el string que esperamos 
         //    (debe coincidir exactamente con lo que retorna el método)
         $expectedQuery = "
-        SELECT 
-        date_format(CURDATE(),'%d/%m/%Y') fecha_actual,
+        SELECT date_format(CURDATE(),'%d/%m/%Y') fecha_actual,
         date_format(CURRENT_TIME(), '%H:%i:%s %p') hora_actua,
         pre.id id_prestamo,
         format(pre.valorpres,2) valorpresf,
@@ -130,11 +129,10 @@ class PrestamosTraitTest extends TestCase
         tsip.*,
         pp.*,
         pp.nomperiodopago nomfpago
-        FROM 
-        psprestamos pre ,
-        psclientes cli, 
-        psempresa em, 
-        pstipodocidenti ide, 
+        FROM psprestamos pre,
+        psclientes cli,
+        psempresa em,
+        pstipodocidenti ide,
         pstiposistemaprest tsip,
         psperiodopago pp
         WHERE pre.id_empresa = :id_empresa

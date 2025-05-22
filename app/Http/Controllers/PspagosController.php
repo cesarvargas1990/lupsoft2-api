@@ -17,12 +17,9 @@ class PspagosController extends Controller
         $this->middleware('auth');
     }
 
-    // Generic for tables, make repaces Pspagos  and Pspagos for  your tables  names 
-
+    // Generic for tables, make repaces Pspagos  and Pspagos for  your tables  names
     public function showAllPspagos(Pspagos $pspagos)
     {
-
-
         try {
 
             return response()->json($pspagos::all());

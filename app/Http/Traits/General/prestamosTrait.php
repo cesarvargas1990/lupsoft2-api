@@ -65,8 +65,7 @@ trait prestamosTrait
     function obtenerQryListadoPrestamos()
     {
         return "
-        SELECT
-        date_format(CURDATE(),'%d/%m/%Y') fecha_actual,
+        SELECT date_format(CURDATE(),'%d/%m/%Y') fecha_actual,
         date_format(CURRENT_TIME(), '%H:%i:%s %p') hora_actua,
         pre.id id_prestamo,
         format(pre.valorpres,2) valorpresf,
@@ -77,8 +76,7 @@ trait prestamosTrait
         tsip.*,
         pp.*,
         pp.nomperiodopago nomfpago
-        FROM 
-        psprestamos pre,
+        FROM psprestamos pre,
         psclientes cli,
         psempresa em,
         pstipodocidenti ide,
