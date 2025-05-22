@@ -61,7 +61,7 @@ trait prestamosTrait
     }
 
 
-    function obtenerQryListadoPrestamos($id_empresa)
+    function obtenerQryListadoPrestamos()
     {
         $qry = "
         SELECT 
@@ -95,7 +95,7 @@ trait prestamosTrait
     }
     function consultaListadoPrestamos($id_empresa)
     {
-        $qry = $this->obtenerQryListadoPrestamos($id_empresa);
+        $qry = $this->obtenerQryListadoPrestamos();
         $binds = array(
             'id_empresa' => $id_empresa
         );
@@ -106,7 +106,7 @@ trait prestamosTrait
     function consultaVariablesPrestamo($id_empresa, $idprestamo)
     {
 
-        $qry = $this->obtenerQryListadoPrestamos($id_empresa);
+        $qry = $this->obtenerQryListadoPrestamos();
         $qry .= ' and pre.id = :id_prestamo';
         $binds = array(
             'id_empresa' => $id_empresa,

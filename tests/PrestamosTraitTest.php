@@ -79,7 +79,6 @@ class PrestamosTraitTest extends TestCase
         //    Devolvemos un query ficticio.
         $dummy->shouldReceive('obtenerQryListadoPrestamos')
               ->once()
-              ->with($id_empresa)
               ->andReturn('SELECT * FROM psprestamos WHERE id_empresa = :id_empresa');
 
         // 4. Preparamos un array de objetos que simulará la respuesta de DB::select
@@ -113,7 +112,7 @@ class PrestamosTraitTest extends TestCase
         $dummy = new PrestamosTraitTestDummy();
 
         // 3. Ejecuta el método
-        $result = $dummy->obtenerQryListadoPrestamos($id_empresa);
+        $result = $dummy->obtenerQryListadoPrestamos();
 
         // 4. Construimos el string que esperamos 
         //    (debe coincidir exactamente con lo que retorna el método)
@@ -164,7 +163,6 @@ class PrestamosTraitTest extends TestCase
         $baseQuery = 'SELECT * FROM psprestamos pre WHERE pre.id_empresa = :id_empresa AND pre.ind_estado = 1';
         $dummy->shouldReceive('obtenerQryListadoPrestamos')
             ->once()
-            ->with($id_empresa)
             ->andReturn($baseQuery);
 
         // 4. Prepara el query final que esperamos

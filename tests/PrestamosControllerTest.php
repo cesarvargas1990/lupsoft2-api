@@ -147,7 +147,6 @@ class PrestamosControllerTest extends TestCase
         $controller = Mockery::mock(PrestamosController::class)->makePartial();
         $controller->shouldAllowMockingProtectedMethods()
                    ->shouldReceive('obtenerQryListadoPrestamos')
-                   ->with(1)
                    ->andReturn('SELECT * FROM prestamos WHERE id_empresa = :id_empresa');
 
         $result = $controller->generarVariablesPlantillas(1);
@@ -166,7 +165,6 @@ class PrestamosControllerTest extends TestCase
         $controller = Mockery::mock(PrestamosController::class)->makePartial();
         $controller->shouldAllowMockingProtectedMethods()
                    ->shouldReceive('obtenerQryListadoPrestamos')
-                   ->with(1)
                    ->andReturn('SELECT * FROM prestamos WHERE id_empresa = :id_empresa');
 
         $result = $controller->generarVariablesPlantillas(1);
