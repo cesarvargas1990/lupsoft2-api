@@ -63,7 +63,7 @@ trait prestamosTrait
 
     function obtenerQryListadoPrestamos()
     {
-        $qry = "
+        return "
         SELECT 
         date_format(CURDATE(),'%d/%m/%Y') fecha_actual,
         date_format(CURRENT_TIME(), '%H:%i:%s %p') hora_actua,
@@ -90,8 +90,6 @@ trait prestamosTrait
         AND em.id = pre.id_empresa
         AND  cli.id_tipo_docid = ide.id
         AND pre.ind_estado = 1";
-
-        return $qry;
     }
     function consultaListadoPrestamos($id_empresa)
     {
@@ -99,8 +97,7 @@ trait prestamosTrait
         $binds = array(
             'id_empresa' => $id_empresa
         );
-        $data = DB::select($qry, $binds);
-        return $data;
+        return DB::select($qry, $binds);
     }
 
     function consultaVariablesPrestamo($id_empresa, $idprestamo)
@@ -182,8 +179,7 @@ trait prestamosTrait
     public function getPlantillasDocumentos($request, Pstdocplant $pstdocplant)
     {
         $id_empresa = $request->get('id_empresa');
-        $data = $pstdocplant::where('id_empresa', $id_empresa)->get();
-        return $data;
+        return $pstdocplant::where('id_empresa', $id_empresa)->get();
     }
   
     public function setVars($query,$variables,$str,$str2){
@@ -222,9 +218,9 @@ trait prestamosTrait
     public function getCapitalInicial($id_empresa, Psempresa $psempresa)
     {
         try {
-            $capitalInicial = $psempresa::where('id', $id_empresa)
+           return $psempresa::where('id', $id_empresa)
                                     ->value('vlr_capinicial');
-            return $capitalInicial;
+            
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -248,12 +244,10 @@ trait prestamosTrait
             $fecha = Carbon::createFromFormat('Y-m-d', $request->get('fecha'))->toDateString();
             $fecIni = Carbon::parse($fecha)->startOfDay();
             $fecFin = Carbon::parse($fecha)->endOfDay();
-            $valorpres = $psprestamos::where('id_empresa', $id_empresa)
+            return $psprestamos::where('id_empresa', $id_empresa)
                                     ->whereBetween('created_at', [$fecIni, $fecFin])
                                     ->where('ind_estado', 1)
                                     ->sum('valorpres');
-
-            return $valorpres;
 
         } catch (\Exception $e) {
             return response()->json([
@@ -302,11 +296,9 @@ trait prestamosTrait
         try {
             $id_empresa = $request->get('id_empresa');
 
-            $valorpres = $psprestamos::where('id_empresa', $id_empresa)
+            return $psprestamos::where('id_empresa', $id_empresa)
                                     ->where('ind_estado', 1)
                                     ->sum('valorpres');
-
-            return $valorpres;
 
         } catch (\Exception $e) {
             return response()->json([

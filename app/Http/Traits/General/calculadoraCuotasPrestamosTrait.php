@@ -22,8 +22,7 @@ trait calculadoraCuotasPrestamosTrait
         $numcuotas = $request->get('numcuotas');
         $porcint = $request->get('porcint'); 
         $valorpres = $request->get('valorpres');
-        $salida =  eval($formula);
-        return $salida;
+        return eval($formula);
     }
 
     function generarTablaAmortizacion($request,Psperiodopago $psperiodopago,Pspstiposistemaprest $pspstiposistemaprest) {
