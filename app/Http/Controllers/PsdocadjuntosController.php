@@ -15,7 +15,6 @@ class PsdocadjuntosController extends Controller
 	
     public function showAllPstdocadjuntos(Psdocadjuntos $psdocadjuntos)
     {
-
         try { 
             return response()->json($psdocadjuntos::all());
         } catch (\Exception $e) {
@@ -26,8 +25,6 @@ class PsdocadjuntosController extends Controller
                 'file' => $e->getFile()
             ], 404);
         }
-
-
     }
 
     public function showOnePsdocadjuntos($id,Psdocadjuntos $psdocadjuntos)
@@ -48,7 +45,6 @@ class PsdocadjuntosController extends Controller
 
     public function create(Request $request, Psdocadjuntos $psdocadjuntos)
     {
-
         try {
             $data = $psdocadjuntos::create($request->all());
             return response()->json($data, 201);

@@ -26,14 +26,11 @@ class CuotasController extends Controller
 
     public function calcularCuotas(Request $request, Psperiodopago $psperiodopago, Pspstiposistemaprest $pspstiposistemaprest)
     {
-
-
         try {
 
             $datos = $this->generarTablaAmortizacion($request,$psperiodopago,$pspstiposistemaprest);
             return response()->json($datos);
 
-
         } catch (\Exception $e) {
             return response()->json([
                 "message" => $e->getMessage(),
@@ -42,20 +39,14 @@ class CuotasController extends Controller
                 "file" => $e->getFile()
             ], 404);
         }
-
 
     }
 
     public function calcularCuotas2(Request $request,Psperiodopago $psperiodopago,Pspstiposistemaprest $pspstiposistemaprest)
     {
-
-
         try {
-
             $datos = $this->calcularCuota($request,$psperiodopago,$pspstiposistemaprest);
             return response()->json($datos);
-
-
         } catch (\Exception $e) {
             return response()->json([
                 "message" => $e->getMessage(),
@@ -67,9 +58,5 @@ class CuotasController extends Controller
 
 
     }
-
-
-
-
 
 }
