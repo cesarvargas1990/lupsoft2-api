@@ -162,7 +162,7 @@ trait prestamosTrait
         foreach ($matches as $value) {
             $qt = $value[0];
             $str = ltrim($value, $qt);
-            if ((preg_match_all('/' . preg_quote('[') . '(.*?)' . preg_quote(']') . '/s', $str, $matchesv))) {
+            if (preg_match_all('/' . preg_quote('[') . '(.*?)' . preg_quote(']') . '/s', $str, $matchesv)) {
                 $qt = $psQueryTabla::where('codigo', $qt)->where('id_empresa', $id_empresa)->first()->sql;
                 $vars = $this->consultaVariablesPrestamo($id_empresa, $idprestamo)[0];
                 $array = json_decode(json_encode($vars), true);
