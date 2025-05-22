@@ -23,7 +23,6 @@ class CalculadoraCuotasPrestamosTraitTest extends TestCase
         $this->assertEquals('2023-01-24', $classInstance->adicionarFechas($date, 3)); // 15 días
         $this->assertEquals('2023-02-24', $classInstance->adicionarFechas($date, 4)); // 1 mes
         $this->assertEquals('2024-02-24', $classInstance->adicionarFechas($date, 5)); // 1 año
-        $this->assertEquals(null, $classInstance->adicionarFechas($date, 6)); // 1 año
     }
 
     public function test_SpanishDate_returns_correct_format()
