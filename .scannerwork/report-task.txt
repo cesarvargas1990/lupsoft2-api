@@ -2,5 +2,5 @@ projectKey=psoft2
 serverUrl=http://localhost:9000
 serverVersion=25.3.0.104237
 dashboardUrl=http://localhost:9000/dashboard?id=psoft2
-ceTaskId=8fd6d017-dea5-4d63-b7db-d6bcdc5163f1
-ceTaskUrl=http://localhost:9000/api/ce/task?id=8fd6d017-dea5-4d63-b7db-d6bcdc5163f1
+ceTaskId=354dd508-2ff9-479b-9746-3d0266c9a9ec
+ceTaskUrl=http://localhost:9000/api/ce/task?id=354dd508-2ff9-479b-9746-3d0266c9a9ec
