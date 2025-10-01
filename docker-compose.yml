@@ -35,7 +35,7 @@ services:
       MYSQL_USER: saequi_psofapi
       MYSQL_PASSWORD: c354rv4rg45
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
     networks:
