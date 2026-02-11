@@ -49,6 +49,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        dd('cerro');
         Auth::logout();
         return response()->json(['message' => 'Sesión cerrada correctamente'], 200);
     }
