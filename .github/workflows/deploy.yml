@@ -27,5 +27,11 @@ jobs:
           script: |
             set -e
             cd /home/${{ secrets.SSH_USER }}/lupsoft2-api
-            git pull
+            git fetch origin
+            if git show-ref --verify --quiet refs/heads/main; then
+              git checkout main
+            else
+              git checkout -b main --track origin/main
+            fi
+            git pull origin main
             docker compose up --build -d
