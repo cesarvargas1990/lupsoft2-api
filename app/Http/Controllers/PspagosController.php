@@ -20,10 +20,8 @@ class PspagosController extends Controller
     public function showAllPspagos(Pspagos $pspagos)
     {
         try {
-
             return response()->json($pspagos::all());
         } catch (\Exception $e) {
-
             return response()->json([
                 "message" => $e->getMessage(),
                 'errorCode' => $e->getCode(),
@@ -35,13 +33,9 @@ class PspagosController extends Controller
 
     public function showOnePspagos(Pspagos $pspagos, $id)
     {
-
-
         try {
-
             return response()->json($pspagos::find($id));
         } catch (\Exception $e) {
-
             return response()->json([
                 "message" => $e->getMessage(),
                 'errorCode' => $e->getCode(),
@@ -105,30 +99,22 @@ class PspagosController extends Controller
 
     public function update($id, Request $request, Pspagos $pspagos)
     {
-
-
         try {
-
             $data = $pspagos::findOrFail($id);
             $data->update($request->all());
 
             return response()->json($data, 200);
         } catch (\Exception $e) {
-
             return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
         }
     }
 
     public function delete($id, Pspagos $pspagos)
     {
-
-
         try {
-
             $pspagos::findOrFail($id)->delete();
             return response(array('message' => 'Deleted Successfully'), 200);
         } catch (\Exception $e) {
-
             return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
         }
     }

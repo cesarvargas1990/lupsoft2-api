@@ -13,8 +13,6 @@ class CreatePsusperfilTable extends Migration
      */
     public function up()
     {
-
-
         Schema::create('psusperfil', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('id_user');

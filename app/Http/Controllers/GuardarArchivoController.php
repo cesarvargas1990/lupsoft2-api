@@ -12,7 +12,6 @@ use App\Pstdocadjuntos;
 
 class GuardarArchivoController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth');

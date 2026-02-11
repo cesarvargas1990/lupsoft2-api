@@ -16,10 +16,8 @@ use Carbon\Carbon;
 
 trait prestamosTrait
 {
-
-    function guardarPrestamoFechas($request, Psperiodopago $psperiodopago, Pspstiposistemaprest $pspstiposistemaprest)
+    public function guardarPrestamoFechas($request, Psperiodopago $psperiodopago, Pspstiposistemaprest $pspstiposistemaprest)
     {
-
         $datosCuota = $this->calcularCuota($request, $psperiodopago, $pspstiposistemaprest);
         $valor_cuota = $datosCuota['datosprestamo']['valor_cuota'] ?? 0;
         $fechaHora = Carbon::parse($request->get('fecha'));
@@ -43,7 +41,6 @@ trait prestamosTrait
         );
 
         foreach ($datosCuota['tabla'] as $fechas) {
-
             DB::table('psfechaspago')->insert(
                 [
                     'id_prestamo' => $id_prestamo,
@@ -62,7 +59,7 @@ trait prestamosTrait
     }
 
 
-    function obtenerQryListadoPrestamos()
+    public function obtenerQryListadoPrestamos()
     {
         return "
         SELECT date_format(CURDATE(),'%d/%m/%Y') fecha_actual,
@@ -90,7 +87,7 @@ trait prestamosTrait
         AND  cli.id_tipo_docid = ide.id
         AND pre.ind_estado = 1";
     }
-    function consultaListadoPrestamos($id_empresa)
+    public function consultaListadoPrestamos($id_empresa)
     {
         $qry = $this->obtenerQryListadoPrestamos();
         $binds = array(
@@ -99,9 +96,8 @@ trait prestamosTrait
         return DB::select($qry, $binds);
     }
 
-    function consultaVariablesPrestamo($id_empresa, $idprestamo)
+    public function consultaVariablesPrestamo($id_empresa, $idprestamo)
     {
-
         $qry = $this->obtenerQryListadoPrestamos();
         $qry .= ' and pre.id = :id_prestamo';
         $binds = array(
@@ -111,9 +107,8 @@ trait prestamosTrait
         return DB::select($qry, $binds);
     }
 
-    function replaceVariablesInTemplate($template, array $variables)
+    public function replaceVariablesInTemplate($template, array $variables)
     {
-
         return preg_replace_callback(
             '#{(.*?)}#',
             function ($match) use ($variables) {
@@ -124,7 +119,7 @@ trait prestamosTrait
         );
     }
 
-    function renderTemplate($request, Psquerytabla $psQueryTabla, Pstdocplant $pstdocplant)
+    public function renderTemplate($request, Psquerytabla $psQueryTabla, Pstdocplant $pstdocplant)
     {
         $idprestamo = $request->get('id_prestamo');
         $id_empresa = $request->get('id_empresa');
@@ -206,7 +201,6 @@ trait prestamosTrait
                 ->sum('valorpres');
 
             return (float) $valorpres; // Retorna un número en caso de éxito
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -290,7 +284,16 @@ trait prestamosTrait
 
     public function getPerfilUser()
     {
-        return Auth::user()->perfiles->firstWhere('id', 1)->id ?? null;
+        try {
+            $user = Auth::user();
+            if (!$user || !isset($user->perfiles)) {
+                return null;
+            }
+
+            return optional($user->perfiles->firstWhere('id', 1))->id;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     public function getValorPrestamos($request, Psprestamos $psprestamos)
@@ -318,12 +321,10 @@ trait prestamosTrait
 
 
             if ($this->getPerfilUser() == 1) {
-
                 $totalintereses = $pspagos::where('id_empresa', $id_empresa)
                     ->where('ind_estado', 1)
                     ->sum('valcuota');
             } else {
-
                 $totalintereses = $pspagos::where('id_empresa', $id_empresa)
                     ->where('ind_estado', 1)
                     ->where('id_usureg', Auth::user()->id)

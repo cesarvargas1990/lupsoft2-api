@@ -18,7 +18,6 @@ class PstdocplantController extends Controller
         try {
             return response()->json($pstdocplant::all());
         } catch (\Exception $e) {
-
             return response([
                 "message" => $e->getMessage(),
                 'errorCode' => $e->getCode(),
@@ -90,12 +89,10 @@ class PstdocplantController extends Controller
 
     public function delete($id, Pstdocplant $pstdocplant)
     {
-
         try {
             $pstdocplant::findOrFail($id)->delete();
             return response(array('message' => 'Deleted Successfully'), 200);
         } catch (\Exception $e) {
-
             return response([
                 "message" => $e->getMessage(),
                 'errorCode' => $e->getCode(),

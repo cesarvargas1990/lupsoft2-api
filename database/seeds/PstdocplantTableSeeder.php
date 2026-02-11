@@ -11,10 +11,6 @@ class PstdocplantTableSeeder extends Seeder
      */
     public function run()
     {
-
-
-
-
         DB::table('pstdocplant')->insert([
 
 

@@ -11,8 +11,6 @@ use DB;
 
 class PsformapagoController extends Controller
 {
-
-
     public function __construct()
     {
         $this->middleware('auth');

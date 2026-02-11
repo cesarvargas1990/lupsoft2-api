@@ -2,7 +2,6 @@
 
 namespace App;
 
-
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Tymon\JWTAuth\Contracts\JWTSubject;

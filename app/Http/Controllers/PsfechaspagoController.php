@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 
 use DB;
 
-
 class PsfechaspagoController extends Controller
 {
     use calculadoraCuotasPrestamosTrait;
@@ -60,13 +59,9 @@ class PsfechaspagoController extends Controller
 
     public function showOnePsfechaspago($id, Psfechaspago $psfechaspago)
     {
-
-
         try {
-
             return response()->json($psfechaspago::find($id));
         } catch (\Exception $e) {
-
             return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
         }
     }
@@ -75,45 +70,33 @@ class PsfechaspagoController extends Controller
 
     public function create(Request $request, Psfechaspago $psfechaspago)
     {
-
-
         try {
-
             $data = $psfechaspago::create($request->all());
 
             return response()->json($data, 201);
         } catch (\Exception $e) {
-
             return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
         }
     }
 
     public function update($id, Request $request, Psfechaspago $psfechaspago)
     {
-
-
         try {
-
             $data = $psfechaspago::findOrFail($id);
             $data->update($request->all());
 
             return response()->json($data, 200);
         } catch (\Exception $e) {
-
             return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
         }
     }
 
     public function delete($id, Psfechaspago $psfechaspago)
     {
-
-
         try {
-
             $psfechaspago::findOrFail($id)->delete();
             return response(array('message' => 'Deleted Successfully'), 200);
         } catch (\Exception $e) {
-
             return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
         }
     }

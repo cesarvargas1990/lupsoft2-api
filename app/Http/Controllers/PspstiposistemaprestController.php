@@ -17,13 +17,9 @@ class PspstiposistemaprestController extends Controller
 
     public function showAll(Pspstiposistemaprest $pspstiposistemaprest)
     {
-
-
         try {
-
             return response()->json($pspstiposistemaprest::all());
         } catch (\Exception $e) {
-
             return response()->json([
                 "message" => $e->getMessage(),
                 'errorCode' => $e->getCode(),
@@ -35,13 +31,9 @@ class PspstiposistemaprestController extends Controller
 
     public function showOne($id, Pspstiposistemaprest $pspstiposistemaprest)
     {
-
-
         try {
-
             return response()->json($pspstiposistemaprest::find($id));
         } catch (\Exception $e) {
-
             return response()->json([
                 "message" => $e->getMessage(),
                 'errorCode' => $e->getCode(),
@@ -85,7 +77,6 @@ class PspstiposistemaprestController extends Controller
 
     public function update($id, Request $request, Pspstiposistemaprest $pspstiposistemaprest)
     {
-
         try {
             $data = $pspstiposistemaprest::findOrFail($id);
             $data->update($request->all());
@@ -102,14 +93,10 @@ class PspstiposistemaprestController extends Controller
 
     public function delete($id, Pspstiposistemaprest $pspstiposistemaprest)
     {
-
-
         try {
-
             $pspstiposistemaprest::findOrFail($id)->delete();
             return response(array('message' => 'Deleted Successfully'), 200);
         } catch (\Exception $e) {
-
             return response()->json([
                 "message" => $e->getMessage(),
                 'errorCode' => $e->getCode(),

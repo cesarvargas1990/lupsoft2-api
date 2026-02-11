@@ -2,7 +2,6 @@
 
 namespace App;
 
-
 use Illuminate\Database\Eloquent\Model;
 
 use Carbon\Carbon;
@@ -12,9 +11,6 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Psusuperfil extends Model
 {
-
-
-
     protected $fillable = [];
 
     /**

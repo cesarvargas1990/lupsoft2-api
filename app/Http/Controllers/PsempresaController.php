@@ -19,14 +19,10 @@ class PsempresaController extends Controller
 
     public function showOnePsempresa(PsEmpresa $psempresa, $nid)
     {
-
-
         try {
-
             $data = $psempresa::where('id', $nid);
             return response()->json($data->first());
         } catch (\Exception $e) {
-
             return response()->json([
                 "message" => $e->getMessage(),
                 'errorCode' => $e->getCode(),
@@ -38,17 +34,13 @@ class PsempresaController extends Controller
 
     public function update($id, Request $request, PsEmpresa $psempresa)
     {
-
-
         try {
-
             $data = $psempresa::findOrFail($id);
             $request->request->add(['nitempresa' => $request->get('nit')]);
             $data->update($request->all());
 
             return response()->json($data, 200);
         } catch (\Exception $e) {
-
             return response()->json([
                 "message" => $e->getMessage(),
                 'errorCode' => $e->getCode(),

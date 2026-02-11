@@ -15,7 +15,6 @@ use App\Pspstiposistemaprest;
 
 class CuotasController extends Controller
 {
-
     use calculadoraCuotasPrestamosTrait;
     use prestamosTrait;
 
@@ -27,7 +26,6 @@ class CuotasController extends Controller
     public function calcularCuotas(Request $request, Psperiodopago $psperiodopago, Pspstiposistemaprest $pspstiposistemaprest)
     {
         try {
-
             $datos = $this->generarTablaAmortizacion($request, $psperiodopago, $pspstiposistemaprest);
             return response()->json($datos);
         } catch (\Exception $e) {

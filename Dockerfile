@@ -22,13 +22,6 @@ RUN echo "zend_extension=xdebug.so" >> /usr/local/etc/php/php.ini \
     && echo "xdebug.remote_host=host.docker.internal" >> /usr/local/etc/php/php.ini
 COPY --from=composer:1 /usr/bin/composer /usr/bin/composer
 
-
-RUN curl -sSLo /tmp/sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip \
-    && unzip /tmp/sonar-scanner-cli.zip -d /opt/ \
-    && mv /opt/sonar-scanner-4.6.2.2472-linux /opt/sonar-scanner \
-    && ln -s /opt/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner \
-    && rm /tmp/sonar-scanner-cli.zip
-
 # Establecer directorio de trabajo
 WORKDIR /var/www/html
 

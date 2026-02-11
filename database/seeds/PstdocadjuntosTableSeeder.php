@@ -11,10 +11,6 @@ class PstdocadjuntosTableSeeder extends Seeder
      */
     public function run()
     {
-
-
-
-
         DB::table('pstdocadjuntos')->insert([
 
 

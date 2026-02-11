@@ -13,8 +13,6 @@ class CreatePsdocadjuntosTable extends Migration
      */
     public function up()
     {
-
-
         Schema::create('psdocadjuntos', function (Blueprint $table) {
             $table->increments('id');
             $table->string('rutaadjunto', 100);

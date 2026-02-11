@@ -11,9 +11,6 @@ class PsusperfilTableSeeder extends Seeder
      */
     public function run()
     {
-
-
-
         DB::table('psusperfil')->insert([
             'id_user' => 1,
             'id_perfil' => 1,

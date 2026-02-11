@@ -17,11 +17,9 @@ class PsperiodopagoController extends Controller
 
     public function showAllPsperiodopago(Psperiodopago $psperiodopago)
     {
-
         try {
             return response()->json($psperiodopago::all());
         } catch (\Exception $e) {
-
             return response()->json([
                 "message" => $e->getMessage(),
                 'errorCode' => $e->getCode(),
@@ -33,7 +31,6 @@ class PsperiodopagoController extends Controller
 
     public function showOnePsperiodopago($id, Psperiodopago $psperiodopago)
     {
-
         try {
             return response()->json($psperiodopago::find($id));
         } catch (\Exception $e) {
@@ -63,8 +60,6 @@ class PsperiodopagoController extends Controller
 
     public function create(Request $request, Psperiodopago $psperiodopago)
     {
-
-
         try {
             $data = $psperiodopago::create($request->all());
             return response()->json($data, 201);

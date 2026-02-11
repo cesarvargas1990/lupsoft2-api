@@ -13,8 +13,6 @@ class CreatePsclientesTable extends Migration
      */
     public function up()
     {
-
-
         Schema::create('psclientes', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nomcliente')->nullable();

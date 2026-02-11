@@ -27,6 +27,17 @@ $app->withEloquent();
 
 /*
 |--------------------------------------------------------------------------
+| Load Application Configuration
+|--------------------------------------------------------------------------
+|
+| Lumen does not auto-load all config files. Some framework service
+| providers (like pagination) expect "view.paths" to exist.
+|
+*/
+$app->configure('view');
+
+/*
+|--------------------------------------------------------------------------
 | Register Container Bindings
 |--------------------------------------------------------------------------
 |

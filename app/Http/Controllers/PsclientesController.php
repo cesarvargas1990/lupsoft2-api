@@ -21,7 +21,6 @@ class PsclientesController extends Controller
     public function showAllPsclientes($id_empresa, Psclientes $psclientes)
     {
         try {
-
             $data = $psclientes::where('id_empresa', $id_empresa)
                 ->where('ind_estado', 1)
                 ->get();
@@ -29,7 +28,6 @@ class PsclientesController extends Controller
 
             return response()->json($data);
         } catch (\Exception $e) {
-
             return response()->json([
                 'message' => $e->getMessage(),
                 'errorCode' => $e->getCode(),
@@ -63,7 +61,6 @@ class PsclientesController extends Controller
     public function ShowPsclientes(Psclientes $psclientes, $id_empresa)
     {
         try {
-
             $data = $psclientes::select('id as value', 'nomcliente as label')
                 ->where('id_empresa', $id_empresa)
                 ->where('ind_estado', 1)
@@ -72,7 +69,6 @@ class PsclientesController extends Controller
 
             return response()->json($data);
         } catch (\Exception $e) {
-
             return response()->json([
                 'message' => $e->getMessage(),
                 'errorCode' => $e->getCode(),
@@ -121,7 +117,6 @@ class PsclientesController extends Controller
             $request->request->add(['fch_nacimiento' => substr($fch_nacimiento, 0, 10)]);
         }
         try {
-
             $data = $psclientes::findOrFail($id);
             $data->update($request->all());
             return response()->json($data, 200);
@@ -137,17 +132,13 @@ class PsclientesController extends Controller
 
     public function delete($id, Psclientes $psclientes, Psprestamos $psprestamos, Pspagos $pspagos, Psfechaspago $psfechaspago)
     {
-
-
         try {
-
             $psclientes::findOrFail($id)->update(['ind_estado' => 0]);
             $psprestamos::where(['id_cliente' => $id])->update(['ind_estado' => 0]);
             $pspagos::where(['id_cliente' => $id])->update(['ind_estado' => 0]);
             $psfechaspago::where(['id_cliente' => $id])->update(['ind_estado' => 0]);
             return response(array('message' => 'Deleted Successfully'), 200);
         } catch (\Exception $e) {
-
             return response()->json([
                 "message" => $e->getMessage(),
                 'errorCode' => $e->getCode(),

@@ -13,9 +13,6 @@ class CreatePsempresaTable extends Migration
      */
     public function up()
     {
-
-
-
         Schema::create('psempresa', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nombre', 60)->nullable();

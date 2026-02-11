@@ -11,7 +11,6 @@ use Carbon\Carbon;
 
 class CalculadoraCuotasPrestamosTraitTest extends TestCase
 {
-
     public function test_adicionar_fechas_returns_correct_date()
     {
         $classInstance = new class {

@@ -2,7 +2,6 @@
 
 namespace App;
 
-
 use Illuminate\Database\Eloquent\Model;
 
 use Carbon\Carbon;
@@ -12,8 +11,6 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Psperfilaccion extends Model
 {
-
-
     protected $table = 'psperfilaccion';
 
     /**

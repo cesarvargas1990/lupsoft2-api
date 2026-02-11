@@ -6,14 +6,10 @@ namespace App\Http\Traits\General;
 use DB;
 use App\Psusuperfil;
 
-
-
 trait menuPrincipalTrait
 {
-
     public function getDatosMenu($idUser)
     {
-
         return DB::select('SELECT m.*
                             FROM psperfil vp,
                             psusperfil up,
@@ -36,7 +32,6 @@ trait menuPrincipalTrait
     public function perfilAccion($idUser, Psusuperfil $psusuperfil)
     {
         try {
-
             return $psusuperfil::where('id_user', $idUser)
                 ->join('psperfilaccion as p', 'psusperfil.id_perfil', '=', 'p.id_perfil')
                 ->select('p.nom_accion')
@@ -57,7 +52,6 @@ trait menuPrincipalTrait
     {
         $temp_array = array();
         foreach ($datosMenu as $element) {
-
             if ($element->id_mpadre == $parent_id) {
                 $children = $this->hacerMenuUsuario($datosMenu, $element->id);
 

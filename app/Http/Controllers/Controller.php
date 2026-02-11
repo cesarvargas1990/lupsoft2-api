@@ -10,11 +10,9 @@ use App\Psusuperfil;
 
 class Controller extends BaseController
 {
-
     use menuPrincipalTrait;
     protected function respondWithToken($token, Psempresa $psempresa, Psusuperfil $psusuperfil)
     {
-
         $empresa = $psempresa::where('id', Auth::user()->id_empresa);
         return response()->json([
             'id' => Auth::user()->id,

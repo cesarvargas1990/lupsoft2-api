@@ -11,9 +11,6 @@ class PsmenuTableSeeder extends Seeder
      */
     public function run()
     {
-
-
-
         DB::table('psmenu')->insert([
             'orden' => '1',
             'nombre' => 'Principal',

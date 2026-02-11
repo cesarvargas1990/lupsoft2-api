@@ -11,7 +11,6 @@ class PsclientesTableSeeder extends Seeder
      */
     public function run()
     {
-
         DB::table('psclientes')->insert([
             'nomcliente' => 'Cliente de Prueba',
             'id_tipo_docid' => '1',

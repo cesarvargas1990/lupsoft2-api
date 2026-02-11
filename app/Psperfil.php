@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Psperfil extends Model
 {
-
     protected $table = 'psperfil';
 
 

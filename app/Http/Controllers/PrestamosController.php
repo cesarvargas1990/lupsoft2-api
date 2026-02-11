@@ -21,8 +21,6 @@ use App\Pstdocplant;
 define('APPLICATION_JSON', 'application/json');
 class PrestamosController extends Controller
 {
-
-
     use prestamosTrait;
     use calculadoraCuotasPrestamosTrait;
 
@@ -36,28 +34,21 @@ class PrestamosController extends Controller
 
     public function guardarPrestamo(Request $request, Psperiodopago $psperiodopago, Pspstiposistemaprest $pspstiposistemaprest)
     {
-
-
         try {
-
             $salida = $this->guardarPrestamoFechas($request, $psperiodopago, $pspstiposistemaprest);
             return response()->json($salida);
         } catch (\Exception $e) {
-
             return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
         }
     }
 
     public function listadoPrestamos(Request $request)
     {
-
         try {
-
             $id_empresa = $request->get('id_empresa');
             $data = $this->consultaListadoPrestamos($id_empresa);
             return response()->json($data);
         } catch (\Exception $e) {
-
             return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
         }
     }
@@ -132,7 +123,6 @@ class PrestamosController extends Controller
     public function getPlantillasDocumentosPrestamo(Request $request, Psquerytabla $psQueryTabla, Pstdocplant $pstdocplant)
     {
         try {
-
             $datos = $this->renderTemplate($request, $psQueryTabla, $pstdocplant);
             return response()->json($datos);
         } catch (\Exception $e) {
@@ -161,7 +151,6 @@ class PrestamosController extends Controller
             $psPrestamosInstance = new Psprestamos();
             return number_format($this->getCapitalPrestado($id_empresa, $psPrestamosInstance), 2);
         } catch (\Exception $e) {
-
             return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
         }
     }
@@ -169,7 +158,6 @@ class PrestamosController extends Controller
     public function totalprestadohoy(Request $request, Psprestamos $psprestamos)
     {
         try {
-
             $hasPerfil = Auth::user()->perfiles->contains('id', 1);
 
             if (!$hasPerfil) {
@@ -177,7 +165,6 @@ class PrestamosController extends Controller
             }
             return number_format($this->getTotalPrestadoHoy($request, $psprestamos), 2);
         } catch (\Exception $e) {
-
             return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
         }
     }
@@ -185,10 +172,8 @@ class PrestamosController extends Controller
     public function totalintereshoy(Request $request, Pspagos $pspagos)
     {
         try {
-
             return number_format($this->getTotalintereseshoy($request, $pspagos), 2);
         } catch (\Exception $e) {
-
             return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
         }
     }
@@ -196,10 +181,8 @@ class PrestamosController extends Controller
     public function totalinteres(Request $request, Pspagos $pspagos)
     {
         try {
-
             return number_format($this->getTotalintereses($request, $pspagos), 2);
         } catch (\Exception $e) {
-
             return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
         }
     }
@@ -214,7 +197,6 @@ class PrestamosController extends Controller
             $request->request->add(['id_empresa' => $id_empresa]);
             return number_format($this->getCapitalInicial($id_empresa, $ps_empresa) - $this->getValorPrestamos($request, $psprestamos) + $this->getTotalintereses($request, $pspagos, $auth), 2);
         } catch (\Exception $e) {
-
             return response(["message" => $e->getMessage(), 'errorCode' => $e->getCode(), 'lineError' => $e->getLine(), 'file' => $e->getFile()], 404);
         }
     }

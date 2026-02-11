@@ -17,13 +17,9 @@ class PstipodocidentiController extends Controller
 
     public function showAllPstipodocidenti(Pstipodocidenti $pstipodocidenti)
     {
-
-
         try {
-
             return response()->json($pstipodocidenti::all());
         } catch (\Exception $e) {
-
             return response()->json([
                 "message" => $e->getMessage(),
                 'errorCode' => $e->getCode(),
@@ -35,13 +31,9 @@ class PstipodocidentiController extends Controller
 
     public function showOnePstipodocidenti(Pstipodocidenti $pstipodocidenti, $id)
     {
-
-
         try {
-
             return response()->json($pstipodocidenti::find($id));
         } catch (\Exception $e) {
-
             return response()->json([
                 "message" => $e->getMessage(),
                 'errorCode' => $e->getCode(),
@@ -72,15 +64,11 @@ class PstipodocidentiController extends Controller
 
     public function create(Request $request, Pstipodocidenti $pstipodocidenti)
     {
-
-
         try {
-
             $data = $pstipodocidenti::create($request->all());
 
             return response()->json($data, 201);
         } catch (\Exception $e) {
-
             return response()->json([
                 "message" => $e->getMessage(),
                 'errorCode' => $e->getCode(),
@@ -92,16 +80,12 @@ class PstipodocidentiController extends Controller
 
     public function update($id, Request $request, Pstipodocidenti $pstipodocidenti)
     {
-
-
         try {
-
             $data = $pstipodocidenti::findOrFail($id);
             $data->update($request->all());
 
             return response()->json($data, 200);
         } catch (\Exception $e) {
-
             return response()->json([
                 "message" => $e->getMessage(),
                 'errorCode' => $e->getCode(),
@@ -113,14 +97,10 @@ class PstipodocidentiController extends Controller
 
     public function delete($id, Psclientes $psclientes)
     {
-
-
         try {
-
             $psclientes::findOrFail($id)->delete();
             return response(array('message' => 'Deleted Successfully'), 200);
         } catch (\Exception $e) {
-
             return response()->json([
                 "message" => $e->getMessage(),
                 'errorCode' => $e->getCode(),

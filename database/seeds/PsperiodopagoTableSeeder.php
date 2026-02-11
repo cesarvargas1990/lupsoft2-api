@@ -11,9 +11,6 @@ class PsperiodopagoTableSeeder extends Seeder
      */
     public function run()
     {
-
-
-
         DB::table('psperiodopago')->insert([
 
             'nomperiodopago' => 'Diario',

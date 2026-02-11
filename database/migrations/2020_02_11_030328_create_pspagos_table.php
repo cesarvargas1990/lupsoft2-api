@@ -13,8 +13,6 @@ class CreatePspagosTable extends Migration
      */
     public function up()
     {
-
-
         Schema::create('pspagos', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('id_cliente')->nullable();

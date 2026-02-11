@@ -13,8 +13,6 @@ class CreatePsprestamosTable extends Migration
      */
     public function up()
     {
-
-
         Schema::create('psprestamos', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('id_cliente');

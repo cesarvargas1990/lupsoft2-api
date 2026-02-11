@@ -8,10 +8,8 @@ use App\Psperiodopago;
 use App\PsEmpresa;
 use App\Pspstiposistemaprest;
 
-
 trait calculadoraCuotasPrestamosTrait
 {
-
     public function calcularCuota($request, Psperiodopago $psperiodopago, Pspstiposistemaprest $pspstiposistemaprest)
     {
         setlocale(LC_ALL, "es_ES@euro", "es_ES", "esp");
@@ -26,13 +24,15 @@ trait calculadoraCuotasPrestamosTrait
         return eval($formula);
     }
 
-    function generarTablaAmortizacion($request, Psperiodopago $psperiodopago, Pspstiposistemaprest $pspstiposistemaprest)
+    public function generarTablaAmortizacion($request, Psperiodopago $psperiodopago, Pspstiposistemaprest $pspstiposistemaprest)
     {
-        return $this->calcularCuota($request, $psperiodopago, $pspstiposistemaprest)['tabla_formato'];
+        $resultado = $this->calcularCuota($request, $psperiodopago, $pspstiposistemaprest);
+
+        return is_array($resultado) ? ($resultado['tabla_formato'] ?? null) : null;
     }
 
 
-    function spanishDate($fechaStamp)
+    public function spanishDate($fechaStamp)
     {
         $ano = date('Y', $fechaStamp);
         $mes = date('n', $fechaStamp);
@@ -66,7 +66,7 @@ trait calculadoraCuotasPrestamosTrait
         return $diassemanaN[$diasemana] . ", $dia de " . $mesesN[$mes] . " de $ano";
     }
 
-    function adicionarFechas($date, $id_periodo_pago)
+    public function adicionarFechas($date, $id_periodo_pago)
     {
         $array = [
             1 => 'P1D',

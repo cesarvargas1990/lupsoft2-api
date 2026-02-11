@@ -13,8 +13,6 @@ class CreatePsquerytablaTable extends Migration
      */
     public function up()
     {
-
-
         Schema::create('psquerytabla', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('codigo');

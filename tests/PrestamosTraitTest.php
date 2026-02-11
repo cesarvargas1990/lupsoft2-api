@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-
 use App\Http\Traits\General\prestamosTrait;
 use App\PsEmpresa;
 use App\Pspagos;
@@ -25,7 +24,7 @@ class PrestamosTraitTestDummy
     use \App\Http\Traits\General\prestamosTrait;
 
     /**
-     * Este método se burla (mock) en el test, 
+     * Este método se burla (mock) en el test,
      * para simular la respuesta de calcularCuota().
      */
     public function calcularCuota($request)
@@ -115,7 +114,7 @@ class PrestamosTraitTest extends TestCase
         // 3. Ejecuta el método
         $result = $dummy->obtenerQryListadoPrestamos();
 
-        // 4. Construimos el string que esperamos 
+        // 4. Construimos el string que esperamos
         //    (debe coincidir exactamente con lo que retorna el método)
         $expectedQuery = "
         SELECT date_format(CURDATE(),'%d/%m/%Y') fecha_actual,

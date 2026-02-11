@@ -30,7 +30,7 @@ class PsformapagoControllerTest extends TestCase
         ]);
 
         $controller = new PsformapagoController();
-        $response = $controller->ShowPsformapago(1, new Psperiodopago());
+        $response = $controller->ShowPsformapago(1, $mock);
 
         $this->assertEquals(200, $response->getStatusCode());
     }

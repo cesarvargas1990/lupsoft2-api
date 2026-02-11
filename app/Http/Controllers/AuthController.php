@@ -11,8 +11,6 @@ use App\User;
 define('VALIDATE_REQUIRE', 'required|string');
 class AuthController extends Controller
 {
-
-
     public function register(Request $request)
     {
 
