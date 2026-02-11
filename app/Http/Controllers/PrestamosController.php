@@ -204,6 +204,7 @@ class PrestamosController extends Controller
     public function totales_dashboard(Request $request, PsEmpresa $psEmpresa, Psprestamos $psprestamos, Pspagos $pspagos, Auth $auth)
     {
         try {
+            dd('prueba');
             $id_empresa = $request->get('id_empresa');
             $data = [
                 "total_capital_prestado" => $this->totalcapital($id_empresa, $request, $psEmpresa, $psprestamos, $pspagos, $auth),
