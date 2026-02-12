@@ -37,8 +37,15 @@ $router->get('/upload/documentosAdjuntos/{filepath:.*}', function ($filepath) {
     $realFilePath = realpath($file);
 
     if ($realBasePath && $realFilePath && strpos($realFilePath, $realBasePath) === 0 && is_file($realFilePath)) {
-        return response()->file($realFilePath, [
-            'Content-Disposition' => 'inline; filename="' . basename($realFilePath) . '"'
+        $mimeType = function_exists('mime_content_type') ? mime_content_type($realFilePath) : null;
+        if (!$mimeType) {
+            $mimeType = 'application/octet-stream';
+        }
+
+        return response(file_get_contents($realFilePath), 200, [
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => 'inline; filename="' . basename($realFilePath) . '"',
+            'Content-Length' => filesize($realFilePath),
         ]);
     }
 
