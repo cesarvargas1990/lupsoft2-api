@@ -1,46 +1,101 @@
-# LUMEN prestasoft api
+# LUPSOFT2 API (Lumen 5.8)
 
-## Usage Local
+## Levantar en local
 
--   `git clone https://github.com/ndiecodes/lumen-auth-example.git auth-api`
--   `cd auth-api`
--   `composer install`
--   `php artisan jwt:secret`
--   `php artisan migrate`
--   `php -S localhost:8000 -t public`
+```bash
+git clone <url-del-repo>
+cd lupsoft2-api
+cp .env.example .env
+composer install
+php artisan jwt:secret
+php artisan migrate
+php -S localhost:8000 -t public
+```
 
+## Levantar con Docker
 
-## Usage Docker
--   `cp .env.example .env`
--   `docker-compose build`
--   `docker-compose up -d`
--   `docker-compose exec app sh -c "composer install && php artisan migrate --force && true && php artisan db:seed"` -- first run
--   `docker-compose run -d app ` -- run 
+```bash
+cp .env.example .env
+docker-compose build
+docker-compose up -d
+docker-compose exec app sh -c "composer install && php artisan migrate --force && php artisan db:seed --force"
+```
 
+API en Docker: `http://localhost:8002`
 
-## Test curl
+## Comando importante en despliegue (Linux/Produccion)
 
-- ``` curl --location 'localhost:8000/auth/login' --header 'Content-Type: application/json' --data-raw '{"email":"admin@admin.com", "password":"password"}' ```
+Si cambias nombres de clases/modelos o relaciones Eloquent, ejecuta:
 
-## Run Test Unit
+```bash
+composer dump-autoload -o
+```
 
-- ``` docker-compose exec app sh -c "./vendor/bin/phpunit" ```
+Si aplica, reinicia PHP-FPM/OPcache despues de eso.
 
+## Probar login (curl)
 
-## Run Coverage
+```bash
+curl --location 'http://localhost:8002/auth/login' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{"email":"admin@admin.com","password":"password"}'
+```
 
-- ``` docker-compose exec app sh -c "./vendor/bin/phpunit --coverage-clover coverage.xml" ```
+## Tests (local)
 
-## Run Coverage html
+```bash
+composer test
+```
 
-``` docker-compose exec app sh -c "./vendor/bin/phpunit --coverage-html coverage-report" ```
+## Tests (local sin Docker, PHP 7.4)
 
+```bash
+/opt/homebrew/opt/php@7.4/bin/php ./vendor/bin/phpunit
+```
 
+## Lint (local)
+
+```bash
+composer lint
+```
+
+## Lint (local sin Docker, PHP 7.4)
+
+```bash
+find app bootstrap config database routes tests -name '*.php' -print0 | xargs -0 -n1 /opt/homebrew/opt/php@7.4/bin/php -l
+```
+
+## Format (local)
+
+```bash
+composer format
+```
+
+## Format (local sin Docker, PHP 7.4)
+
+```bash
+for d in app bootstrap config database routes tests; do /opt/homebrew/opt/php@7.4/bin/php vendor/bin/php-cs-fixer fix "$d"; done
+```
+
+## PHPUnit en Docker
+
+```bash
+docker-compose exec app sh -c "./vendor/bin/phpunit"
+```
+
+## Coverage en Docker
+
+```bash
+docker-compose exec app sh -c "./vendor/bin/phpunit --coverage-clover coverage.xml"
+docker-compose exec app sh -c "./vendor/bin/phpunit --coverage-html coverage-report"
+```
 
 ## Sonar
 
-``` sonar-scanner \
+```bash
+sonar-scanner \
   -Dsonar.projectKey=psoft2 \
   -Dsonar.sources=. \
   -Dsonar.host.url=http://localhost:9000 \
-  -Dsonar.login=sqp_e159da3fd903b3dc456c9f2b29c933fea044aebb ```
+  -Dsonar.login=<token>
+```
