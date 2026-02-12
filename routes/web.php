@@ -26,8 +26,12 @@ define('PSFECHASPAGO_ROUTE', 'psfechaspago/{id}');
 define('PSTDOCPLANT_ID', 'pstdocplant/{id}');
 define('PSTDOCADJUNTOS_ID', 'pstdocadjuntos/{id}');
 $router->get('/upload/documentosAdjuntos/{filepath:.*}', function ($filepath) {
-    dd("Ruta alcanzada: $filepath");
-    $file = storage_path("app/$filepath");
+    $safePath = str_replace('\\', '/', $filepath);
+    if (strpos($safePath, '..') !== false) {
+        return response()->json(['error' => 'Invalid path'], 400);
+    }
+
+    $file = storage_path('app/upload/documentosAdjuntos/' . ltrim($safePath, '/'));
 
     if (file_exists($file)) {
         return response()->download($file);

@@ -37,7 +37,12 @@ class GuardarArchivoController extends Controller
 
         // Definir el nombre del archivo
         $archivoAdjunto = $tdoc ? "{$tdoc}-" . time() . ".{$extension}" : $customFilename;
-        $filePath = $path . $archivoAdjunto;
+        $basePath = $this->resolveUploadBasePath($path);
+        if (!$this->ensureDirectoryExists($basePath)) {
+            return $this->responseRequestError('Cannot create upload directory');
+        }
+        $rutaAdjunto = $this->buildRelativeAttachmentPath($archivoAdjunto);
+        $filePath = $basePath . $archivoAdjunto;
 
         // Decodificar el archivo
         $data = $this->decodificarArchivoBase64($imageData, $extension);
@@ -50,7 +55,7 @@ class GuardarArchivoController extends Controller
         // Si hay un tipo de documento, guardar en la base de datos
         if (!empty($tdoc)) {
             DB::table('psdocadjuntos')->insertGetId([
-                'rutaadjunto' => $filePath,
+                'rutaadjunto' => $rutaAdjunto,
                 'id_tdocadjunto' => $tdoc,
                 'nombrearchivo' => $archivoAdjunto,
                 'id_usu_cargarch' => $id_usuario,
@@ -59,7 +64,7 @@ class GuardarArchivoController extends Controller
             ]);
         }
 
-        return $this->responseRequestSuccess($filePath);
+        return $this->responseRequestSuccess($rutaAdjunto);
     }
 
     /**
@@ -100,7 +105,12 @@ class GuardarArchivoController extends Controller
 
             // Definir el nombre del archivo
             $archivoAdjunto = !empty($tdoc) ? "{$tdoc}-" . time() . ".{$extension}" : $customFilename;
-            $filePath = $path . $archivoAdjunto;
+            $basePath = $this->resolveUploadBasePath($path);
+            if (!$this->ensureDirectoryExists($basePath)) {
+                continue;
+            }
+            $rutaAdjunto = $this->buildRelativeAttachmentPath($archivoAdjunto);
+            $filePath = $basePath . $archivoAdjunto;
 
             // Decodificar el archivo base64
             $data = $this->decodificarArchivoBase64($images[$i], $extension);
@@ -126,7 +136,7 @@ class GuardarArchivoController extends Controller
                 DB::table('psdocadjuntos')->insert([
                     'id_cliente' => $id_cliente,
                     'id_tdocadjunto' => $tdoc,
-                    'rutaadjunto' => $filePath,
+                    'rutaadjunto' => $rutaAdjunto,
                     'nombrearchivo' => $archivoAdjunto,
                     'id_usu_cargarch' => $id_usuario,
                     'id_empresa' => $id_empresa
@@ -137,7 +147,7 @@ class GuardarArchivoController extends Controller
                     ->where('id_cliente', $id_cliente)
                     ->where('id_tdocadjunto', $tdoc)
                     ->update([
-                        'rutaadjunto' => $filePath,
+                        'rutaadjunto' => $rutaAdjunto,
                         'nombrearchivo' => $archivoAdjunto,
                         'id_usu_cargarch' => $id_usuario,
                         'id_empresa' => $id_empresa
@@ -163,6 +173,26 @@ class GuardarArchivoController extends Controller
         $url = str_replace($path, implode('/', $encoded_path), $url);
 
         return filter_var($url, FILTER_VALIDATE_URL) ? true : false;
+    }
+
+    private function resolveUploadBasePath($path)
+    {
+        // Se mantiene el parametro por compatibilidad, pero la ruta de adjuntos es fija.
+        return rtrim(storage_path('app/upload/documentosAdjuntos'), '/\\') . DIRECTORY_SEPARATOR;
+    }
+
+    private function ensureDirectoryExists($dir)
+    {
+        if (is_dir($dir)) {
+            return true;
+        }
+
+        return @mkdir($dir, 0775, true) || is_dir($dir);
+    }
+
+    private function buildRelativeAttachmentPath($filename)
+    {
+        return 'upload/documentosAdjuntos/' . ltrim($filename, '/\\');
     }
 
 
