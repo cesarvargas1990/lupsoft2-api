@@ -36,5 +36,5 @@ RUN chown -R www-data:www-data /var/www/html
 # Exponer el puerto (para servidor embebido)
 EXPOSE 8000
 
-# Comando por defecto: servidor embebido de PHP
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+# Comando por defecto: servidor embebido de PHP con front controller
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public", "public/index.php"]

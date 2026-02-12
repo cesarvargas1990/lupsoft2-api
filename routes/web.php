@@ -31,10 +31,15 @@ $router->get('/upload/documentosAdjuntos/{filepath:.*}', function ($filepath) {
         return response()->json(['error' => 'Invalid path'], 400);
     }
 
-    $file = storage_path('app/upload/documentosAdjuntos/' . ltrim($safePath, '/'));
+    $basePath = storage_path('app/upload/documentosAdjuntos');
+    $file = $basePath . '/' . ltrim($safePath, '/');
+    $realBasePath = realpath($basePath);
+    $realFilePath = realpath($file);
 
-    if (file_exists($file)) {
-        return response()->download($file);
+    if ($realBasePath && $realFilePath && strpos($realFilePath, $realBasePath) === 0 && is_file($realFilePath)) {
+        return response()->file($realFilePath, [
+            'Content-Disposition' => 'inline; filename="' . basename($realFilePath) . '"'
+        ]);
     }
 
     return response()->json(['error' => 'File not found'], 404);
