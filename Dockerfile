@@ -16,10 +16,6 @@ RUN apt-get update && apt-get install -y \
     curl \
     && docker-php-ext-install pdo pdo_mysql zip mbstring tokenizer
 
-RUN echo "zend_extension=xdebug.so" >> /usr/local/etc/php/php.ini \
-    && echo "xdebug.remote_enable=1" >> /usr/local/etc/php/php.ini \
-    && echo "xdebug.remote_autostart=1" >> /usr/local/etc/php/php.ini \
-    && echo "xdebug.remote_host=host.docker.internal" >> /usr/local/etc/php/php.ini
 COPY --from=composer:1 /usr/bin/composer /usr/bin/composer
 
 # Establecer directorio de trabajo
@@ -28,8 +24,8 @@ WORKDIR /var/www/html
 # Copiar composer.json y composer.lock primero (cache eficiente)
 COPY composer.json composer.lock ./
 
-# Instalar dependencias (Composer 1)
-RUN composer install --no-interaction --prefer-dist || true
+# Instalar solo dependencias de runtime (sin dev/ phpunit)
+RUN composer install --no-dev --no-scripts --no-interaction --prefer-dist --optimize-autoloader || true
 
 # Copiar el resto de la aplicación
 COPY . .
