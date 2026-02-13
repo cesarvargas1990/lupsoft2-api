@@ -73,6 +73,7 @@ class PsempresaController extends Controller
         try {
             $data = $psempresa::findOrFail($id);
             $request->request->add(['nitempresa' => $request->get('nit')]);
+            $request->request->add(['firma' => $this->normalizarFirmaEmpresaInput($request->get('firma'))]);
             $data->update($request->all());
 
             return response()->json($data, 200);
@@ -84,5 +85,27 @@ class PsempresaController extends Controller
                 'file' => $e->getFile()
             ], 404);
         }
+    }
+
+    protected function normalizarFirmaEmpresaInput($firma)
+    {
+        if (empty($firma)) {
+            return $firma;
+        }
+
+        $firma = trim((string) $firma);
+        $path = parse_url($firma, PHP_URL_PATH);
+
+        if (is_string($path) && $path !== '') {
+            $firma = $path;
+        }
+
+        $firma = ltrim($firma, '/');
+        $pos = stripos($firma, 'upload/');
+        if ($pos !== false) {
+            $firma = substr($firma, $pos);
+        }
+
+        return $firma;
     }
 }
