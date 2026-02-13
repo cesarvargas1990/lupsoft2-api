@@ -121,6 +121,15 @@ class PrestamosTraitTest extends TestCase
         date_format(CURRENT_TIME(), '%H:%i:%s %p') hora_actua,
         pre.id id_prestamo,
         format(pre.valorpres,2) valorpresf,
+        (
+            SELECT da.rutaadjunto
+            FROM psdocadjuntos da
+            WHERE da.id_empresa = pre.id_empresa
+            AND da.id_cliente = pre.id_cliente
+            AND da.id_tdocadjunto = 3
+            ORDER BY da.id DESC
+            LIMIT 1
+        ) firma_cliente,
         pre.*,
         cli.*,
         em.*,
