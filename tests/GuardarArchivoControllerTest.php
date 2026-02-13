@@ -152,7 +152,7 @@ class GuardarArchivoControllerTest extends TestCase
 
         // Se espera que devuelva "png"
         $extension = $controller->obtenerExtensionArchivo($base64Image);
-        $this->assertEquals('plain', $extension);
+        $this->assertEquals('png', $extension);
     }
 
     public function test_obtener_extension_archivo_exception()
@@ -164,7 +164,7 @@ class GuardarArchivoControllerTest extends TestCase
 
         // Se espera que devuelva "png"
         $extension = $controller->obtenerExtensionArchivo($base64Image);
-        $this->assertEquals('jpeg', $extension);
+        $this->assertEquals('jpg', $extension);
     }
 
     public function test_editar_archivo_adjunto_flow()
@@ -181,9 +181,6 @@ class GuardarArchivoControllerTest extends TestCase
             'image' => ['data:image/png;base64,' . base64_encode('fakeimagecontent')],
         ]);
 
-        // Simula el comportamiento de obtenerExtensionArchivo
-        $controller->shouldReceive('obtenerExtensionArchivo')->andReturn('png');
-
         // Simula el comportamiento de decodificarArchivoBase64
         $controller->shouldReceive('decodificarArchivoBase64')->andReturn('decodeddata');
 
@@ -195,14 +192,7 @@ class GuardarArchivoControllerTest extends TestCase
 
         // Mock de la clase DB
         DB::shouldReceive('table')->with('psdocadjuntos')->andReturnSelf();
-
-        // Simula la verificación de si el archivo adjunto ya existe
-        DB::shouldReceive('where')->with('id_cliente', 1)->andReturnSelf();
-        DB::shouldReceive('where')->with('id_tdocadjunto', 1001)->andReturnSelf();
-        DB::shouldReceive('exists')->andReturn(false);
-
-        // Simula la inserción del archivo
-        DB::shouldReceive('insert')->once();
+        DB::shouldReceive('updateOrInsert')->once()->andReturn(true);
 
         $controller->editarArchivoAdjunto($request);
 
@@ -226,10 +216,6 @@ class GuardarArchivoControllerTest extends TestCase
         $controller = Mockery::mock(GuardarArchivoController::class)->makePartial();
 
         $controller->shouldAllowMockingProtectedMethods()
-            ->shouldReceive('obtenerExtensionArchivo')
-            ->andReturn('png');
-
-        $controller->shouldAllowMockingProtectedMethods()
             ->shouldReceive('decodificarArchivoBase64')
             ->andReturn('decoded-content');
 
@@ -241,10 +227,7 @@ class GuardarArchivoControllerTest extends TestCase
         file_put_contents('/tmp/111-' . time() . '.png', 'decoded-content');
 
         DB::shouldReceive('table')->with('psdocadjuntos')->andReturnSelf();
-        DB::shouldReceive('where')->with('id_cliente', 1)->andReturnSelf();
-        DB::shouldReceive('where')->with('id_tdocadjunto', 111)->andReturnSelf();
-        DB::shouldReceive('exists')->andReturn(true);
-        DB::shouldReceive('update')->andReturn(true);
+        DB::shouldReceive('updateOrInsert')->once()->andReturn(true);
 
         $response = $controller->editarArchivoAdjunto($request);
 

@@ -6,7 +6,7 @@ use App\Psclientes;
 
 use Illuminate\Http\Request;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 
 use App\Pstdocadjuntos;
 
@@ -24,7 +24,6 @@ class GuardarArchivoController extends Controller
         $id_cliente = $request->get('id_cliente');
         $id_usuario = $request->get('id_usuario');
         $customFilename = $request->get('filename');
-        $path = $request->get('path');
 
         if (!$request->has('image')) {
             return $this->responseRequestError('File not found');
@@ -32,12 +31,12 @@ class GuardarArchivoController extends Controller
 
         $imageData = $request->get('image');
 
-        // Determinar la extensión del archivo
-        $extension = $this->obtenerExtensionArchivo($imageData);
+        // Determinar tipo y extensión del archivo
+        [$extension, $mimeType] = $this->detectarTipoArchivo($imageData, $customFilename);
 
         // Definir el nombre del archivo
         $archivoAdjunto = $tdoc ? "{$tdoc}-" . time() . ".{$extension}" : $customFilename;
-        $basePath = $this->resolveUploadBasePath($path);
+        $basePath = $this->resolveUploadBasePath();
         if (!$this->ensureDirectoryExists($basePath)) {
             return $this->responseRequestError('Cannot create upload directory');
         }
@@ -45,7 +44,12 @@ class GuardarArchivoController extends Controller
         $filePath = $basePath . $archivoAdjunto;
 
         // Decodificar el archivo
-        $data = $this->decodificarArchivoBase64($imageData, $extension);
+        $decodedData = $this->decodificarArchivoBase64($imageData, $extension);
+        if ($decodedData === false) {
+            return $this->responseRequestError('Invalid base64 payload');
+        }
+
+        $data = $this->optimizarArchivoParaGuardar($decodedData, $mimeType, $extension);
 
         // Guardar el archivo
         if (!file_put_contents($filePath, $data)) {
@@ -72,12 +76,8 @@ class GuardarArchivoController extends Controller
      */
     public function obtenerExtensionArchivo($imageData)
     {
-        try {
-            $mimeType = mime_content_type($imageData);
-            return $mimeType ? explode('/', $mimeType)[1] : 'jpeg';
-        } catch (\Exception $e) {
-            return 'jpeg';
-        }
+        [$extension] = $this->detectarTipoArchivo($imageData);
+        return $extension;
     }
 
     /**
@@ -90,81 +90,65 @@ class GuardarArchivoController extends Controller
         $id_cliente = $request->get('id_cliente');
         $id_usuario = $request->get('id_usuario');
         $id_empresa = $request->get('id_empresa');
-        $path = $request->get('path');
         $customFilename = $request->get('filename');
         $tdocs = $request->get('id_tdocadjunto');
         $images = $request->get('image');
 
+        if (!$request->has('image') || !is_array($images) || !is_array($tdocs)) {
+            return;
+        }
+
+        $basePath = $this->resolveUploadBasePath();
+        if (!$this->ensureDirectoryExists($basePath)) {
+            return;
+        }
+
         foreach ($tdocs as $i => $tdoc) {
-            if (!$request->has('image') || !isset($images[$i])) {
+            if (!isset($images[$i])) {
                 continue;
             }
 
-            // Obtener la extensión del archivo
-            $extension = $this->obtenerExtensionArchivo($images[$i]);
-
-            // Definir el nombre del archivo
-            $archivoAdjunto = !empty($tdoc) ? "{$tdoc}-" . time() . ".{$extension}" : $customFilename;
-            $basePath = $this->resolveUploadBasePath($path);
-            if (!$this->ensureDirectoryExists($basePath)) {
-                continue;
-            }
-            $rutaAdjunto = $this->buildRelativeAttachmentPath($archivoAdjunto);
-            $filePath = $basePath . $archivoAdjunto;
-
-            // Decodificar el archivo base64
-            $data = $this->decodificarArchivoBase64($images[$i], $extension);
-
-            // Validar si la imagen ya existe en la URL
             if ($this->validateUrl($images[$i])) {
                 continue;
             }
 
-            // Guardar el archivo
+            [$extension, $mimeType] = $this->detectarTipoArchivo($images[$i], $customFilename);
+            $archivoAdjunto = !empty($tdoc) ? "{$tdoc}-" . time() . ".{$extension}" : $customFilename;
+            $rutaAdjunto = $this->buildRelativeAttachmentPath($archivoAdjunto);
+            $filePath = $basePath . $archivoAdjunto;
+
+            $decodedData = $this->decodificarArchivoBase64($images[$i], $extension);
+            if ($decodedData === false) {
+                continue;
+            }
+
+            $data = $this->optimizarArchivoParaGuardar($decodedData, $mimeType, $extension);
             if (!file_put_contents($filePath, $data)) {
                 continue;
             }
 
-            // Verificar si ya existe un archivo adjunto para el cliente y tipo de documento
-            $existeAdjunto = DB::table('psdocadjuntos')
-                ->where('id_cliente', $id_cliente)
-                ->where('id_tdocadjunto', $tdoc)
-                ->exists();
-
-            if (!$existeAdjunto) {
-                // Insertar nuevo archivo adjunto
-                DB::table('psdocadjuntos')->insert([
+            DB::table('psdocadjuntos')->updateOrInsert(
+                [
                     'id_cliente' => $id_cliente,
                     'id_tdocadjunto' => $tdoc,
+                ],
+                [
                     'rutaadjunto' => $rutaAdjunto,
                     'nombrearchivo' => $archivoAdjunto,
                     'id_usu_cargarch' => $id_usuario,
-                    'id_empresa' => $id_empresa
-                ]);
-            } else {
-                // Actualizar archivo adjunto existente
-                DB::table('psdocadjuntos')
-                    ->where('id_cliente', $id_cliente)
-                    ->where('id_tdocadjunto', $tdoc)
-                    ->update([
-                        'rutaadjunto' => $rutaAdjunto,
-                        'nombrearchivo' => $archivoAdjunto,
-                        'id_usu_cargarch' => $id_usuario,
-                        'id_empresa' => $id_empresa
-                    ]);
-            }
+                    'id_empresa' => $id_empresa,
+                ]
+            );
         }
     }
-
-
 
     /**
      * Decodifica el archivo base64 dependiendo de su tipo.
      */
     public function decodificarArchivoBase64($imageData, $extension)
     {
-        $pattern = ($extension === "pdf") ? '#^data:application/\w+;base64,#i' : '#^data:image/\w+;base64,#i';
-        return base64_decode(preg_replace($pattern, '', $imageData));
+        $cleanData = preg_replace('#^data:[^;]+;base64,#i', '', $imageData);
+        return base64_decode($cleanData, true);
     }
     public function validateUrl($url)
     {
@@ -175,9 +159,104 @@ class GuardarArchivoController extends Controller
         return filter_var($url, FILTER_VALIDATE_URL) ? true : false;
     }
 
-    private function resolveUploadBasePath($path)
+    private function detectarTipoArchivo($imageData, $customFilename = null)
     {
-        // Se mantiene el parametro por compatibilidad, pero la ruta de adjuntos es fija.
+        $mimeType = null;
+
+        if (is_string($imageData) && preg_match('#^data:([^;]+);base64,#i', $imageData, $matches)) {
+            $mimeType = strtolower(trim($matches[1]));
+        }
+
+        if (!$mimeType && !empty($customFilename)) {
+            $extension = strtolower(pathinfo($customFilename, PATHINFO_EXTENSION));
+            if (!empty($extension)) {
+                return [$extension, $this->mapExtensionToMime($extension)];
+            }
+        }
+
+        if (!$mimeType) {
+            $mimeType = 'image/jpeg';
+        }
+
+        return [$this->mapMimeToExtension($mimeType), $mimeType];
+    }
+
+    private function mapMimeToExtension($mimeType)
+    {
+        $map = [
+            'image/jpeg' => 'jpg',
+            'image/jpg' => 'jpg',
+            'image/png' => 'png',
+            'image/gif' => 'gif',
+            'image/webp' => 'webp',
+            'application/pdf' => 'pdf',
+        ];
+
+        return isset($map[$mimeType]) ? $map[$mimeType] : 'jpg';
+    }
+
+    private function mapExtensionToMime($extension)
+    {
+        $map = [
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'webp' => 'image/webp',
+            'pdf' => 'application/pdf',
+        ];
+
+        return isset($map[$extension]) ? $map[$extension] : 'application/octet-stream';
+    }
+
+    private function optimizarArchivoParaGuardar($binaryData, $mimeType, $extension)
+    {
+        if (!is_string($binaryData) || $binaryData === '') {
+            return $binaryData;
+        }
+
+        if (strpos($mimeType, 'image/') !== 0 || !extension_loaded('gd')) {
+            return $binaryData;
+        }
+
+        $image = @imagecreatefromstring($binaryData);
+        if ($image === false) {
+            return $binaryData;
+        }
+
+        $optimized = null;
+        if ($mimeType === 'image/jpeg' || $mimeType === 'image/jpg' || $extension === 'jpg' || $extension === 'jpeg') {
+            ob_start();
+            imagejpeg($image, null, 75);
+            $optimized = ob_get_clean();
+        } elseif ($mimeType === 'image/png' || $extension === 'png') {
+            imagealphablending($image, false);
+            imagesavealpha($image, true);
+            ob_start();
+            imagepng($image, null, 6);
+            $optimized = ob_get_clean();
+        } elseif (($mimeType === 'image/webp' || $extension === 'webp') && function_exists('imagewebp')) {
+            ob_start();
+            imagewebp($image, null, 75);
+            $optimized = ob_get_clean();
+        }
+
+        imagedestroy($image);
+
+        if (!is_string($optimized) || $optimized === '') {
+            return $binaryData;
+        }
+
+        if (strlen($optimized) >= strlen($binaryData)) {
+            return $binaryData;
+        }
+
+        return $optimized;
+    }
+
+    private function resolveUploadBasePath()
+    {
+        // La ruta de adjuntos es fija.
         return rtrim(storage_path('app/upload/documentosAdjuntos'), '/\\') . DIRECTORY_SEPARATOR;
     }
 

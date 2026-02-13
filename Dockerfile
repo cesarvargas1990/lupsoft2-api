@@ -10,11 +10,15 @@ RUN sed -i 's|deb.debian.org|archive.debian.org|g' /etc/apt/sources.list \
 RUN apt-get update && apt-get install -y \
     libmcrypt-dev \
     libzip-dev \
+    libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
     unzip \
     git \
     gnupg \
     curl \
-    && docker-php-ext-install pdo pdo_mysql zip mbstring tokenizer
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install pdo pdo_mysql zip mbstring tokenizer gd
 
 COPY --from=composer:1 /usr/bin/composer /usr/bin/composer
 
