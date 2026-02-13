@@ -66,6 +66,15 @@ trait prestamosTrait
         date_format(CURRENT_TIME(), '%H:%i:%s %p') hora_actua,
         pre.id id_prestamo,
         format(pre.valorpres,2) valorpresf,
+        (
+            SELECT da.rutaadjunto
+            FROM psdocadjuntos da
+            WHERE da.id_empresa = pre.id_empresa
+            AND da.id_cliente = pre.id_cliente
+            AND da.id_tdocadjunto = 3
+            ORDER BY da.id DESC
+            LIMIT 1
+        ) firma_cliente,
         pre.*,
         cli.*,
         em.*,
@@ -113,7 +122,7 @@ trait prestamosTrait
             '#{(.*?)}#',
             function ($match) use ($variables) {
                 $match[1] = trim($match[1], '$');
-                return $variables[$match[1]];
+                return isset($variables[$match[1]]) ? (string) $variables[$match[1]] : '';
             },
             $template
         );
@@ -125,8 +134,32 @@ trait prestamosTrait
         $id_empresa = $request->get('id_empresa');
         $variables = $this->consultaVariablesPrestamo($id_empresa, $idprestamo)[0];
         $array = json_decode(json_encode($variables), true);
+        $array = $this->normalizarFirmaCliente($array, $request);
         $data = $this->getPlantillasDocumentos($request, $pstdocplant);
         return $this->replaceVariables($data, $array, $id_empresa, $idprestamo, $psQueryTabla);
+    }
+
+    public function normalizarFirmaCliente(array $variables, $request)
+    {
+        if (empty($variables['firma_cliente'])) {
+            return $variables;
+        }
+
+        $firma = trim((string) $variables['firma_cliente']);
+        if (preg_match('/^https?:\/\//i', $firma)) {
+            return $variables;
+        }
+
+        $baseUrl = rtrim((string) env('APP_URL', ''), '/');
+        if ($baseUrl === '' && method_exists($request, 'getSchemeAndHttpHost')) {
+            $baseUrl = rtrim((string) $request->getSchemeAndHttpHost(), '/');
+        }
+
+        if ($baseUrl !== '') {
+            $variables['firma_cliente'] = $baseUrl . '/' . ltrim($firma, '/');
+        }
+
+        return $variables;
     }
 
     public function replaceVariables($data, $array, $id_empresa, $idprestamo, $psQueryTabla)
