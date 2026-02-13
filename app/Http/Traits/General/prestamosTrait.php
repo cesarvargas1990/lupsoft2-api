@@ -150,9 +150,19 @@ trait prestamosTrait
             return $variables;
         }
 
-        $baseUrl = rtrim((string) env('APP_URL', ''), '/');
-        if ($baseUrl === '' && method_exists($request, 'getSchemeAndHttpHost')) {
-            $baseUrl = rtrim((string) $request->getSchemeAndHttpHost(), '/');
+        $baseUrl = '';
+        if (method_exists($request, 'getSchemeAndHttpHost')) {
+            $requestHost = rtrim((string) $request->getSchemeAndHttpHost(), '/');
+            if ($requestHost !== '' && !preg_match('/\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i', $requestHost)) {
+                $baseUrl = $requestHost;
+            }
+        }
+
+        if ($baseUrl === '') {
+            $envBaseUrl = rtrim((string) env('APP_URL', ''), '/');
+            if ($envBaseUrl !== '' && !preg_match('/\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i', $envBaseUrl)) {
+                $baseUrl = $envBaseUrl;
+            }
         }
 
         if ($baseUrl !== '') {
