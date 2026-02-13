@@ -17,7 +17,8 @@ class PsEmpresa extends Model
         'telefono',
         'pagina',
         'email',
-        'vlr_capinicial'
+        'vlr_capinicial',
+        'firma'
     ];
 
 
