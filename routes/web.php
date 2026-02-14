@@ -31,7 +31,7 @@ $router->get('/upload/documentosAdjuntos/{filepath:.*}', function ($filepath) {
         return response()->json(['error' => 'Invalid path'], 400);
     }
 
-    $basePath = storage_path('app/upload/documentosAdjuntos');
+    $basePath = base_path('upload/documentosAdjuntos');
     $file = $basePath . '/' . ltrim($safePath, '/');
     $realBasePath = realpath($basePath);
     $realFilePath = realpath($file);
