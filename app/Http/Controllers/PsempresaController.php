@@ -42,7 +42,30 @@ class PsempresaController extends Controller
             return $empresa;
         }
 
-        $empresa->firma = $this->normalizarFirmaEmpresaInput($empresa->firma);
+        $firma = trim((string) $empresa->firma);
+        if (preg_match('/^https?:\/\//i', $firma)) {
+            return $empresa;
+        }
+
+        $baseUrl = '';
+        $request = function_exists('app') ? app('request') : null;
+        if ($request && method_exists($request, 'getSchemeAndHttpHost')) {
+            $requestHost = rtrim((string) $request->getSchemeAndHttpHost(), '/');
+            if ($requestHost !== '' && !preg_match('/\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i', $requestHost)) {
+                $baseUrl = $requestHost;
+            }
+        }
+
+        if ($baseUrl === '') {
+            $envBaseUrl = rtrim((string) env('APP_URL', ''), '/');
+            if ($envBaseUrl !== '' && !preg_match('/\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i', $envBaseUrl)) {
+                $baseUrl = $envBaseUrl;
+            }
+        }
+
+        if ($baseUrl !== '') {
+            $empresa->firma = $baseUrl . '/' . ltrim($firma, '/');
+        }
 
         return $empresa;
     }
