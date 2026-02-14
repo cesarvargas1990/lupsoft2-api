@@ -134,20 +134,33 @@ trait prestamosTrait
         $id_empresa = $request->get('id_empresa');
         $variables = $this->consultaVariablesPrestamo($id_empresa, $idprestamo)[0];
         $array = json_decode(json_encode($variables), true);
-        $array = $this->normalizarFirmaCliente($array, $request);
+        $array = $this->normalizarFirmasDocumento($array, $request);
         $data = $this->getPlantillasDocumentos($request, $pstdocplant);
         return $this->replaceVariables($data, $array, $id_empresa, $idprestamo, $psQueryTabla);
     }
 
-    public function normalizarFirmaCliente(array $variables, $request)
+    public function normalizarFirmasDocumento(array $variables, $request)
     {
-        if (empty($variables['firma_cliente'])) {
-            return $variables;
+        if (empty($variables['firma_acreedor']) && !empty($variables['firma'])) {
+            $variables['firma_acreedor'] = $variables['firma'];
         }
 
-        $firma = trim((string) $variables['firma_cliente']);
-        if (preg_match('/^https?:\/\//i', $firma)) {
-            return $variables;
+        if (!empty($variables['firma_cliente'])) {
+            $variables['firma_cliente'] = $this->normalizarFirmaDocumento((string) $variables['firma_cliente'], $request);
+        }
+
+        if (!empty($variables['firma_acreedor'])) {
+            $variables['firma_acreedor'] = $this->normalizarFirmaDocumento((string) $variables['firma_acreedor'], $request);
+        }
+
+        return $variables;
+    }
+
+    public function normalizarFirmaDocumento($firma, $request)
+    {
+        $firma = trim((string) $firma);
+        if ($firma === '' || preg_match('/^https?:\/\//i', $firma)) {
+            return $firma;
         }
 
         $baseUrl = '';
@@ -166,10 +179,10 @@ trait prestamosTrait
         }
 
         if ($baseUrl !== '') {
-            $variables['firma_cliente'] = $baseUrl . '/' . ltrim($firma, '/');
+            return $baseUrl . '/' . ltrim($firma, '/');
         }
 
-        return $variables;
+        return $firma;
     }
 
     public function replaceVariables($data, $array, $id_empresa, $idprestamo, $psQueryTabla)
