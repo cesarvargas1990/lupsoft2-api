@@ -10,6 +10,8 @@ use DB;
 
 class PsempresaController extends Controller
 {
+    private const TIPO_FIRMA = 3;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -127,7 +129,7 @@ class PsempresaController extends Controller
         $mimeType = isset($matches[1]) ? strtolower(trim($matches[1])) : 'image/png';
         $extension = $this->mapMimeToExtension($mimeType);
 
-        $filename = $idEmpresa . '-' . time() . '.' . $extension;
+        $filename = self::TIPO_FIRMA . '-' . time() . '.' . $extension;
         $relativePath = 'upload/documentosAdjuntos/' . $filename;
         $basePath = rtrim(base_path('upload/documentosAdjuntos'), '/\\') . DIRECTORY_SEPARATOR;
 

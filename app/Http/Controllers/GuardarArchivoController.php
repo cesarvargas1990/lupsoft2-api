@@ -13,6 +13,8 @@ use App\Pstdocadjuntos;
 
 class GuardarArchivoController extends Controller
 {
+    private const TIPO_FIRMA = 3;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -36,8 +38,9 @@ class GuardarArchivoController extends Controller
         [$extension, $mimeType] = $this->detectarTipoArchivo($imageData, $customFilename);
 
         // Definir el nombre del archivo
-        $filenameSeed = !empty($id_empresa) ? $id_empresa : (!empty($id_usuario) ? $id_usuario : 'archivo');
-        $archivoAdjunto = $tdoc ? "{$tdoc}-" . time() . ".{$extension}" : "{$filenameSeed}-" . time() . ".{$extension}";
+        $archivoAdjunto = $tdoc
+            ? "{$tdoc}-" . time() . ".{$extension}"
+            : self::TIPO_FIRMA . '-' . time() . ".{$extension}";
         $basePath = $this->resolveUploadBasePath();
         if (!$this->ensureDirectoryExists($basePath)) {
             return $this->responseRequestError('Cannot create upload directory');
