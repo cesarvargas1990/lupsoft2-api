@@ -116,4 +116,17 @@ class PsempresaControllerTest extends TestCase
         $this->assertEquals('Error actualizando', $data['message']);
         $this->assertEquals(500, $data['errorCode']);
     }
+
+    public function test_normaliza_firma_empresa_input_to_relative_path()
+    {
+        $controller = new PsempresaController();
+        $method = new \ReflectionMethod(PsempresaController::class, 'normalizarFirmaEmpresaInput');
+        $method->setAccessible(true);
+
+        $value = $method->invoke($controller, 'http://147.93.1.252:8002/upload/documentosAdjuntos/empresa-firma.png');
+        $this->assertEquals('upload/documentosAdjuntos/empresa-firma.png', $value);
+
+        $value2 = $method->invoke($controller, '/upload/documentosAdjuntos/empresa-firma.png');
+        $this->assertEquals('upload/documentosAdjuntos/empresa-firma.png', $value2);
+    }
 }
