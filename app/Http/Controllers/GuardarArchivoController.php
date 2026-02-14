@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Psclientes;
+use App\PsEmpresa;
 
 use Illuminate\Http\Request;
 
@@ -35,7 +36,8 @@ class GuardarArchivoController extends Controller
         [$extension, $mimeType] = $this->detectarTipoArchivo($imageData, $customFilename);
 
         // Definir el nombre del archivo
-        $archivoAdjunto = $tdoc ? "{$tdoc}-" . time() . ".{$extension}" : $customFilename;
+        $filenameSeed = !empty($id_empresa) ? $id_empresa : (!empty($id_usuario) ? $id_usuario : 'archivo');
+        $archivoAdjunto = $tdoc ? "{$tdoc}-" . time() . ".{$extension}" : "{$filenameSeed}-" . time() . ".{$extension}";
         $basePath = $this->resolveUploadBasePath();
         if (!$this->ensureDirectoryExists($basePath)) {
             return $this->responseRequestError('Cannot create upload directory');
@@ -66,6 +68,8 @@ class GuardarArchivoController extends Controller
                 'id_cliente' => $id_cliente,
                 'id_empresa' => $id_empresa
             ]);
+        } elseif (!empty($id_empresa)) {
+            PsEmpresa::where('id', $id_empresa)->update(['firma' => $rutaAdjunto]);
         }
 
         return $this->responseRequestSuccess($rutaAdjunto);
@@ -257,7 +261,7 @@ class GuardarArchivoController extends Controller
     private function resolveUploadBasePath()
     {
         // La ruta de adjuntos es fija.
-        return rtrim(storage_path('app/upload/documentosAdjuntos'), '/\\') . DIRECTORY_SEPARATOR;
+        return rtrim(base_path('upload/documentosAdjuntos'), '/\\') . DIRECTORY_SEPARATOR;
     }
 
     private function ensureDirectoryExists($dir)

@@ -46,7 +46,7 @@ class PsempresaController extends Controller
         }
 
         $baseUrl = '';
-        $request = function_exists('request') ? request() : null;
+        $request = function_exists('app') ? app('request') : null;
         if ($request && method_exists($request, 'getSchemeAndHttpHost')) {
             $requestHost = rtrim((string) $request->getSchemeAndHttpHost(), '/');
             if ($requestHost !== '' && !preg_match('/\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i', $requestHost)) {
@@ -73,7 +73,14 @@ class PsempresaController extends Controller
         try {
             $data = $psempresa::findOrFail($id);
             $request->request->add(['nitempresa' => $request->get('nit')]);
-            $request->request->add(['firma' => $this->normalizarFirmaEmpresaInput($request->get('firma'))]);
+
+            $firma = $request->get('firma');
+            if ($this->esBase64DataUri($firma)) {
+                $request->request->add(['firma' => $this->guardarFirmaEmpresaBase64($id, $firma)]);
+            } else {
+                $request->request->add(['firma' => $this->normalizarFirmaEmpresaInput($firma)]);
+            }
+
             $data->update($request->all());
 
             return response()->json($data, 200);
@@ -107,5 +114,51 @@ class PsempresaController extends Controller
         }
 
         return $firma;
+    }
+
+    protected function esBase64DataUri($payload)
+    {
+        return is_string($payload) && preg_match('#^data:[^;]+;base64,#i', trim($payload));
+    }
+
+    protected function guardarFirmaEmpresaBase64($idEmpresa, $firmaBase64)
+    {
+        preg_match('#^data:([^;]+);base64,#i', $firmaBase64, $matches);
+        $mimeType = isset($matches[1]) ? strtolower(trim($matches[1])) : 'image/png';
+        $extension = $this->mapMimeToExtension($mimeType);
+
+        $filename = $idEmpresa . '-' . time() . '.' . $extension;
+        $relativePath = 'upload/documentosAdjuntos/' . $filename;
+        $basePath = rtrim(base_path('upload/documentosAdjuntos'), '/\\') . DIRECTORY_SEPARATOR;
+
+        if (!is_dir($basePath) && !@mkdir($basePath, 0775, true) && !is_dir($basePath)) {
+            throw new \RuntimeException('Cannot create upload directory');
+        }
+
+        $cleanData = preg_replace('#^data:[^;]+;base64,#i', '', $firmaBase64);
+        $decodedData = base64_decode($cleanData, true);
+        if ($decodedData === false) {
+            throw new \RuntimeException('Invalid base64 payload');
+        }
+
+        $result = @file_put_contents($basePath . $filename, $decodedData);
+        if ($result === false) {
+            throw new \RuntimeException('Cannot upload file');
+        }
+
+        return $relativePath;
+    }
+
+    protected function mapMimeToExtension($mimeType)
+    {
+        $map = [
+            'image/jpeg' => 'jpg',
+            'image/jpg' => 'jpg',
+            'image/png' => 'png',
+            'image/gif' => 'gif',
+            'image/webp' => 'webp',
+        ];
+
+        return isset($map[$mimeType]) ? $map[$mimeType] : 'png';
     }
 }
