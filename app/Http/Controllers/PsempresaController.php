@@ -238,9 +238,10 @@ class PsempresaController extends Controller
                 $green = ($rgba >> 8) & 0xFF;
                 $blue = $rgba & 0xFF;
 
+                $isDarkEnough = ($red < 245 || $green < 245 || $blue < 245);
                 $isInkPixel = $isTransparentFriendly
-                    ? ($alpha < 120)
-                    : ($red < 245 || $green < 245 || $blue < 245);
+                    ? ($alpha < 120 && $isDarkEnough)
+                    : $isDarkEnough;
 
                 if (!$isInkPixel) {
                     continue;
