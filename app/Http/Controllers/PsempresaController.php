@@ -143,6 +143,8 @@ class PsempresaController extends Controller
             throw new \RuntimeException('Invalid base64 payload');
         }
 
+        $decodedData = $this->optimizarFirmaParaGuardar($decodedData, $mimeType, $extension);
+
         $result = @file_put_contents($basePath . $filename, $decodedData);
         if ($result === false) {
             throw new \RuntimeException('Cannot upload file');
@@ -162,5 +164,81 @@ class PsempresaController extends Controller
         ];
 
         return isset($map[$mimeType]) ? $map[$mimeType] : 'png';
+    }
+
+    protected function optimizarFirmaParaGuardar($binaryData, $mimeType, $extension)
+    {
+        if (!is_string($binaryData) || $binaryData === '' || strpos((string) $mimeType, 'image/') !== 0 || !extension_loaded('gd')) {
+            return $binaryData;
+        }
+
+        $image = @imagecreatefromstring($binaryData);
+        if ($image === false) {
+            return $binaryData;
+        }
+
+        $wasCropped = false;
+        [$image, $wasCropped] = $this->recortarAreaUtilSiAplica($image, $mimeType, $extension);
+
+        $optimized = null;
+        if ($mimeType === 'image/jpeg' || $mimeType === 'image/jpg' || $extension === 'jpg' || $extension === 'jpeg') {
+            ob_start();
+            imagejpeg($image, null, 75);
+            $optimized = ob_get_clean();
+        } elseif ($mimeType === 'image/png' || $extension === 'png') {
+            imagealphablending($image, false);
+            imagesavealpha($image, true);
+            ob_start();
+            imagepng($image, null, 6);
+            $optimized = ob_get_clean();
+        } elseif (($mimeType === 'image/webp' || $extension === 'webp') && function_exists('imagewebp')) {
+            ob_start();
+            imagewebp($image, null, 75);
+            $optimized = ob_get_clean();
+        }
+
+        imagedestroy($image);
+
+        if (!is_string($optimized) || $optimized === '') {
+            return $binaryData;
+        }
+
+        if (!$wasCropped && strlen($optimized) >= strlen($binaryData)) {
+            return $binaryData;
+        }
+
+        return $optimized;
+    }
+
+    protected function recortarAreaUtilSiAplica($image, $mimeType, $extension)
+    {
+        $isTransparentFriendly = $mimeType === 'image/png'
+            || $mimeType === 'image/webp'
+            || $mimeType === 'image/gif'
+            || $extension === 'png'
+            || $extension === 'webp'
+            || $extension === 'gif';
+
+        if (!$isTransparentFriendly || !function_exists('imagecropauto') || !defined('IMG_CROP_TRANSPARENT')) {
+            return [$image, false];
+        }
+
+        $cropped = @imagecropauto($image, IMG_CROP_TRANSPARENT);
+        if ($cropped === false) {
+            return [$image, false];
+        }
+
+        if (imagesx($cropped) === 0 || imagesy($cropped) === 0) {
+            imagedestroy($cropped);
+            return [$image, false];
+        }
+
+        if (imagesx($cropped) === imagesx($image) && imagesy($cropped) === imagesy($image)) {
+            imagedestroy($cropped);
+            return [$image, false];
+        }
+
+        imagedestroy($image);
+        return [$cropped, true];
     }
 }

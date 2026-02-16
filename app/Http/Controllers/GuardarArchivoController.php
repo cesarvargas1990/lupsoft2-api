@@ -231,6 +231,9 @@ class GuardarArchivoController extends Controller
             return $binaryData;
         }
 
+        $wasCropped = false;
+        [$image, $wasCropped] = $this->recortarAreaUtilSiAplica($image, $mimeType, $extension);
+
         $optimized = null;
         if ($mimeType === 'image/jpeg' || $mimeType === 'image/jpg' || $extension === 'jpg' || $extension === 'jpeg') {
             ob_start();
@@ -254,11 +257,43 @@ class GuardarArchivoController extends Controller
             return $binaryData;
         }
 
-        if (strlen($optimized) >= strlen($binaryData)) {
+        if (!$wasCropped && strlen($optimized) >= strlen($binaryData)) {
             return $binaryData;
         }
 
         return $optimized;
+    }
+
+    private function recortarAreaUtilSiAplica($image, $mimeType, $extension)
+    {
+        $isTransparentFriendly = $mimeType === 'image/png'
+            || $mimeType === 'image/webp'
+            || $mimeType === 'image/gif'
+            || $extension === 'png'
+            || $extension === 'webp'
+            || $extension === 'gif';
+
+        if (!$isTransparentFriendly || !function_exists('imagecropauto') || !defined('IMG_CROP_TRANSPARENT')) {
+            return [$image, false];
+        }
+
+        $cropped = @imagecropauto($image, IMG_CROP_TRANSPARENT);
+        if ($cropped === false) {
+            return [$image, false];
+        }
+
+        if (imagesx($cropped) === 0 || imagesy($cropped) === 0) {
+            imagedestroy($cropped);
+            return [$image, false];
+        }
+
+        if (imagesx($cropped) === imagesx($image) && imagesy($cropped) === imagesy($image)) {
+            imagedestroy($cropped);
+            return [$image, false];
+        }
+
+        imagedestroy($image);
+        return [$cropped, true];
     }
 
     private function resolveUploadBasePath()
