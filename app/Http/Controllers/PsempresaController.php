@@ -212,6 +212,12 @@ class PsempresaController extends Controller
 
     protected function recortarAreaUtilSiAplica($image, $mimeType, $extension)
     {
+        $width = imagesx($image);
+        $height = imagesy($image);
+        if ($width <= 0 || $height <= 0) {
+            return [$image, false];
+        }
+
         $isTransparentFriendly = $mimeType === 'image/png'
             || $mimeType === 'image/webp'
             || $mimeType === 'image/gif'
@@ -219,22 +225,64 @@ class PsempresaController extends Controller
             || $extension === 'webp'
             || $extension === 'gif';
 
-        if (!$isTransparentFriendly || !function_exists('imagecropauto') || !defined('IMG_CROP_TRANSPARENT')) {
+        $minX = $width;
+        $minY = $height;
+        $maxX = -1;
+        $maxY = -1;
+
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
+                $rgba = imagecolorat($image, $x, $y);
+                $alpha = ($rgba & 0x7F000000) >> 24;
+                $red = ($rgba >> 16) & 0xFF;
+                $green = ($rgba >> 8) & 0xFF;
+                $blue = $rgba & 0xFF;
+
+                $isInkPixel = $isTransparentFriendly
+                    ? ($alpha < 120)
+                    : ($red < 245 || $green < 245 || $blue < 245);
+
+                if (!$isInkPixel) {
+                    continue;
+                }
+
+                if ($x < $minX) {
+                    $minX = $x;
+                }
+                if ($y < $minY) {
+                    $minY = $y;
+                }
+                if ($x > $maxX) {
+                    $maxX = $x;
+                }
+                if ($y > $maxY) {
+                    $maxY = $y;
+                }
+            }
+        }
+
+        if ($maxX < 0 || $maxY < 0) {
             return [$image, false];
         }
 
-        $cropped = @imagecropauto($image, IMG_CROP_TRANSPARENT);
+        $padding = 6;
+        $cropX = max(0, $minX - $padding);
+        $cropY = max(0, $minY - $padding);
+        $cropW = min($width - $cropX, ($maxX - $minX + 1) + ($padding * 2));
+        $cropH = min($height - $cropY, ($maxY - $minY + 1) + ($padding * 2));
+
+        if ($cropW <= 0 || $cropH <= 0 || ($cropW === $width && $cropH === $height)) {
+            return [$image, false];
+        }
+
+        $cropped = @imagecrop($image, [
+            'x' => $cropX,
+            'y' => $cropY,
+            'width' => $cropW,
+            'height' => $cropH,
+        ]);
+
         if ($cropped === false) {
-            return [$image, false];
-        }
-
-        if (imagesx($cropped) === 0 || imagesy($cropped) === 0) {
-            imagedestroy($cropped);
-            return [$image, false];
-        }
-
-        if (imagesx($cropped) === imagesx($image) && imagesy($cropped) === imagesy($image)) {
-            imagedestroy($cropped);
             return [$image, false];
         }
 

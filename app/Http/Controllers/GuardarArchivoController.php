@@ -54,7 +54,8 @@ class GuardarArchivoController extends Controller
             return $this->responseRequestError('Invalid base64 payload');
         }
 
-        $data = $this->optimizarArchivoParaGuardar($decodedData, $mimeType, $extension);
+        $isFirma = empty($tdoc) || (string) $tdoc === (string) self::TIPO_FIRMA;
+        $data = $this->optimizarArchivoParaGuardar($decodedData, $mimeType, $extension, $isFirma);
 
         // Guardar el archivo
         if (!file_put_contents($filePath, $data)) {
@@ -129,7 +130,8 @@ class GuardarArchivoController extends Controller
                 continue;
             }
 
-            $data = $this->optimizarArchivoParaGuardar($decodedData, $mimeType, $extension);
+            $isFirma = !empty($tdoc) && (string) $tdoc === (string) self::TIPO_FIRMA;
+            $data = $this->optimizarArchivoParaGuardar($decodedData, $mimeType, $extension, $isFirma);
             if (!file_put_contents($filePath, $data)) {
                 continue;
             }
@@ -216,7 +218,7 @@ class GuardarArchivoController extends Controller
         return isset($map[$extension]) ? $map[$extension] : 'application/octet-stream';
     }
 
-    private function optimizarArchivoParaGuardar($binaryData, $mimeType, $extension)
+    private function optimizarArchivoParaGuardar($binaryData, $mimeType, $extension, $normalizarFirma = false)
     {
         if (!is_string($binaryData) || $binaryData === '') {
             return $binaryData;
@@ -232,7 +234,9 @@ class GuardarArchivoController extends Controller
         }
 
         $wasCropped = false;
-        [$image, $wasCropped] = $this->recortarAreaUtilSiAplica($image, $mimeType, $extension);
+        if ($normalizarFirma) {
+            [$image, $wasCropped] = $this->recortarAreaUtilSiAplica($image, $mimeType, $extension);
+        }
 
         $optimized = null;
         if ($mimeType === 'image/jpeg' || $mimeType === 'image/jpg' || $extension === 'jpg' || $extension === 'jpeg') {
@@ -266,6 +270,12 @@ class GuardarArchivoController extends Controller
 
     private function recortarAreaUtilSiAplica($image, $mimeType, $extension)
     {
+        $width = imagesx($image);
+        $height = imagesy($image);
+        if ($width <= 0 || $height <= 0) {
+            return [$image, false];
+        }
+
         $isTransparentFriendly = $mimeType === 'image/png'
             || $mimeType === 'image/webp'
             || $mimeType === 'image/gif'
@@ -273,22 +283,64 @@ class GuardarArchivoController extends Controller
             || $extension === 'webp'
             || $extension === 'gif';
 
-        if (!$isTransparentFriendly || !function_exists('imagecropauto') || !defined('IMG_CROP_TRANSPARENT')) {
+        $minX = $width;
+        $minY = $height;
+        $maxX = -1;
+        $maxY = -1;
+
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
+                $rgba = imagecolorat($image, $x, $y);
+                $alpha = ($rgba & 0x7F000000) >> 24;
+                $red = ($rgba >> 16) & 0xFF;
+                $green = ($rgba >> 8) & 0xFF;
+                $blue = $rgba & 0xFF;
+
+                $isInkPixel = $isTransparentFriendly
+                    ? ($alpha < 120)
+                    : ($red < 245 || $green < 245 || $blue < 245);
+
+                if (!$isInkPixel) {
+                    continue;
+                }
+
+                if ($x < $minX) {
+                    $minX = $x;
+                }
+                if ($y < $minY) {
+                    $minY = $y;
+                }
+                if ($x > $maxX) {
+                    $maxX = $x;
+                }
+                if ($y > $maxY) {
+                    $maxY = $y;
+                }
+            }
+        }
+
+        if ($maxX < 0 || $maxY < 0) {
             return [$image, false];
         }
 
-        $cropped = @imagecropauto($image, IMG_CROP_TRANSPARENT);
+        $padding = 6;
+        $cropX = max(0, $minX - $padding);
+        $cropY = max(0, $minY - $padding);
+        $cropW = min($width - $cropX, ($maxX - $minX + 1) + ($padding * 2));
+        $cropH = min($height - $cropY, ($maxY - $minY + 1) + ($padding * 2));
+
+        if ($cropW <= 0 || $cropH <= 0 || ($cropW === $width && $cropH === $height)) {
+            return [$image, false];
+        }
+
+        $cropped = @imagecrop($image, [
+            'x' => $cropX,
+            'y' => $cropY,
+            'width' => $cropW,
+            'height' => $cropH,
+        ]);
+
         if ($cropped === false) {
-            return [$image, false];
-        }
-
-        if (imagesx($cropped) === 0 || imagesy($cropped) === 0) {
-            imagedestroy($cropped);
-            return [$image, false];
-        }
-
-        if (imagesx($cropped) === imagesx($image) && imagesy($cropped) === imagesy($image)) {
-            imagedestroy($cropped);
             return [$image, false];
         }
 
