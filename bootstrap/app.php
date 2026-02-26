@@ -72,6 +72,7 @@ $app->singleton(
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
+    'dto.validate' => App\Http\Middleware\DtoRequestValidationMiddleware::class,
 ]);
 
 /*
