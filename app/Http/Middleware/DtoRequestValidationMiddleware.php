@@ -38,6 +38,17 @@ class DtoRequestValidationMiddleware
         }
 
         $bodyContract = isset($matched['contract']['body']) ? $matched['contract']['body'] : null;
+        if ($bodyContract === null) {
+            $input = $request->all();
+            if (!empty($input)) {
+                return response()->json([
+                    'message' => 'Request body is not allowed for this endpoint',
+                    'errors' => ['body must be empty'],
+                    'contract' => $matched['endpoint'],
+                ], 422);
+            }
+        }
+
         if (is_string($bodyContract) && strpos($bodyContract, 'object{') === 0) {
             $bodyErrors = $this->validateBody($request, $bodyContract);
             if (!empty($bodyErrors)) {
@@ -60,7 +71,21 @@ class DtoRequestValidationMiddleware
     private function matchContract(Request $request, array $map)
     {
         $method = strtoupper($request->method());
-        $path = trim($request->path(), '/');
+        $path = trim((string) $request->path(), '/');
+        $pathWithSlash = '/' . $path;
+        if ($path === '') {
+            $pathWithSlash = '/';
+        }
+
+        // Fast path: exact key match (most reliable).
+        $directKey = $method . ' ' . $pathWithSlash;
+        if (isset($map[$directKey])) {
+            return [
+                'endpoint' => $directKey,
+                'contract' => $map[$directKey],
+                'params' => [],
+            ];
+        }
 
         foreach ($map as $endpoint => $contract) {
             $parts = explode(' ', $endpoint, 2);
@@ -146,14 +171,27 @@ class DtoRequestValidationMiddleware
         $rules = $this->parseObjectContract($bodyContract);
         $input = $request->all();
 
-        foreach ($rules as $field => $type) {
+        foreach ($rules as $field => $rule) {
             if (!array_key_exists($field, $input)) {
-                $errors[] = $field . ' is required';
+                if (!empty($rule['required'])) {
+                    $errors[] = $field . ' is required';
+                }
                 continue;
             }
 
-            if (!$this->isValidType($input[$field], $type)) {
-                $errors[] = $field . ' must be ' . $type;
+            $value = $input[$field];
+            if ($value === null && !empty($rule['nullable'])) {
+                continue;
+            }
+
+            if (!$this->isValidType($value, $rule['type'])) {
+                $errors[] = $field . ' must be ' . $rule['type'];
+            }
+        }
+
+        foreach ($input as $key => $value) {
+            if (!array_key_exists($key, $rules)) {
+                $errors[] = $key . ' is not allowed';
             }
         }
 
@@ -162,7 +200,7 @@ class DtoRequestValidationMiddleware
 
     /**
      * @param string $contract
-     * @return array<string, string>
+     * @return array<string, array<string, mixed>>
      */
     private function parseObjectContract($contract)
     {
@@ -185,12 +223,35 @@ class DtoRequestValidationMiddleware
             if (count($pair) !== 2) {
                 continue;
             }
-            $field = trim($pair[0]);
+
+            $rawField = trim($pair[0]);
             $type = trim($pair[1]);
-            if ($field === '' || $type === '') {
+            if ($rawField === '' || $type === '') {
                 continue;
             }
-            $rules[$field] = $type;
+
+            $required = true;
+            if (substr($rawField, -1) === '?') {
+                $required = false;
+                $rawField = substr($rawField, 0, -1);
+            }
+
+            $nullable = false;
+            if (strpos($type, '|null') !== false || strpos($type, 'null|') !== false || $type === 'null') {
+                $nullable = true;
+                $type = str_replace('|null', '', $type);
+                $type = str_replace('null|', '', $type);
+                $type = trim($type);
+                if ($type === '') {
+                    $type = 'mixed';
+                }
+            }
+
+            $rules[$rawField] = [
+                'type' => $type,
+                'required' => $required,
+                'nullable' => $nullable,
+            ];
         }
 
         return $rules;
@@ -257,4 +318,3 @@ class DtoRequestValidationMiddleware
         }
     }
 }
-

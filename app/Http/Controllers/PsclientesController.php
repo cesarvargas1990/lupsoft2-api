@@ -81,6 +81,18 @@ class PsclientesController extends Controller
     public function create(Request $request, Psclientes $psclientes)
     {
         try {
+            $this->validate($request, [
+                'nomcliente' => 'required|string',
+                'id_tipo_docid' => 'required|integer',
+                'numdocumento' => 'required|string',
+                'id_empresa' => 'required|integer',
+                'id_user' => 'required|integer',
+                'id_cobrador' => 'required|integer',
+                'email' => 'nullable|email',
+                'fch_expdocumento' => 'nullable|date',
+                'fch_nacimiento' => 'nullable|date',
+            ]);
+
             if ($request->has('fch_expdocumento')) {
                 $fch_expdocumento = $request->get('fch_expdocumento');
                 $request->request->remove('fch_expdocumento');
@@ -106,6 +118,16 @@ class PsclientesController extends Controller
 
     public function update($id, Request $request, Psclientes $psclientes)
     {
+        $this->validate($request, [
+            'id_tipo_docid' => 'sometimes|integer',
+            'id_empresa' => 'sometimes|integer',
+            'id_user' => 'sometimes|integer',
+            'id_cobrador' => 'sometimes|integer',
+            'email' => 'sometimes|nullable|email',
+            'fch_expdocumento' => 'sometimes|nullable|date',
+            'fch_nacimiento' => 'sometimes|nullable|date',
+        ]);
+
         if ($request->has('fch_expdocumento')) {
             $fch_expdocumento = $request->get('fch_expdocumento');
             $request->request->remove('fch_expdocumento');
