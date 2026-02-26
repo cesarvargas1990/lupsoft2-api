@@ -11,7 +11,7 @@ return [
     'POST /guardarPrestamo' => ['params' => [], 'body' => 'object{id_empresa:int,id_cliente:int,valorpres:float,numcuotas:int,porcint:float,id_periodo_pago:int,id_sistema_pago:int,fec_inicial:string,id_cobrador:int,id_usureg:int,fecha:string}', 'response' => ['int', 'object{message:string,errorCode:int,lineError:int,file:string}']],
     'GET /generarVariablesPlantillas/{id_empresa}' => ['params' => ['id_empresa' => 'int'], 'body' => null, 'response' => 'array<object{title:string,content:string}>'],
     'POST /guardarArchivoAdjunto' => ['params' => [], 'body' => 'object{id_tdocadjunto:int,id_empresa:int,id_cliente:int,id_usuario:int,filename:string,image:string}', 'response' => 'object{status:string,data?:string,error?:string}'],
-    'PUT /editarArchivoAdjunto' => ['params' => [], 'body' => 'object{id_cliente:int,id_usuario:int,id_empresa:int,filename:string,id_tdocadjunto:array<int>,image:array<string>}', 'response' => 'null'],
+    'PUT /editarArchivoAdjunto' => ['params' => [], 'body' => 'object{id_cliente:int,id_usuario:int,id_empresa:int,filename?:string,id_tdocadjunto:array<int>,image:array<string>}', 'response' => 'null'],
 
     'DELETE /eliminarPrestamo/{id_prestamo}' => ['params' => ['id_prestamo' => 'int'], 'body' => null, 'response' => 'null'],
     'GET /capitalprestado/{id_empresa}' => ['params' => ['id_empresa' => 'int'], 'body' => null, 'response' => ['string', 'object{message:string,errorCode:int,lineError:int,file:string}']],
