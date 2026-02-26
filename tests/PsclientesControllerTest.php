@@ -220,8 +220,15 @@ class PsclientesControllerTest extends TestCase
     public function test_create_psclientes_exception()
     {
         $request = new Request([
+            'nomcliente' => 'Cliente de prueba',
+            'id_tipo_docid' => 1,
+            'numdocumento' => '123456',
+            'id_empresa' => 1,
+            'id_user' => 1,
+            'id_cobrador' => 1,
+            'email' => 'cliente@test.com',
             'fch_expdocumento' => '2024-01-01T00:00:00Z',
-            'nombre' => 'Cliente de prueba',
+            'fch_nacimiento' => '1990-01-01T00:00:00Z',
         ]);
 
         $mock = Mockery::mock(Psclientes::class);

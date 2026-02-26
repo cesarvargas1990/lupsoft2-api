@@ -56,7 +56,7 @@ composer test
 ## Lint (local)
 
 ```bash
-composer lint
+/opt/homebrew/opt/php@7.4/bin/php ./vendor/bin/phpunit
 ```
 
 ## Lint (local sin Docker, PHP 7.4)
