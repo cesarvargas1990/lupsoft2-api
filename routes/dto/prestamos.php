@@ -2,8 +2,8 @@
 
 return [
     'POST /consultaTipoDocPlantilla' => ['params' => [], 'body' => 'object{id_empresa:int}', 'response' => 'array<object>'],
-    'POST /calcularCuotas' => ['params' => [], 'body' => 'object{id_periodo_pago:int,id_sistema_pago:string,numcuotas:int,porcint:float,valorpres:float}', 'response' => 'array<object>'],
-    'POST /calcularCuotas2' => ['params' => [], 'body' => 'object{id_periodo_pago:int,id_sistema_pago:string,numcuotas:int,porcint:float,valorpres:float}', 'response' => 'object'],
+    'POST /calcularCuotas' => ['params' => [], 'body' => 'object{id_periodo_pago:int,id_sistema_pago?:int|string,numcuotas:int,porcint:float,valorpres:float}', 'response' => 'array<object>'],
+    'POST /calcularCuotas2' => ['params' => [], 'body' => 'object{id_periodo_pago:int,id_sistema_pago?:int|string,numcuotas:int,porcint:float,valorpres:float}', 'response' => 'object'],
     'POST /listadoPrestamos' => ['params' => [], 'body' => 'object{id_empresa:int}', 'response' => 'array<object>'],
     'POST /prestamosCliente' => ['params' => [], 'body' => 'object{id_empresa:int,id_cliente:int}', 'response' => 'array<object>'],
     'POST /renderTemplates' => ['params' => [], 'body' => 'object{id_empresa:int,id_prestamo:int}', 'response' => 'array<object>'],
