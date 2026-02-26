@@ -88,7 +88,7 @@ class PsclientesController extends Controller
                 'id_empresa' => 'required|integer',
                 'id_user' => 'required|integer',
                 'id_cobrador' => 'required|integer',
-                'email' => 'nullable|email',
+                'email' => 'nullable|string',
                 'fch_expdocumento' => 'nullable|date',
                 'fch_nacimiento' => 'nullable|date',
             ]);
@@ -123,7 +123,7 @@ class PsclientesController extends Controller
             'id_empresa' => 'sometimes|integer',
             'id_user' => 'sometimes|integer',
             'id_cobrador' => 'sometimes|integer',
-            'email' => 'sometimes|nullable|email',
+            'email' => 'sometimes|nullable|string',
             'fch_expdocumento' => 'sometimes|nullable|date',
             'fch_nacimiento' => 'sometimes|nullable|date',
         ]);
