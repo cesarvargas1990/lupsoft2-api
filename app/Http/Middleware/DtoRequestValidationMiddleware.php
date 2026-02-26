@@ -189,12 +189,6 @@ class DtoRequestValidationMiddleware
             }
         }
 
-        foreach ($input as $key => $value) {
-            if (!array_key_exists($key, $rules)) {
-                $errors[] = $key . ' is not allowed';
-            }
-        }
-
         return $errors;
     }
 
