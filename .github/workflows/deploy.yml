@@ -14,9 +14,12 @@ concurrency:
 
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -35,3 +38,28 @@ jobs:
             fi
             git pull origin main
             docker compose up --build -d
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run post-deploy real API query tests
+        env:
+          BASE_URL: ${{ vars.API_BASE_URL != '' && vars.API_BASE_URL || 'http://147.93.1.252:8002' }}
+          ADMIN_EMAIL: ${{ secrets.API_ADMIN_EMAIL != '' && secrets.API_ADMIN_EMAIL || 'admin@admin.com' }}
+          ADMIN_PASSWORD: ${{ secrets.API_ADMIN_PASSWORD != '' && secrets.API_ADMIN_PASSWORD || 'password' }}
+          REPORT_FILE: logs/api_real_query_tests_report.txt
+        run: ./scripts/api_real_query_tests.sh
+
+      - name: Upload post-deploy API test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: post-deploy-api-real-query-tests-report
+          path: logs/api_real_query_tests_report.txt
+          if-no-files-found: warn
