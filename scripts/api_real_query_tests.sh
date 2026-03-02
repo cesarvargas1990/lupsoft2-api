@@ -118,7 +118,7 @@ run_case "listado prestamos success" POST "/listadoPrestamos" "200" '{"id_empres
 run_case "prestamos cliente success" POST "/prestamosCliente" "200" '{"id_empresa":1,"id_cliente":1}' "auth" 'type == "array"'
 run_case "render templates success" POST "/renderTemplates" "200" '{"id_empresa":1,"id_prestamo":1}' "auth" 'type == "array"'
 run_case "totales dashboard success" POST "/totales_dashboard" "200" '{"id_empresa":1,"fecha":"2026-02-27"}' "auth" '.total_prestado != null'
-run_case "total interes success" POST "/totalinteres" "201" '{"id_empresa":1}' "auth"
+run_case "total interes success" POST "/totalinteres" "200" '{"id_empresa":1}' "auth"
 
 # Negative/validation cases for query endpoints
 run_case "cobradores invalid id type" GET "/cobradores/abc" "422" "" "auth" '.message == "Route params validation failed"'
