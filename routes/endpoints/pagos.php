@@ -6,6 +6,7 @@ $router->put(PSPAGOS_ROUTE, $dto('PspagosController@update'));
 $router->delete(PSPAGOS_ROUTE, $dto('PspagosController@delete'));
 
 $router->get('psfechaspago/{id_prestamo}', $dto('PsfechaspagoController@showAllPsfechaspago'));
+$router->post('cuotas_pendientes_hoy', $dto('PsfechaspagoController@cuotasPendientesHoy'));
 $router->post('psfechaspago', $dto('PsfechaspagoController@create'));
 $router->put(PSFECHASPAGO_ROUTE, $dto('PsfechaspagoController@update'));
 $router->delete(PSFECHASPAGO_ROUTE, $dto('PsfechaspagoController@delete'));

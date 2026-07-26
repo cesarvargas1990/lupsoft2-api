@@ -66,6 +66,47 @@ class PsfechaspagoController extends Controller
         }
     }
 
+    public function cuotasPendientesHoy(Request $request, Psfechaspago $psfechaspago)
+    {
+        try {
+            $cuotas = $psfechaspago::query()
+                ->where('id_empresa', $request->get('id_empresa'))
+                ->where('ind_estado', 1)
+                ->whereDate('fecha_pago', $request->get('fecha'))
+                ->whereHas('prestamo', function ($query) use ($request) {
+                    $query->where('id_empresa', $request->get('id_empresa'))
+                        ->where('ind_estado', 1);
+                })
+                ->whereDoesntHave('pagos')
+                ->with(['prestamo.cliente'])
+                ->orderBy('fecha_pago')
+                ->orderBy('id')
+                ->get()
+                ->map(function ($cuota) {
+                    return [
+                        'id' => $cuota->id,
+                        'id_cliente' => $cuota->id_cliente,
+                        'id_prestamo' => $cuota->id_prestamo,
+                        'nomcliente' => optional(optional($cuota->prestamo)->cliente)->nomcliente,
+                        'celular' => optional(optional($cuota->prestamo)->cliente)->celular,
+                        'fecha_pago' => $cuota->fecha_pago,
+                        'fecha_pago_texto' => $this->spanishDate(strtotime($cuota->fecha_pago)),
+                        'valcuota' => number_format($cuota->valor_cuota, 2),
+                        'valtotal' => number_format($cuota->valor_pagar, 2),
+                    ];
+                });
+
+            return response()->json($cuotas);
+        } catch (\Exception $e) {
+            return response()->json([
+                "message" => $e->getMessage(),
+                'errorCode' => $e->getCode(),
+                'lineError' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 404);
+        }
+    }
+
 
 
     public function create(Request $request, Psfechaspago $psfechaspago)
