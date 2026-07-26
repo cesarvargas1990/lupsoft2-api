@@ -15,16 +15,29 @@ use Illuminate\Http\Request;
 
 class EndpointWorkflowTest extends TestCase
 {
+    private $sqliteDatabasePath;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->prepareSqliteDatabase();
+        $this->configureSqliteDatabase();
         $this->artisan('migrate:fresh');
         $this->seedBaseCatalogs();
 
         $this->assertTrue(Schema::hasTable('pstdocplant'));
         $this->assertTrue(Schema::hasTable('psclientes'));
+    }
+
+    protected function tearDown(): void
+    {
+        DB::disconnect('sqlite');
+
+        if ($this->sqliteDatabasePath && file_exists($this->sqliteDatabasePath)) {
+            unlink($this->sqliteDatabasePath);
+        }
+
+        parent::tearDown();
     }
 
     public function test_pstdocplant_create_and_delete_workflow()
@@ -172,20 +185,21 @@ class EndpointWorkflowTest extends TestCase
         ]);
     }
 
-    private function prepareSqliteDatabase()
+    private function configureSqliteDatabase()
     {
-        $databasePath = env('DB_DATABASE');
-        if (!$databasePath) {
-            return;
-        }
+        $this->sqliteDatabasePath = tempnam(sys_get_temp_dir(), 'lupsoft_test_');
 
-        $directory = dirname($databasePath);
-        if (!is_dir($directory)) {
-            mkdir($directory, 0777, true);
-        }
+        config([
+            'database.default' => 'sqlite',
+            'database.connections.sqlite' => [
+                'driver' => 'sqlite',
+                'database' => $this->sqliteDatabasePath,
+                'prefix' => '',
+                'foreign_key_constraints' => true,
+            ],
+        ]);
 
-        if (!file_exists($databasePath)) {
-            touch($databasePath);
-        }
+        DB::purge('sqlite');
+        DB::setDefaultConnection('sqlite');
     }
 }
