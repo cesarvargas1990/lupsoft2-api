@@ -1,35 +1,44 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 
 class CorsMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-        $headers = [
-            'Access-Control-Allow-Origin' => '*',
-            'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS, PUT, DELETE',
-            'Access-Control-Allow-Credentials' => 'true',
-            'Access-Control-Max-Age' => '86400',
-            'Access-Control-Allow-Headers' => 'Content-Type, Authorization, X-Requested-With'
+        $allowedOrigins = [
+            'http://localhost:4200',
+            'http://127.0.0.1:4200',
+
+            // Agrega aquí tu frontend de producción:
+            // 'https://tudominio.com',
         ];
 
+        $origin = $request->headers->get('Origin');
+
+        $headers = [
+            'Access-Control-Allow-Methods'     => 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers'     => 'Origin, Content-Type, Accept, Authorization, X-Requested-With, X-CSRF-TOKEN',
+            'Access-Control-Allow-Credentials' => 'true',
+            'Access-Control-Max-Age'           => '86400',
+            'Vary'                             => 'Origin',
+        ];
+
+        if ($origin && in_array($origin, $allowedOrigins, true)) {
+            $headers['Access-Control-Allow-Origin'] = $origin;
+        }
+
+        // Responder directamente al preflight del navegador
         if ($request->isMethod('OPTIONS')) {
-            return response()->json('{"method":"OPTIONS"}', 200, $headers);
+            return response('', 204, $headers);
         }
 
         $response = $next($request);
+
         foreach ($headers as $key => $value) {
-            $response->header($key, $value);
+            $response->headers->set($key, $value);
         }
 
         return $response;
