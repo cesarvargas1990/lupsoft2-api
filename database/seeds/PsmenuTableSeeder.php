@@ -79,6 +79,16 @@ class PsmenuTableSeeder extends Seeder
 
         DB::table('psmenu')->insert([
             'orden' => '3',
+            'nombre' => 'Préstamos',
+            'ruta' => 'prestamos/listar',
+            'icono' => 'account_balance',
+            'id_perfil' => 1,
+            'ind_activo' => 1,
+            'id_empresa' => '1'
+        ]);
+
+        DB::table('psmenu')->insert([
+            'orden' => '4',
             'nombre' => 'Parametros',
             'ruta' => 'parametros',
             'icono' => 'settings',
@@ -95,7 +105,7 @@ class PsmenuTableSeeder extends Seeder
             'ruta' => 'parametros/documentos',
             'icono' => 'file_copy',
             'id_perfil' => 1,
-            'id_mpadre' => 7,
+            'id_mpadre' => 8,
             'ind_activo' => 1,
             'id_empresa' => '1'
         ]);
@@ -106,7 +116,7 @@ class PsmenuTableSeeder extends Seeder
             'ruta' => 'parametros/empresa',
             'icono' => 'business',
             'id_perfil' => 1,
-            'id_mpadre' => 7,
+            'id_mpadre' => 8,
             'ind_activo' => 1,
             'id_empresa' => '1'
         ]);
