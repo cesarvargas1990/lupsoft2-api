@@ -14,7 +14,7 @@ return [
     'POST /cuotas_pendientes_hoy' => [
         'params' => [],
         'body' => 'object{id_empresa:int,fecha:string}',
-        'response' => 'array<object{id:int,id_cliente:int,id_prestamo:int,nomcliente:string,celular?:string,direcasa?:string,ubicasa?:string,fecha_pago:string,fecha_pago_texto:string,valcuota:string,valtotal:string}>'
+        'response' => 'array<object{id:int,id_cliente:int,id_prestamo:int,nomcliente:string,celular?:string,direcasa?:string,ubicasa?:string,diretrabajo?:string,ubictrabajo?:string,fecha_pago:string,fecha_pago_texto:string,valcuota:string,valtotal:string}>'
     ],
     'POST /psfechaspago' => ['params' => [], 'body' => 'object{id_prestamo:int,valor_cuota:float,valor_pagar:float,fecha_pago:string,ind_renovar:int,ind_estado:int,id_cliente:int,id_empresa:int}', 'response' => 'object'],
     'PUT /psfechaspago/{id}' => ['params' => ['id' => 'int'], 'body' => 'object{ind_renovar:int}', 'response' => 'object'],

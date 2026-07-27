@@ -91,6 +91,8 @@ class PsfechaspagoController extends Controller
                         'celular' => optional(optional($cuota->prestamo)->cliente)->celular,
                         'direcasa' => optional(optional($cuota->prestamo)->cliente)->direcasa,
                         'ubicasa' => optional(optional($cuota->prestamo)->cliente)->ubicasa,
+                        'diretrabajo' => optional(optional($cuota->prestamo)->cliente)->diretrabajo,
+                        'ubictrabajo' => optional(optional($cuota->prestamo)->cliente)->ubictrabajo,
                         'fecha_pago' => $cuota->fecha_pago,
                         'fecha_pago_texto' => $this->spanishDate(strtotime($cuota->fecha_pago)),
                         'valcuota' => number_format($cuota->valor_cuota, 2),
