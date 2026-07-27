@@ -81,6 +81,8 @@ class PsclientesController extends Controller
     public function create(Request $request, Psclientes $psclientes)
     {
         try {
+            $this->normalizeOptionalClienteFields($request);
+
             $this->validate($request, [
                 'nomcliente' => 'required|string',
                 'id_tipo_docid' => 'required|integer',
@@ -98,7 +100,7 @@ class PsclientesController extends Controller
                 $request->request->remove('fch_expdocumento');
                 $request->request->add(['fch_expdocumento' => substr($fch_expdocumento, 0, 10)]);
             }
-            if ($request->has('fch_nacimiento')) {
+            if ($request->filled('fch_nacimiento')) {
                 $fch_nacimiento = $request->get('fch_nacimiento');
                 $request->request->remove('fch_nacimiento');
                 $request->request->add(['fch_nacimiento' => substr($fch_nacimiento, 0, 10)]);
@@ -118,6 +120,8 @@ class PsclientesController extends Controller
 
     public function update($id, Request $request, Psclientes $psclientes)
     {
+        $this->normalizeOptionalClienteFields($request);
+
         $this->validate($request, [
             'id_tipo_docid' => 'sometimes|integer',
             'id_empresa' => 'sometimes|integer',
@@ -133,7 +137,7 @@ class PsclientesController extends Controller
             $request->request->remove('fch_expdocumento');
             $request->request->add(['fch_expdocumento' => substr($fch_expdocumento, 0, 10)]);
         }
-        if ($request->has('fch_nacimiento')) {
+        if ($request->filled('fch_nacimiento')) {
             $fch_nacimiento = $request->get('fch_nacimiento');
             $request->request->remove('fch_nacimiento');
             $request->request->add(['fch_nacimiento' => substr($fch_nacimiento, 0, 10)]);
@@ -149,6 +153,16 @@ class PsclientesController extends Controller
                 'lineError' => $e->getLine(),
                 'file' => $e->getFile()
             ], 404);
+        }
+    }
+
+    private function normalizeOptionalClienteFields(Request $request)
+    {
+        foreach (['email', 'fch_nacimiento'] as $field) {
+            if (array_key_exists($field, $request->all())
+                && trim((string) $request->get($field)) === '') {
+                $request->merge([$field => null]);
+            }
         }
     }
 

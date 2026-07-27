@@ -242,4 +242,34 @@ class PsclientesControllerTest extends TestCase
         $this->assertEquals('DB Error', $data['message']);
         $this->assertEquals(123, $data['errorCode']);
     }
+
+    public function test_create_psclientes_without_email_or_birth_date()
+    {
+        $request = new Request([
+            'nomcliente' => 'Cliente sin datos opcionales',
+            'id_tipo_docid' => 1,
+            'numdocumento' => '123456',
+            'id_empresa' => 1,
+            'id_user' => 1,
+            'id_cobrador' => 1,
+            'email' => '',
+            'fch_nacimiento' => '',
+        ]);
+
+        $mock = Mockery::mock(Psclientes::class);
+        $mock->shouldReceive('create')
+            ->once()
+            ->with(Mockery::on(function ($data) {
+                return array_key_exists('email', $data)
+                    && $data['email'] === null
+                    && array_key_exists('fch_nacimiento', $data)
+                    && $data['fch_nacimiento'] === null;
+            }))
+            ->andReturn(['id' => 1]);
+
+        $controller = new PsclientesController();
+        $response = $controller->create($request, $mock);
+
+        $this->assertEquals(201, $response->getStatusCode(), $response->getContent());
+    }
 }
